@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Breeder Dashboard - Animal Registry</title>
+    <link rel="stylesheet" href="./css/breeder.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="top-header">
+      <div class="header-left">
+        <button class="menu-toggle" id="menu-toggle">
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search here..." />
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="notification-container">
+          <button class="notification-bell">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge" id="notification-badge">0</span>
+          </button>
+
+          <!-- Notification Dropdown -->
+          <div class="notification-dropdown">
+            <div class="notification-header">
+              <h3 class="notification-title">Notifications</h3>
+              <button class="mark-all-read" onclick="markAllAsRead()">
+                Mark all read
+              </button>
+            </div>
+            <div class="notification-list" id="notification-list">
+              <!-- Notifications will be loaded here -->
+            </div>
+          </div>
+        </div>
+        <div class="user-profile">
+          <img src="./images/admin_logo.png" alt="User" />
+          <span>Admin</span>
+          <span class="verified-badge">VERIFIED</span>
+        </div>
+        <button class="logout-btn" onclick="logout()">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <div class="logo">
+        <div class="logo-icon">M</div>
+        <span class="logo-text">Mkulima Mdogo</span>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="#" class="nav-item active" data-section="dashboard-page">
+          <i class="fas fa-home"></i>
+          <span>Dashboard Overview</span>
+        </a>
+        <a href="#" class="nav-item" data-section="register-page">
+          <i class="fas fa-plus-circle"></i>
+          <span>Register Animal</span>
+        </a>
+        <a href="#" class="nav-item" data-section="breeding-page">
+          <i class="fas fa-venus-mars"></i>
+          <span>Breeding Events</span>
+        </a>
+        <a href="#" class="nav-item" data-section="records-page">
+          <i class="fas fa-book"></i>
+          <span>My Records</span>
+        </a>
+        <a href="#" class="nav-item" data-section="lineage-page">
+          <i class="fas fa-sitemap"></i>
+          <span>Lineage Query</span>
+        </a>
+        <a href="#" class="nav-item" data-section="settings-page">
+          <i class="fas fa-cog"></i>
+          <span>Settings</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Dashboard Overview Page -->
+      <div id="dashboard-page" class="page">
+        <div class="welcome-card">
+          <h1>Welcome, John Smith</h1>
+          <p>Herd Prefix: ABC Ranch • Status: <strong>VERIFIED</strong></p>
+          <p>
+            Manage your animal registry with blockchain-powered transparency
+          </p>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div class="stat-value">VERIFIED</div>
+            <div class="stat-label">Account Status</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🐄</div>
+            <div class="stat-value">47</div>
+            <div class="stat-label">Animals Registered</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📜</div>
+            <div class="stat-value">23</div>
+            <div class="stat-label">Breeding Events</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">⛓️</div>
+            <div class="stat-value">0x4f2a...</div>
+            <div class="stat-label">Latest Block Hash</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Register Animal Page -->
+      <div id="register-page" class="page hidden">
+        <h1 class="page-title">Register New Animal</h1>
+        <div class="form-container">
+          <form id="registerForm">
+            <div class="form-group">
+              <label for="animalType">Animal Type</label>
+              <select id="animalType" required>
+                <option value="">Select Animal Type</option>
+                <option value="cattle">Cattle</option>
+                <option value="sheep">Sheep</option>
+                <option value="goat">Goat</option>
+                <option value="pig">Pig</option>
+                <option value="horse">Horse</option>
+                <option value="dog">Dog</option>
+                <option value="cat">Cat</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="breed">Breed</label>
+              <select id="breed" required disabled>
+                <option value="">Select Animal Type First</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="gender">Gender</label>
+              <select id="gender" required>
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="dob">Date of Birth</label>
+              <input type="date" id="dob" required />
+            </div>
+            <div class="form-group">
+              <label for="parent1">Sire/Father ID (Optional)</label>
+              <select id="parent1">
+                <option value="">Select Sire</option>
+                <option value="ABC-001">ABC-001 (Male Angus)</option>
+                <option value="ABC-002">ABC-002 (Male Hereford)</option>
+                <option value="ABC-003">ABC-003 (Male Holstein)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="parent2">Dam/Mother ID (Optional)</label>
+              <select id="parent2">
+                <option value="">Select Dam</option>
+                <option value="ABC-004">ABC-004 (Female Angus)</option>
+                <option value="ABC-005">ABC-005 (Female Hereford)</option>
+                <option value="ABC-006">ABC-006 (Female Holstein)</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-success">
+              Register Animal
+            </button>
+          </form>
+          <div
+            class="message"
+            style="
+              background: #e8f4fd;
+              color: #1565c0;
+              border: 1px solid #1565c0;
+              margin-top: 20px;
+            "
+          >
+            <strong>Note:</strong> Animal ID will be auto-generated based on
+            your herd prefix and registration sequence.
+          </div>
+        </div>
+      </div>
+
+      <!-- Breeding Events Page -->
+      <div id="breeding-page" class="page hidden">
+        <h1 class="page-title">Log Breeding Event</h1>
+        <div class="form-container">
+          <form id="breedingForm">
+            <div class="form-group">
+              <label for="breedingMethod">Breeding Method</label>
+              <select id="breedingMethod" required>
+                <option value="">Select Breeding Method</option>
+                <option value="natural">Natural Mating</option>
+                <option value="ai">Artificial Insemination (AI)</option>
+                <option value="et">Embryo Transfer (ET)</option>
+                <option value="ivf">In Vitro Fertilization (IVF)</option>
+              </select>
+            </div>
+
+            <!-- Dam (Mother) - Always required -->
+            <div class="form-group">
+              <label for="dam">Dam/Mother ID</label>
+              <select id="dam" required>
+                <option value="">Select Dam</option>
+                <option value="ABC-004">ABC-004 (Female Angus)</option>
+                <option value="ABC-005">ABC-005 (Female Hereford)</option>
+                <option value="ABC-006">ABC-006 (Female Holstein)</option>
+              </select>
+            </div>
+
+            <!-- Sire Section - Changes based on breeding method -->
+            <div id="sireSection">
+              <div class="form-group">
+                <label for="sire" id="sireLabel">Sire/Father ID</label>
+                <select id="sire">
+                  <option value="">Select Sire</option>
+                  <option value="ABC-001">ABC-001 (Male Angus)</option>
+                  <option value="ABC-002">ABC-002 (Male Hereford)</option>
+                  <option value="ABC-003">ABC-003 (Male Holstein)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- AI/ET Specific Fields -->
+            <div id="aiFields" class="hidden">
+              <div class="form-group">
+                <label for="semenSource">Semen/Genetic Material Source</label>
+                <input
+                  type="text"
+                  id="semenSource"
+                  placeholder="e.g., Bull Name, Stud Book #, or Donor ID"
+                />
+              </div>
+              <div class="form-group">
+                <label for="aiTechnician">AI Technician/Veterinarian</label>
+                <input
+                  type="text"
+                  id="aiTechnician"
+                  placeholder="Name of certified technician"
+                />
+              </div>
+              <div class="form-group">
+                <label for="batchNumber">Batch/Straw Number</label>
+                <input
+                  type="text"
+                  id="batchNumber"
+                  placeholder="Semen batch or straw identification"
+                />
+              </div>
+            </div>
+
+            <!-- ET Specific Fields -->
+            <div id="etFields" class="hidden">
+              <div class="form-group">
+                <label for="donorDam">Donor Dam ID</label>
+                <input
+                  type="text"
+                  id="donorDam"
+                  placeholder="Original egg/embryo donor"
+                />
+              </div>
+              <div class="form-group">
+                <label for="embryoId">Embryo ID</label>
+                <input
+                  type="text"
+                  id="embryoId"
+                  placeholder="Embryo identification number"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="eventDate">Breeding/Service Date</label>
+              <input type="date" id="eventDate" required />
+            </div>
+
+            <div class="form-group">
+              <label for="expectedDue">Expected Due Date (Optional)</label>
+              <input type="date" id="expectedDue" />
+            </div>
+
+            <div class="form-group">
+              <label for="offspring">Offspring ID (If already born)</label>
+              <input
+                type="text"
+                id="offspring"
+                placeholder="Leave empty if not yet born"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="notes">Additional Notes</label>
+              <textarea
+                id="notes"
+                rows="3"
+                placeholder="Any additional breeding information, conditions, or observations"
+              ></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-success">
+              Log Breeding Event
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- My Records Page -->
+      <div id="records-page" class="page hidden">
+        <h1 class="page-title">My Animal Records</h1>
+        <div class="table-container">
+          <div class="table-header">
+            <input
+              type="text"
+              class="search-input"
+              placeholder="Search animals..."
+              id="searchInput"
+            />
+            <button class="btn" id="refreshBtn">🔄 Refresh</button>
+          </div>
+          <table id="recordsTable">
+            <thead>
+              <tr>
+                <th>Animal ID</th>
+                <th>Type</th>
+                <th>Breed</th>
+                <th>Gender</th>
+                <th>Date of Birth</th>
+                <th>Parents</th>
+                <th>Blockchain Tx</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>ABC-001</td>
+                <td>Cattle</td>
+                <td>Angus</td>
+                <td>Male</td>
+                <td>2023-03-15</td>
+                <td>Sire: -, Dam: -</td>
+                <td>0x7b3f2a1c...</td>
+                <td>
+                  <span class="status-badge status-verified">Verified</span>
+                </td>
+              </tr>
+              <tr>
+                <td>ABC-002</td>
+                <td>Cattle</td>
+                <td>Hereford</td>
+                <td>Female</td>
+                <td>2023-05-22</td>
+                <td>Sire: -, Dam: -</td>
+                <td>0x9e4d5c2b...</td>
+                <td>
+                  <span class="status-badge status-verified">Verified</span>
+                </td>
+              </tr>
+              <tr>
+                <td>ABC-003</td>
+                <td>Sheep</td>
+                <td>Merino</td>
+                <td>Female</td>
+                <td>2023-08-10</td>
+                <td>Sire: ABC-001, Dam: ABC-002</td>
+                <td>0x1a6f8e3d...</td>
+                <td>
+                  <span class="status-badge status-pending">Pending</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Lineage Query Page -->
+      <div id="lineage-page" class="page hidden">
+        <h1 class="page-title">Lineage Query</h1>
+        <div class="lineage-container">
+          <div class="lineage-query">
+            <div class="form-group" style="flex: 1; margin-bottom: 0">
+              <label for="queryId">Animal ID</label>
+              <input
+                type="text"
+                id="queryId"
+                placeholder="Enter Animal ID (e.g., ABC-003)"
+              />
+            </div>
+            <button class="btn" id="queryBtn">🔍 Query Lineage</button>
+          </div>
+          <div id="lineageResult"></div>
+        </div>
+      </div>
+
+      <!-- Settings Page -->
+      <div id="settings-page" class="page hidden">
+        <h1 class="page-title">Settings</h1>
+        <div class="form-container">
+          <div class="message message-success">
+            <strong>Account Verified:</strong> Core details are locked and
+            cannot be modified.
+          </div>
+          <form id="settingsForm">
+            <div class="form-group">
+              <label for="breederName">Breeder Name</label>
+              <input type="text" id="breederName" value="John Smith" disabled />
+            </div>
+            <div class="form-group">
+              <label for="herdPrefix">Herd Prefix</label>
+              <input type="text" id="herdPrefix" value="ABC Ranch" disabled />
+            </div>
+            <div class="form-group">
+              <label for="contactEmail">Contact Email</label>
+              <input type="email" id="contactEmail" value="john@abcranch.com" />
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" value="+1-555-123-4567" />
+            </div>
+            <div class="form-group">
+              <label for="address">Address</label>
+              <input
+                type="text"
+                id="address"
+                value="123 Ranch Road, Texas, USA"
+              />
+            </div>
+            <button type="submit" class="btn">Update Profile</button>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <script src="./js/script.js"></script>
+  </body>
+</html>

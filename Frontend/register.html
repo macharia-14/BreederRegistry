@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Breeder Registration</title>
+    <link rel="stylesheet" href="/Frontend/css/style.css" />
+  </head>
+  <body>
+    <nav class="nav">
+      <div class="container">
+        <a href="/Frontend/index.html" class="btn btn-text">← Back to Home</a>
+        <h1>Animal Breed Registry</h1>
+      </div>
+    </nav>
+
+    <main class="main">
+      <div class="container">
+        <div class="form-container">
+          <h2>Breeder Registration</h2>
+          <form id="register-form" class="form">
+            <div class="form-group">
+              <label for="fullName">Full Name *</label>
+              <input type="text" id="fullName" name="full_name" required />
+            </div>
+
+            <div class="form-group">
+              <label for="nationalId">National ID *</label>
+              <input type="text" id="nationalId" name="national_id" required />
+            </div>
+
+            <div class="form-group">
+              <label for="breederType">Breeder Type *</label>
+              <select
+                id="breederType"
+                name="breeder_type"
+                required
+                onchange="toggleCompanyFields()"
+              >
+                <option value="individual">Individual</option>
+                <option value="company">Company</option>
+              </select>
+            </div>
+
+            <div id="companyFields" style="display: none">
+              <div class="form-group">
+                <label for="farmName">Farm Name *</label>
+                <input type="text" id="farmName" name="farm_name" />
+              </div>
+
+              <div class="form-group">
+                <label for="farmPrefix"
+                  >Farm Prefix (3 uppercase letters) *</label
+                >
+                <input
+                  type="text"
+                  id="farmPrefix"
+                  name="farm_prefix"
+                  pattern="[A-Z]{3}"
+                  maxlength="3"
+                  title="Please enter 3 uppercase letters."
+                />
+                <div
+                  id="prefix-validation-message"
+                  class="validation-message"
+                ></div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="farmLocation">Farm Location *</label>
+              <input
+                type="text"
+                id="farmLocation"
+                name="farm_location"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="county">County</label>
+              <input type="text" id="county" name="county" />
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Phone Number *</label>
+              <input type="tel" id="phone" name="phone" required />
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email Address *</label>
+              <input type="email" id="email" name="email" required />
+            </div>
+
+            <div class="form-group">
+              <label for="password">Password *</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                required
+                minlength="8"
+                title="Password must be at least 8 characters long."
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="confirmPassword">Confirm Password *</label>
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirm_password"
+                required
+              />
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+              Submit Application
+            </button>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      function toggleCompanyFields() {
+        const type = document.getElementById("breederType").value;
+        const companyFields = document.getElementById("companyFields");
+        document.getElementById("farmName").required = type === "company";
+        document.getElementById("farmPrefix").required = type === "company";
+        companyFields.style.display = type === "company" ? "block" : "none";
+      }
+
+      // Asynchronous validation for farm prefix uniqueness
+      (function () {
+        const farmPrefixInput = document.getElementById("farmPrefix");
+        const validationMessage = document.getElementById(
+          "prefix-validation-message"
+        );
+        let debounceTimer;
+
+        farmPrefixInput.addEventListener("input", () => {
+          clearTimeout(debounceTimer);
+          const prefix = farmPrefixInput.value.toUpperCase();
+
+          // Clear previous message and validity
+          validationMessage.textContent = "";
+          farmPrefixInput.setCustomValidity("");
+
+          if (prefix.length === 3) {
+            debounceTimer = setTimeout(() => {
+              checkPrefixUniqueness(prefix);
+            }, 500); // Debounce to avoid sending requests on every keystroke
+          }
+        });
+
+        async function checkPrefixUniqueness(prefix) {
+          try {
+            // NOTE: This is a hypothetical API endpoint. You will need to implement it on your backend.
+            // It should return a JSON object like: {"isAvailable": true} or {"isAvailable": false}
+            const response = await fetch(
+              `/api/breeders/check-prefix/${prefix}`
+            );
+            const data = await response.json();
+
+            if (data.isAvailable) {
+              validationMessage.textContent = "Prefix is available!";
+              validationMessage.className = "validation-message success";
+              farmPrefixInput.setCustomValidity("");
+            } else {
+              validationMessage.textContent = "This prefix is already taken.";
+              validationMessage.className = "validation-message error";
+              farmPrefixInput.setCustomValidity(
+                "This prefix is already taken."
+              );
+            }
+          } catch (error) {
+            console.error("Error checking prefix:", error);
+            validationMessage.textContent = "Could not verify prefix.";
+            validationMessage.className = "validation-message error";
+          }
+        }
+      })();
+
+      // Password confirmation validation
+      (function () {
+        const passwordInput = document.getElementById("password");
+        const confirmPasswordInput = document.getElementById("confirmPassword");
+
+        // Create a message element for feedback and insert it after the input
+        const passwordMatchMessage = document.createElement("div");
+        passwordMatchMessage.className = "validation-message";
+        confirmPasswordInput.parentNode.insertBefore(
+          passwordMatchMessage,
+          confirmPasswordInput.nextSibling
+        );
+
+        function validatePasswords() {
+          if (confirmPasswordInput.value === "") {
+            passwordMatchMessage.textContent = "";
+            confirmPasswordInput.setCustomValidity("");
+            return;
+          }
+          if (passwordInput.value !== confirmPasswordInput.value) {
+            const message = "Passwords do not match.";
+            confirmPasswordInput.setCustomValidity(message);
+            passwordMatchMessage.textContent = message;
+            passwordMatchMessage.className = "validation-message error";
+          } else {
+            confirmPasswordInput.setCustomValidity("");
+            passwordMatchMessage.textContent = "Passwords match!";
+            passwordMatchMessage.className = "validation-message success";
+          }
+        }
+        passwordInput.addEventListener("input", validatePasswords);
+        confirmPasswordInput.addEventListener("input", validatePasswords);
+      })();
+    </script>
+
+    <script
+      crossorigin="anonymous"
+      src="//unpkg.com/same-runtime/dist/index.global.js"
+    ></script>
+    <script src="/Frontend/js/script.js"></script>
+  </body>
+</html>

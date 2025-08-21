@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="./images/admin_logo.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/Frontend/admin/css/admin.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body>
+    <main class="main">
+      <div class="container">
+        <div class="admin-layout">
+          <div class="sidebar" id="sidebar">
+            <div class="logo">
+              <div class="logo-icon">M</div>
+              <span class="logo-text">Mkulima Mdogo</span>
+            </div>
+
+            <nav class="nav-menu">
+              <a
+                href="#"
+                class="nav-item active"
+                data-section="admin-applications"
+              >
+                <i class="fas fa-home"></i>
+                <span>Applications</span>
+              </a>
+              <a href="#" class="nav-item" data-section="admin-farmers">
+                <i class="fas fa-clock"></i>
+                <span>Breeders</span>
+              </a>
+              <a href="#" class="nav-item" data-section="admin-settings">
+                <i class="fas fa-bullseye"></i>
+                <span>Settings</span>
+              </a>
+            </nav>
+          </div>
+
+          <div class="admin-content">
+            <header class="top-header">
+              <div class="header-left">
+                <button class="menu-toggle" id="menu-toggle">
+                  <i class="fas fa-bars"></i>
+                </button>
+                <div class="search-box">
+                  <i class="fas fa-search"></i>
+                  <input type="text" placeholder="Search here..." />
+                </div>
+              </div>
+              <div class="header-right">
+                <div class="notification-container">
+                  <button class="notification-bell">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notification-badge"
+                      >0</span
+                    >
+                  </button>
+
+                  <!-- Notification Dropdown -->
+                  <div class="notification-dropdown">
+                    <div class="notification-header">
+                      <h3 class="notification-title">Notifications</h3>
+                      <button class="mark-all-read" onclick="markAllAsRead()">
+                        Mark all read
+                      </button>
+                    </div>
+                    <div class="notification-list" id="notification-list">
+                      <!-- Notifications will be loaded here -->
+                    </div>
+                  </div>
+                </div>
+                <div class="user-profile">
+                  <img src="./images/admin_logo.png" alt="User" />
+                  <span>Admin</span>
+                </div>
+                <button class="logout-btn" onclick="logout()">
+                  <i class="fas fa-sign-out-alt"></i>
+                </button>
+              </div>
+            </header>
+
+            <!-- Pending Applications -->
+            <section id="admin-applications" class="admin-section active">
+              <h3>Pending Breeder Applications</h3>
+              <div id="pending-applications">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Full Name</th>
+                      <th>National ID</th>
+                      <th>Breeder Type</th>
+                      <th>Farm Name</th>
+                      <th>County</th>
+                      <th>Phone</th>
+                      <th>Email</th>
+                      <th>Applied Date</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="applications-tbody">
+                    <tr>
+                      <td>John Kamau Mwangi</td>
+                      <td>12345678</td>
+                      <td>
+                        <span class="badge badge-individual">Individual</span>
+                      </td>
+                      <td>Green Valley Farm</td>
+                      <td>Kiambu</td>
+                      <td>+254701234567</td>
+                      <td>john.kamau@email.com</td>
+                      <td>Aug 20, 2025</td>
+                      <td>
+                        <button
+                          class="action-btn approve-btn"
+                          onclick="approveApplication(1)"
+                        >
+                          <i class="fas fa-check"></i> Approve
+                        </button>
+                        <button
+                          class="action-btn reject-btn"
+                          onclick="rejectApplication(1)"
+                        >
+                          <i class="fas fa-times"></i> Reject
+                        </button>
+                        <button
+                          class="action-btn view-btn"
+                          onclick="viewApplication(1)"
+                        >
+                          <i class="fas fa-eye"></i> View
+                        </button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Mary Wanjiku Enterprises</td>
+                      <td>87654321</td>
+                      <td><span class="badge badge-company">Company</span></td>
+                      <td>Sunrise Livestock Ltd</td>
+                      <td>Nakuru</td>
+                      <td>+254712345678</td>
+                      <td>info@sunriselivestock.co.ke</td>
+                      <td>Aug 19, 2025</td>
+                      <td>
+                        <button
+                          class="action-btn approve-btn"
+                          onclick="approveApplication(2)"
+                        >
+                          <i class="fas fa-check"></i> Approve
+                        </button>
+                        <button
+                          class="action-btn reject-btn"
+                          onclick="rejectApplication(2)"
+                        >
+                          <i class="fas fa-times"></i> Reject
+                        </button>
+                        <button
+                          class="action-btn view-btn"
+                          onclick="viewApplication(2)"
+                        >
+                          <i class="fas fa-eye"></i> View
+                        </button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Peter Ochieng Otieno</td>
+                      <td>11223344</td>
+                      <td>
+                        <span class="badge badge-individual">Individual</span>
+                      </td>
+                      <td>Lake View Ranch</td>
+                      <td>Kisumu</td>
+                      <td>+254723456789</td>
+                      <td>peter.ochieng@gmail.com</td>
+                      <td>Aug 18, 2025</td>
+                      <td>
+                        <button
+                          class="action-btn approve-btn"
+                          onclick="approveApplication(3)"
+                        >
+                          <i class="fas fa-check"></i> Approve
+                        </button>
+                        <button
+                          class="action-btn reject-btn"
+                          onclick="rejectApplication(3)"
+                        >
+                          <i class="fas fa-times"></i> Reject
+                        </button>
+                        <button
+                          class="action-btn view-btn"
+                          onclick="viewApplication(3)"
+                        >
+                          <i class="fas fa-eye"></i> View
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <!-- Verified Farmers -->
+            <section id="admin-farmers" class="admin-section">
+              <h3>Verified Breeders</h3>
+              <div id="verified-farmers">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Full Name</th>
+                      <th>Farm Prefix</th>
+                      <th>Farm Name</th>
+                      <th>County</th>
+                      <th>Breeder Type</th>
+                      <th>Phone</th>
+                      <th>Status</th>
+                      <th>Approved Date</th>
+                    </tr>
+                  </thead>
+                  <tbody id="farmers-tbody">
+                    <tr>
+                      <td>James Mwangi Kiprotich</td>
+                      <td><span class="farm-prefix">JMK001</span></td>
+                      <td>Highland Dairy Farm</td>
+                      <td>Thika</td>
+                      <td>
+                        <span class="badge badge-individual">Individual</span>
+                      </td>
+                      <td>+254734567890</td>
+                      <td>
+                        <span class="status-badge status-active">Active</span>
+                      </td>
+                      <td>Aug 15, 2025</td>
+                    </tr>
+                    <tr>
+                      <td>Grace Akinyi Ltd</td>
+                      <td><span class="farm-prefix">GAL002</span></td>
+                      <td>Maize Valley Livestock</td>
+                      <td>Eldoret</td>
+                      <td><span class="badge badge-company">Company</span></td>
+                      <td>+254745678901</td>
+                      <td>
+                        <span class="status-badge status-active">Active</span>
+                      </td>
+                      <td>Aug 10, 2025</td>
+                    </tr>
+                    <tr>
+                      <td>David Mutua Nzuki</td>
+                      <td><span class="farm-prefix">DMN003</span></td>
+                      <td>Acacia Ridge Farm</td>
+                      <td>Machakos</td>
+                      <td>
+                        <span class="badge badge-individual">Individual</span>
+                      </td>
+                      <td>+254756789012</td>
+                      <td>
+                        <span class="status-badge status-suspended"
+                          >Suspended</span
+                        >
+                      </td>
+                      <td>Aug 05, 2025</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <!-- Settings -->
+            <section id="admin-settings" class="admin-section">
+              <h3>System Settings</h3>
+              <div class="settings-grid">
+                <div class="card">
+                  <h4>System Status</h4>
+                  <p>
+                    Blockchain connection:
+                    <span class="status-connected">Connected</span>
+                  </p>
+                  <p>
+                    Database connection:
+                    <span class="status-connected">Connected</span>
+                  </p>
+                </div>
+                <div class="card">
+                  <h4>Statistics</h4>
+                  <p>Total Breeders: <span id="total-breeders">0</span></p>
+                  <p>Pending Applications: <span id="pending-count">0</span></p>
+                  <p>Total Animals: <span id="total-animals">0</span></p>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script
+      crossorigin="anonymous"
+      src="//unpkg.com/same-runtime/dist/index.global.js"
+    ></script>
+    <script src="/Frontend/js/script.js"></script>
+  </body>
+</html>
