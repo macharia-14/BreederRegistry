@@ -20,36 +20,10 @@
         <button class="menu-toggle" id="menu-toggle">
           <i class="fas fa-bars"></i>
         </button>
-        <div class="search-box">
-          <i class="fas fa-search"></i>
-          <input type="text" placeholder="Search here..." />
-        </div>
+       
       </div>
-      <div class="header-right">
-        <div class="notification-container">
-          <button class="notification-bell">
-            <i class="fas fa-bell"></i>
-            <span class="notification-badge" id="notification-badge">0</span>
-          </button>
-
-          <!-- Notification Dropdown -->
-          <div class="notification-dropdown">
-            <div class="notification-header">
-              <h3 class="notification-title">Notifications</h3>
-              <button class="mark-all-read" onclick="markAllAsRead()">
-                Mark all read
-              </button>
-            </div>
-            <div class="notification-list" id="notification-list">
-              <!-- Notifications will be loaded here -->
-            </div>
-          </div>
-        </div>
-        <div class="user-profile">
-          <img src="./images/admin_logo.png" alt="User" />
-          <span>Admin</span>
-          <span class="verified-badge">VERIFIED</span>
-        </div>
+      
+        
         <button class="logout-btn" onclick="logout()">
           <i class="fas fa-sign-out-alt"></i>
         </button>
@@ -59,8 +33,8 @@
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
       <div class="logo">
-        <div class="logo-icon">M</div>
-        <span class="logo-text">Mkulima Mdogo</span>
+        <div class="logo-icon">A</div>
+        <span class="logo-text">Agritrack</span>
       </div>
 
       <nav class="nav-menu">
@@ -76,18 +50,12 @@
           <i class="fas fa-venus-mars"></i>
           <span>Breeding Events</span>
         </a>
-        <a href="#" class="nav-item" data-section="records-page">
-          <i class="fas fa-book"></i>
-          <span>My Records</span>
-        </a>
+       
         <a href="#" class="nav-item" data-section="lineage-page">
           <i class="fas fa-sitemap"></i>
           <span>Lineage Query</span>
         </a>
-        <a href="#" class="nav-item" data-section="settings-page">
-          <i class="fas fa-cog"></i>
-          <span>Settings</span>
-        </a>
+        
       </nav>
     </div>
 
@@ -95,35 +63,21 @@
     <main class="main-content">
       <!-- Dashboard Overview Page -->
       <div id="dashboard-page" class="page">
-        <div class="welcome-card">
-          <h1>Welcome, John Smith</h1>
-          <p>Herd Prefix: ABC Ranch • Status: <strong>VERIFIED</strong></p>
-          <p>
-            Manage your animal registry with blockchain-powered transparency
-          </p>
-        </div>
+        
 
         <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-icon">✅</div>
-            <div class="stat-value">VERIFIED</div>
-            <div class="stat-label">Account Status</div>
-          </div>
+          
           <div class="stat-card">
             <div class="stat-icon">🐄</div>
-            <div class="stat-value">47</div>
+            <div class="stat-value" id="animalsCount">47</div>
             <div class="stat-label">Animals Registered</div>
           </div>
           <div class="stat-card">
             <div class="stat-icon">📜</div>
-            <div class="stat-value">23</div>
+            <div class="stat-value" id="eventsCount">23</div>
             <div class="stat-label">Breeding Events</div>
           </div>
-          <div class="stat-card">
-            <div class="stat-icon">⛓️</div>
-            <div class="stat-value">0x4f2a...</div>
-            <div class="stat-label">Latest Block Hash</div>
-          </div>
+          
         </div>
       </div>
 
@@ -134,7 +88,7 @@
           <form id="registerForm">
             <div class="form-group">
               <label for="animalType">Animal Type</label>
-              <select id="animalType" required>
+              <select id="animalType" name="animalType" required>
                 <option value="">Select Animal Type</option>
                 <option value="cattle">Cattle</option>
                 <option value="sheep">Sheep</option>
@@ -142,30 +96,31 @@
                 <option value="pig">Pig</option>
                 <option value="horse">Horse</option>
                 <option value="dog">Dog</option>
-                <option value="cat">Cat</option>
+                
               </select>
             </div>
-            <div class="form-group">
-              <label for="breed">Breed</label>
-              <select id="breed" required disabled>
-                <option value="">Select Animal Type First</option>
-              </select>
-            </div>
+            
             <div class="form-group">
               <label for="gender">Gender</label>
-              <select id="gender" required>
+              <select id="gender" name="gender" required>
                 <option value="">Select Gender</option>
                 <option value="male">Male</option>
                 <option value="female">Female</option>
               </select>
             </div>
             <div class="form-group">
+              <label for="breed">Breed</label>
+              <select id="breed" name="breed" required disabled>
+                <option value="">Select Animal Type First</option>
+              </select>
+            </div>
+            <div class="form-group">
               <label for="dob">Date of Birth</label>
-              <input type="date" id="dob" required />
+              <input type="date" id="dob" name="dob" required />
             </div>
             <div class="form-group">
               <label for="parent1">Sire/Father ID (Optional)</label>
-              <select id="parent1">
+              <select id="parent1" name="parent1">
                 <option value="">Select Sire</option>
                 <option value="ABC-001">ABC-001 (Male Angus)</option>
                 <option value="ABC-002">ABC-002 (Male Hereford)</option>
@@ -174,7 +129,7 @@
             </div>
             <div class="form-group">
               <label for="parent2">Dam/Mother ID (Optional)</label>
-              <select id="parent2">
+              <select id="parent2" name="parent2">
                 <option value="">Select Dam</option>
                 <option value="ABC-004">ABC-004 (Female Angus)</option>
                 <option value="ABC-005">ABC-005 (Female Hereford)</option>
@@ -195,7 +150,7 @@
             "
           >
             <strong>Note:</strong> Animal ID will be auto-generated based on
-            your herd prefix and registration sequence.
+            your farm prefix and registration sequence.
           </div>
         </div>
       </div>
@@ -207,7 +162,7 @@
           <form id="breedingForm">
             <div class="form-group">
               <label for="breedingMethod">Breeding Method</label>
-              <select id="breedingMethod" required>
+              <select id="breedingMethod" name="breedingMethod" required>
                 <option value="">Select Breeding Method</option>
                 <option value="natural">Natural Mating</option>
                 <option value="ai">Artificial Insemination (AI)</option>
@@ -219,7 +174,7 @@
             <!-- Dam (Mother) - Always required -->
             <div class="form-group">
               <label for="dam">Dam/Mother ID</label>
-              <select id="dam" required>
+              <select id="dam" name="dam" required>
                 <option value="">Select Dam</option>
                 <option value="ABC-004">ABC-004 (Female Angus)</option>
                 <option value="ABC-005">ABC-005 (Female Hereford)</option>
@@ -231,7 +186,7 @@
             <div id="sireSection">
               <div class="form-group">
                 <label for="sire" id="sireLabel">Sire/Father ID</label>
-                <select id="sire">
+                <select id="sire" name="sire">
                   <option value="">Select Sire</option>
                   <option value="ABC-001">ABC-001 (Male Angus)</option>
                   <option value="ABC-002">ABC-002 (Male Hereford)</option>
@@ -247,6 +202,7 @@
                 <input
                   type="text"
                   id="semenSource"
+                  name="semenSource"
                   placeholder="e.g., Bull Name, Stud Book #, or Donor ID"
                 />
               </div>
@@ -255,6 +211,7 @@
                 <input
                   type="text"
                   id="aiTechnician"
+                  name="aiTechnician"
                   placeholder="Name of certified technician"
                 />
               </div>
@@ -263,6 +220,7 @@
                 <input
                   type="text"
                   id="batchNumber"
+                  name="batchNumber"
                   placeholder="Semen batch or straw identification"
                 />
               </div>
@@ -275,6 +233,7 @@
                 <input
                   type="text"
                   id="donorDam"
+                  name="donorDam"
                   placeholder="Original egg/embryo donor"
                 />
               </div>
@@ -283,6 +242,7 @@
                 <input
                   type="text"
                   id="embryoId"
+                  name="embryoId"
                   placeholder="Embryo identification number"
                 />
               </div>
@@ -290,12 +250,12 @@
 
             <div class="form-group">
               <label for="eventDate">Breeding/Service Date</label>
-              <input type="date" id="eventDate" required />
+              <input type="date" id="eventDate" name="eventDate" required />
             </div>
 
             <div class="form-group">
               <label for="expectedDue">Expected Due Date (Optional)</label>
-              <input type="date" id="expectedDue" />
+              <input type="date" id="expectedDue" name="expectedDue" />
             </div>
 
             <div class="form-group">
@@ -303,6 +263,7 @@
               <input
                 type="text"
                 id="offspring"
+                name="offspring"
                 placeholder="Leave empty if not yet born"
               />
             </div>
@@ -311,6 +272,7 @@
               <label for="notes">Additional Notes</label>
               <textarea
                 id="notes"
+                name="notes"
                 rows="3"
                 placeholder="Any additional breeding information, conditions, or observations"
               ></textarea>
@@ -345,7 +307,7 @@
                 <th>Gender</th>
                 <th>Date of Birth</th>
                 <th>Parents</th>
-                <th>Blockchain Tx</th>
+                
                 <th>Status</th>
               </tr>
             </thead>
@@ -357,7 +319,7 @@
                 <td>Male</td>
                 <td>2023-03-15</td>
                 <td>Sire: -, Dam: -</td>
-                <td>0x7b3f2a1c...</td>
+               
                 <td>
                   <span class="status-badge status-verified">Verified</span>
                 </td>
@@ -369,7 +331,7 @@
                 <td>Female</td>
                 <td>2023-05-22</td>
                 <td>Sire: -, Dam: -</td>
-                <td>0x9e4d5c2b...</td>
+                
                 <td>
                   <span class="status-badge status-verified">Verified</span>
                 </td>
@@ -381,7 +343,7 @@
                 <td>Female</td>
                 <td>2023-08-10</td>
                 <td>Sire: ABC-001, Dam: ABC-002</td>
-                <td>0x1a6f8e3d...</td>
+                
                 <td>
                   <span class="status-badge status-pending">Pending</span>
                 </td>
@@ -424,8 +386,8 @@
               <input type="text" id="breederName" value="John Smith" disabled />
             </div>
             <div class="form-group">
-              <label for="herdPrefix">Herd Prefix</label>
-              <input type="text" id="herdPrefix" value="ABC Ranch" disabled />
+              <label for="farmPrefix">Farm Prefix</label>
+              <input type="text" id="farmPrefix" value="ABC Ranch" disabled />
             </div>
             <div class="form-group">
               <label for="contactEmail">Contact Email</label>

@@ -4,38 +4,28 @@
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="/vite.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Public Lineage Search</title>
+  <title>Animal Lineage Search</title>
   <link rel="stylesheet" href="/Frontend/css/style.css" />
+  <link rel="stylesheet" href="/Frontend/css/lineage_search.css" />
 </head>
 <body>
   <nav class="nav">
     <div class="container">
-      <a href="/Frontend/admin.html" class="btn btn-text">← Back to Home</a>
-      <h1>Animal Lineage Search</h1>
+      <a href="/Frontend/index.html" class="btn btn-text">← Back to Home</a>
+      <h1>Search Animal Lineage</h1>
     </div>
   </nav>
 
   <main class="main">
-    <div class="container">
-      <div class="search-container">
-        <h2>Search Animal Lineage</h2>
-        <p>Enter an animal ID to view its breeding history and lineage information.</p>
-
-        <form id="public-lineage-form" class="form">
-          <div class="form-group">
-            <label for="publicSearchId">Animal ID *</label>
-            <input type="text" id="publicSearchId" name="publicSearchId" required placeholder="e.g., ABC001" />
-          </div>
-
-          <button type="submit" class="btn btn-primary">Search Lineage</button>
-        </form>
-
-        <div id="public-lineage-results" class="lineage-results"></div>
-      </div>
+    <div class="lineage-search-container">
+      <form id="lineage-search-form">
+        <input type="text" id="lineage-search-input" placeholder="Enter Animal ID (e.g., ABC001)" required />
+        <button type="submit">Search Lineage</button>
+      </form>
+      <div id="lineage-results"></div>
     </div>
   </main>
 
-  <script crossorigin="anonymous" src="//unpkg.com/same-runtime/dist/index.global.js"></script>
-  <script src="/frontend/js/script.js"></script>
+  <script src="/Frontend/js/script.js"></script>
 </body>
 </html>

@@ -30,43 +30,22 @@
             </div>
 
             <div class="form-group">
-              <label for="breederType">Breeder Type *</label>
-              <select
-                id="breederType"
-                name="breeder_type"
-                required
-                onchange="toggleCompanyFields()"
-              >
-                <option value="individual">Individual</option>
-                <option value="company">Company</option>
+              <label for="animalType">Animal Type *</label>
+              <select id="animalType" name="animal_type" required>
+                <option value="">Select Animal Type</option>
+                <option value="cattle">Cattle</option>
+                <option value="sheep">Sheep</option>
+                <option value="goat">Goat</option>
+                <option value="dog">Dog</option>
               </select>
             </div>
 
-            <div id="companyFields" style="display: none">
-              <div class="form-group">
-                <label for="farmName">Farm Name *</label>
-                <input type="text" id="farmName" name="farm_name" />
-              </div>
-
-              <div class="form-group">
-                <label for="farmPrefix"
-                  >Farm Prefix (3 uppercase letters) *</label
-                >
-                <input
-                  type="text"
-                  id="farmPrefix"
-                  name="farm_prefix"
-                  pattern="[A-Z]{3}"
-                  maxlength="3"
-                  title="Please enter 3 uppercase letters."
-                />
-                <div
-                  id="prefix-validation-message"
-                  class="validation-message"
-                ></div>
-              </div>
+            <div class="form-group">
+              <label for="farmName">Farm Name *</label>
+              <input type="text" id="farmName" name="farm_name" required />
             </div>
 
+           
             <div class="form-group">
               <label for="farmLocation">Farm Location *</label>
               <input
@@ -78,8 +57,8 @@
             </div>
 
             <div class="form-group">
-              <label for="county">County</label>
-              <input type="text" id="county" name="county" />
+              <label for="county">County *</label>
+              <input type="text" id="county" name="county" required />
             </div>
 
             <div class="form-group">
@@ -123,13 +102,7 @@
     </main>
 
     <script>
-      function toggleCompanyFields() {
-        const type = document.getElementById("breederType").value;
-        const companyFields = document.getElementById("companyFields");
-        document.getElementById("farmName").required = type === "company";
-        document.getElementById("farmPrefix").required = type === "company";
-        companyFields.style.display = type === "company" ? "block" : "none";
-      }
+     
 
       // Asynchronous validation for farm prefix uniqueness
       (function () {
@@ -217,10 +190,7 @@
       })();
     </script>
 
-    <script
-      crossorigin="anonymous"
-      src="//unpkg.com/same-runtime/dist/index.global.js"
-    ></script>
+    
     <script src="/Frontend/js/script.js"></script>
   </body>
 </html>

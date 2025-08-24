@@ -419,79 +419,388 @@
             color: #ddd;
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
+/* Enhanced Mobile Responsive Design */
+@media (max-width: 1024px) {
+  .container {
+    padding: 0 1.5rem;
+  }
+  
+  .search-box input {
+    width: 250px;
+  }
+  
+  .settings-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .card {
+    padding: 1.5rem;
+  }
+}
 
-            .sidebar.active {
-                transform: translateX(0);
-            }
+@media (max-width: 768px) {
+  /* General Mobile Styles */
+  .container {
+    padding: 0 1rem;
+  }
+  
+  /* Header Mobile Optimization */
+  .top-header {
+    padding: 0 1rem;
+    height: 60px;
+  }
+  
+  .menu-toggle {
+    display: block;
+  }
+  
+  .search-box {
+    display: none;
+  }
+  
+  .header-right {
+    gap: 0.75rem;
+  }
+  
+  .user-profile span {
+    display: none;
+  }
+  
+  .notification-bell {
+    padding: 6px;
+  }
+  
+  .notification-dropdown {
+    width: 280px;
+    right: -15px;
+  }
+  
+  /* Sidebar Mobile Behavior */
+  .sidebar {
+    transform: translateX(-100%);
+    width: 280px;
+  }
+  
+  .sidebar.active {
+    transform: translateX(0);
+  }
+  
+  /* Main Content */
+  .admin-content {
+    margin-left: 0;
+    width: 100%;
+    padding: 1rem;
+  }
+  
+  .admin-section {
+    padding: 1rem;
+  }
+  
+  .admin-section h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Dashboard Cards */
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) !important;
+    gap: 1rem !important;
+    margin-bottom: 1.5rem !important;
+  }
+  
+  .stat-card {
+    padding: 1.25rem !important;
+  }
+  
+  .stat-icon {
+    font-size: 2rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+  
+  .stat-value {
+    font-size: 1.5rem !important;
+  }
+  
+  .stat-card h4 {
+    font-size: 0.9rem !important;
+    margin: 0.5rem 0 !important;
+  }
+  
+  /* Tables */
+  #pending-applications,
+  #rejected-applications,
+  #verified-farmers {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 -1rem;
+    padding: 0 1rem;
+  }
+  
+  .data-table {
+    font-size: 0.875rem;
+    min-width: 800px;
+    width: 100%;
+  }
+  
+  .data-table th,
+  .data-table td {
+    padding: 0.75rem 0.5rem;
+    white-space: nowrap;
+  }
+  
+  .action-btn {
+    white-space: nowrap;
+    margin-bottom: 0.25rem;
+    font-size: 0.75rem;
+    padding: 0.5rem 0.75rem;
+  }
+  
+  /* Settings */
+  .settings-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .card {
+    padding: 1.5rem;
+  }
+  
+  .card h4 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .card p {
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  /* Empty State */
+  .empty-state {
+    padding: 2rem 1rem;
+  }
+  
+  .empty-state i {
+    font-size: 2.5rem;
+  }
+}
 
-            .admin-content {
-                margin-left: 0;
-                width: 100%;
-                overflow-x: hidden; /* Prevent header from scrolling horizontally */
-            }
+@media (max-width: 480px) {
+  /* Extra Small Devices */
+  .top-header {
+    padding: 0 0.75rem;
+    height: 55px;
+  }
+  
+  .header-right {
+    gap: 0.5rem;
+  }
+  
+  .notification-bell {
+    padding: 5px;
+  }
+  
+  .notification-dropdown {
+    width: 250px;
+  }
+  
+  .user-profile {
+    padding: 5px;
+  }
+  
+  .logout-btn {
+    padding: 5px;
+  }
+  
+  .admin-content {
+    padding: 0.75rem;
+  }
+  
+  .admin-section {
+    padding: 0.75rem;
+  }
+  
+  .admin-section h3 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+  
+  .stat-card {
+    padding: 1rem !important;
+  }
+  
+  .stat-icon {
+    font-size: 1.75rem !important;
+  }
+  
+  .stat-value {
+    font-size: 1.25rem !important;
+  }
+  
+  .stat-card h4 {
+    font-size: 0.8rem !important;
+  }
+  
+  .data-table {
+    font-size: 0.8rem;
+    min-width: 700px;
+  }
+  
+  .data-table th,
+  .data-table td {
+    padding: 0.5rem 0.375rem;
+  }
+  
+  .action-btn {
+    padding: 0.375rem 0.5rem;
+    font-size: 0.7rem;
+    margin-right: 0.125rem;
+  }
+  
+  .card {
+    padding: 1.25rem;
+  }
+  
+  .card h4 {
+    font-size: 1rem;
+  }
+  
+  .card p {
+    font-size: 0.85rem;
+  }
+  
+  .empty-state {
+    padding: 1.5rem 0.75rem;
+  }
+  
+  .empty-state i {
+    font-size: 2rem;
+  }
+}
 
-            .top-header {
-                padding: 0 20px;
-            }
+/* Touch Device Optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .btn,
+  .nav-item,
+  .menu-toggle,
+  .notification-bell,
+  .user-profile,
+  .logout-btn,
+  .action-btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  input,
+  select,
+  textarea {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+  }
+  
+  .search-box input {
+    padding: 1rem 1rem 1rem 3rem;
+  }
+}
 
-            .menu-toggle {
-                display: block;
-            }
+/* High DPI Screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .admin-section h3,
+  .stat-value,
+  .stat-card h4 {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
 
-            .search-box input {
-                width: 200px;
-            }
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #1a1a1a;
+    color: #ffffff;
+  }
+  
+  .top-header {
+    background: #2d2d2d;
+  }
+  
+  .search-box input {
+    background: #3d3d3d;
+    border-color: #555555;
+    color: #ffffff;
+  }
+  
+  .stat-card,
+  .card,
+  .data-table {
+    background: #2d2d2d;
+    color: #ffffff;
+  }
+  
+  .data-table thead {
+    background: #3d3d3d;
+  }
+  
+  .data-table th {
+    color: #ffffff;
+    border-bottom-color: #404040;
+  }
+  
+  .data-table td {
+    border-bottom-color: #404040;
+  }
+  
+  .data-table tbody tr:hover {
+    background-color: #3d3d3d;
+  }
+  
+  .card h4 {
+    color: #ffffff;
+    border-bottom-color: #404040;
+  }
+  
+  .card p {
+    color: #cccccc;
+  }
+  
+  .empty-state {
+    color: #cccccc;
+  }
+}
 
-            .header-right {
-                gap: 10px;
-            }
-
-            .user-profile span {
-                display: none;
-            }
-
-            .admin-section {
-                padding: 20px 15px;
-                overflow-x: auto; /* Allow content like tables to scroll */
-                -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-            }
-
-            .settings-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .data-table {
-                font-size: 14px;
-        /* Set a min-width to prevent columns from squishing too much.
-           The value can be adjusted based on the content. */
-        min-width: 800px;
-            }
-
-            .data-table th,
-            .data-table td {
-                padding: 12px 8px;
-            }
-    .action-btn {
-        white-space: nowrap;
-    }
-        }
-
-        @media (max-width: 480px) {
-            .search-box {
-                display: none;
-            }
-
-            .data-table {
-                font-size: 12px;
-            }
-
-            .action-btn {
-                padding: 4px 8px;
-                font-size: 10px;
-            }
-          }
+/* Print Styles */
+@media print {
+  .sidebar,
+  .top-header,
+  .btn,
+  .notification-bell,
+  .action-btn {
+    display: none !important;
+  }
+  
+  .admin-content {
+    margin-left: 0;
+    width: 100%;
+  }
+  
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .stat-card,
+  .card,
+  .data-table {
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+  
+  .data-table {
+    page-break-inside: avoid;
+  }
+}

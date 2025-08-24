@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Blockchain Animal Breed Registry</title>
+    <title>Animal Breed Registry System</title>
     <link rel="stylesheet" href="/Frontend/css/style.css" />
   </head>
   <body>
@@ -13,11 +13,9 @@
       <!-- Hero Section -->
       <header class="hero">
         <div class="container">
-          <h1 class="hero-title">
-            Blockchain-Based Animal Breed Registry System
-          </h1>
+          <h1 class="hero-title">Animal Breed Registry System</h1>
           <p class="hero-tagline">
-            Tamper-proof breed records with verified farmer identities.
+            Breed records with verified farmer identities.
           </p>
           <div class="hero-buttons">
             <a href="/Frontend/register.html" class="btn btn-primary"
@@ -27,27 +25,38 @@
           </div>
           <!-- Prominent Search Section -->
           <div class="hero-search-section">
-            <h2 class="search-title">Search Animal Lineage</h2>
+            <h2 class="search-title">Search Animal Breeders</h2>
             <form id="hero-search-form" class="hero-search-form">
               <div class="search-input-container">
                 <input
                   type="text"
                   id="hero-search-input"
-                  placeholder="Enter Animal ID (e.g., ABC001)"
+                  placeholder="Enter Breed Name (e.g., Angus)"
                   required
                   class="hero-search-input"
                 />
                 <button type="submit" class="hero-search-btn">
-                  <span>🔍 Search</span>
+                  <span>🔍 Search Breeders</span>
                 </button>
               </div>
             </form>
             <p class="search-hint">
-              Find any animal's complete breeding history instantly
+              Find breeders who specialize in specific animal breeds
             </p>
           </div>
         </div>
       </header>
+
+      <!-- Navigation to Public Search -->
+      <section class="public-search-section">
+        <div class="container">
+          <h2>Search Animal Lineage</h2>
+          <p>Look up any animal's breeding history and lineage</p>
+          <a href="/Frontend/lineage_search.html" class="btn btn-outline"
+            >Public Lineage Search</a
+          >
+        </div>
+      </section>
 
       <!-- Info Section -->
       <section class="info-section">
@@ -56,10 +65,7 @@
           <div class="info-grid">
             <div class="info-card">
               <h3>🔒 Secure Records</h3>
-              <p>
-                All animal breeding records are stored on the blockchain,
-                ensuring tamper-proof documentation.
-              </p>
+              <p>All animal breeding records are stored safely.</p>
             </div>
             <div class="info-card">
               <h3>✅ Verified Breeders</h3>
@@ -75,40 +81,19 @@
                 search system.
               </p>
             </div>
-            <div class="info-card">
-              <h3>📱 Mobile Friendly</h3>
-              <p>
-                Access the system from any device with our responsive design.
-              </p>
-            </div>
           </div>
-        </div>
-      </section>
-
-      <!-- Navigation to Public Search -->
-      <section class="public-search-section">
-        <div class="container">
-          <h2>Search Animal Lineage</h2>
-          <p>Look up any animal's breeding history and lineage</p>
-          <a href="/Frontend/" class="btn btn-outline">Public Lineage Search</a>
         </div>
       </section>
 
       <!-- Footer -->
       <footer class="footer">
         <div class="container">
-          <p>
-            &copy; 2025 Blockchain Animal Breed Registry. All rights reserved.
-          </p>
-          <p>Contact: info@animalregistry.com | Phone: +1 (555) 123-4567</p>
+          <p>&copy; 2025 Animal Breed Registry. All rights reserved.</p>
+          <p>Contact: machariaelick1454@gmail.com | Phone:</p>
         </div>
       </footer>
     </div>
 
-    <script
-      crossorigin="anonymous"
-      src="//unpkg.com/same-runtime/dist/index.global.js"
-    ></script>
     <script src="/Frontend/js/script.js"></script>
   </body>
 </html>

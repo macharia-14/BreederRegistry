@@ -1,0 +1,380 @@
+/* Lineage Search Page Specific Styles */
+.lineage-search-container {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e1e5e9;
+}
+
+.lineage-search-container h1 {
+    text-align: center;
+    color: #2c3e50;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+#lineage-search-form {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+#lineage-search-input {
+    flex: 1;
+    min-width: 300px;
+    padding: 1rem 1.5rem;
+    border: 2px solid #e1e5e9;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+}
+
+#lineage-search-input:focus {
+    outline: none;
+    border-color: #667eea;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    transform: translateY(-2px);
+}
+
+#lineage-search-input::placeholder {
+    color: #9ca3af;
+}
+
+#lineage-search-form button {
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg,#2ecc71 0%, #27ae60 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+#lineage-search-form button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+#lineage-search-form button:active {
+    transform: translateY(0);
+}
+
+/* Lineage Results Styling */
+#lineage-results {
+    margin-top: 2rem;
+}
+
+.lineage-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #2c3e50;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+/* Lineage Tree Visualization */
+.lineage-tree {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.generation {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.animal-card {
+    background: white;
+    border: 2px solid #e1e5e9;
+    border-radius: 12px;
+    padding: 1.5rem;
+    min-width: 250px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.animal-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    border-color: #8af798;
+}
+
+.animal-card.foundation {
+    border-color: #27ae60;
+    background: linear-gradient(135deg, #f0f9f4 0%, #e8f5e8 100%);
+}
+
+.animal-card.foundation::before {
+    content: '⭐';
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: #27ae60;
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+.animal-card h3 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.animal-card p {
+    margin: 0.5rem 0;
+    color: #6b7280;
+    font-size: 0.95rem;
+}
+
+.animal-card strong {
+    color: #374151;
+    font-weight: 600;
+}
+
+/* Connection Lines */
+.generation-connector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    position: relative;
+}
+
+.generation-connector::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #667eea, transparent);
+    transform: translate(-50%, -50%);
+}
+
+/* Parent-Child Relationships */
+.parents-container {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 1rem;
+}
+
+.parent-card {
+    background: #f8f9fa;
+    border: 1px solid #e1e5e9;
+    border-radius: 8px;
+    padding: 1rem;
+    min-width: 200px;
+}
+
+.parent-card h4 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+/* Breeding Events */
+.breeding-events {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: #f0f9ff;
+    border-radius: 8px;
+    border-left: 4px solid #3b82f6;
+}
+
+.breeding-events h4 {
+    color: #1e40af;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+.breeding-event {
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    background: white;
+    border-radius: 6px;
+    border-left: 3px solid #93c5fd;
+}
+
+/* Offspring */
+.offspring-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.offspring-chip {
+    background: #e0f2fe;
+    color: #0369a1;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* Summary Card */
+.summary-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-top: 2rem;
+}
+
+.summary-card h4 {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.summary-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+/* Loading State */
+.loading {
+    text-align: center;
+    padding: 2rem;
+    color: #6b7280;
+}
+
+.loading::after {
+    content: '...';
+    animation: dots 1.5s infinite;
+}
+
+@keyframes dots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60%, 100% { content: '...'; }
+}
+
+/* Error State */
+.error-message {
+    background: #fee2e2;
+    color: #dc2626;
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid #dc2626;
+    margin: 1rem 0;
+}
+
+/* No Results */
+.no-results {
+    text-align: center;
+    padding: 3rem;
+    color: #6b7280;
+    font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .lineage-search-container {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+    
+    .lineage-search-container h1 {
+        font-size: 2rem;
+    }
+    
+    #lineage-search-form {
+        flex-direction: column;
+    }
+    
+    #lineage-search-input {
+        min-width: unset;
+        width: 100%;
+    }
+    
+    #lineage-search-form button {
+        width: 100%;
+    }
+    
+    .generation {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .animal-card {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .parents-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .parent-card {
+        width: 100%;
+        max-width: 250px;
+    }
+    
+    .summary-stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .lineage-search-container {
+        padding: 1rem;
+        margin: 0.5rem;
+    }
+    
+    .lineage-search-container h1 {
+        font-size: 1.75rem;
+    }
+    
+    .animal-card {
+        padding: 1rem;
+    }
+    
+    .breeding-events {
+        padding: 0.75rem;
+    }
+}
