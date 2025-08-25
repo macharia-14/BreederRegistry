@@ -795,7 +795,7 @@
         }
       }
 
-      /* Dark Mode Support */
+      /* Dark Mode Support 
       @media (prefers-color-scheme: dark) {
         body {
           background-color: #1a1a1a;
@@ -841,6 +841,7 @@
           border-color: #404040;
         }
       }
+        */
 
       /* Print Styles */
       @media print {

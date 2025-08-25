@@ -1,5 +1,6 @@
 # backend/app/routes/breeders.py
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from typing import List
 from .. import models, schemas, database, crud
@@ -12,7 +13,8 @@ def get_breed_summary(breed: str, db: Session = Depends(database.get_db)):
     """
     Get breed summary from the public_breed_summary view.
     """
-    results = db.execute("SELECT * FROM public.public_breed_summary WHERE breed = :breed", {'breed': breed}).fetchall()
+    from sqlalchemy import text
+    results = db.execute(text("SELECT * FROM public.public_breed_summary WHERE breed = :breed"), {'breed': breed}).fetchall()
     
     if not results:
         raise HTTPException(status_code=404, detail="Breed not found")
@@ -69,6 +71,14 @@ def login(payload: schemas.BreederLogin, db: Session = Depends(database.get_db))
     if not breeder or not verify_password(payload.password, breeder.password_hash):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     return {"success": True, "breeder_id": breeder.id, "status": breeder.status}
+
+# New endpoint to get breeder details by ID
+@router.get("/{breeder_id}", response_model=schemas.BreederResponse)
+def get_breeder_details(breeder_id: int, db: Session = Depends(database.get_db)):
+    breeder = db.query(models.Breeder).filter(models.Breeder.id == breeder_id).first()
+    if not breeder:
+        raise HTTPException(status_code=404, detail="Breeder not found")
+    return breeder
 
 # Animal endpoints
 @router.get("/{breeder_id}/animals", response_model=List[schemas.AnimalResponse])
@@ -135,3 +145,7 @@ def create_breeding_event_for_breeder(
             raise HTTPException(status_code=400, detail="Invalid offspring ID")
     
     return crud.create_breeding_event(db=db, breeding_event=breeding_event, breeder_id=breeder_id)
+
+@router.get("/dashboard", include_in_schema=False)
+async def read_dashboard():
+    return FileResponse('Frontend/breeders/dashboard.html')

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Animal Breed Registry System</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <!-- Landing Page -->
+    <div id="landing-page" class="page active">
+      <!-- Hero Section -->
+      <header class="hero">
+        <div class="container">
+          <h1 class="hero-title">Animal Breed Registry System</h1>
+          <p class="hero-tagline">
+            Breed records with verified farmer identities.
+          </p>
+          <div class="hero-buttons">
+            <a href="register.html" class="btn btn-primary">Register as Breeder</a>
+            <a href="login.html" class="btn btn-secondary">Login</a>
+          </div>
+          <!-- Prominent Search Section -->
+          <div class="hero-search-section">
+            <h2 class="search-title">Search Animal Breeders</h2>
+            <form id="hero-search-form" class="hero-search-form">
+              <div class="search-input-container">
+                <input
+                  type="text"
+                  id="hero-search-input"
+                  placeholder="Enter Breed Name (e.g., Angus)"
+                  required
+                  class="hero-search-input"
+                />
+                <button type="submit" class="hero-search-btn">
+                  <span>🔍 Search Breeders</span>
+                </button>
+              </div>
+            </form>
+            <p class="search-hint">
+              Find breeders who specialize in specific animal breeds
+            </p>
+          </div>
+        </div>
+      </header>
+
+      <!-- Navigation to Public Search -->
+      <section class="public-search-section">
+        <div class="container">
+          <h2>Search Animal Lineage</h2>
+          <p>Look up any animal's breeding history and lineage</p>
+          <a href="lineage_search.html" class="btn btn-outline">Public Lineage Search</a>
+        </div>
+      </section>
+
+      <!-- Info Section -->
+      <section class="info-section">
+        <div class="container">
+          <h2>About the System</h2>
+          <div class="info-grid">
+            <div class="info-card">
+              <h3>🔒 Secure Records</h3>
+              <p>All animal breeding records are stored safely.</p>
+            </div>
+            <div class="info-card">
+              <h3>✅ Verified Breeders</h3>
+              <p>
+                Only verified and approved breeders can register animals and
+                record breeding events.
+              </p>
+            </div>
+            <div class="info-card">
+              <h3>🔍 Public Lineage</h3>
+              <p>
+                Anyone can search and verify animal lineage using our public
+                search system.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <div class="container">
+          <p>&copy; 2025 Animal Breed Registry. All rights reserved.</p>
+          <p>Contact: machariaelick1454@gmail.com | Phone:</p>
+        </div>
+      </footer>
+    </div>
+
+    <script src="js/script.js"></script>
+  </body>
+</html>

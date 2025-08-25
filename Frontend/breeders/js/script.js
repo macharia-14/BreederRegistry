@@ -177,28 +177,51 @@ document.addEventListener("DOMContentLoaded", () => {
     settingsForm.addEventListener("submit", handleSettingsUpdate);
   }
 
-  // Check if user is logged in and populate dropdowns
-  const savedBreeder = localStorage.getItem('breeder');
-  if (savedBreeder) {
-    try {
-      currentBreeder = JSON.parse(savedBreeder);
-      // Validate that breeder_id exists
-      if (!currentBreeder || !currentBreeder.breeder_id) {
-        console.error('Invalid breeder data in localStorage:', currentBreeder);
-        localStorage.removeItem('breeder');
-        currentBreeder = null;
-        showMessage('Please log in again', 'error');
-        return;
-      }
-      populateAnimalDropdowns();
-      loadDashboardData();
-    } catch (error) {
-      console.error('Error parsing breeder data:', error);
+// Add event listener for records page navigation
+const recordsNavItem = document.querySelector('[data-section="records-page"]');
+if (recordsNavItem) {
+  console.log('Records navigation item found:', recordsNavItem);
+  recordsNavItem.addEventListener('click', () => {
+    console.log('Records page clicked, loading animal records...');
+    // Load animal records when navigating to records page
+    setTimeout(loadAnimalRecords, 100); // Small delay to ensure page is visible
+  });
+} else {
+  console.error('Records navigation item NOT found!');
+  // Debug: Log all navigation items to see what's available
+  const allNavItems = document.querySelectorAll('.nav-item');
+  console.log('All navigation items found:', allNavItems.length);
+  allNavItems.forEach((item, index) => {
+    console.log(`Nav item ${index}:`, item.textContent.trim(), item.getAttribute('data-section'));
+  });
+}
+
+// Check if user is logged in and populate dropdowns
+const savedBreeder = localStorage.getItem('breeder');
+if (savedBreeder) {
+  try {
+    currentBreeder = JSON.parse(savedBreeder);
+    // Validate that breeder_id exists
+    if (!currentBreeder || !currentBreeder.breeder_id) {
+      console.error('Invalid breeder data in localStorage:', currentBreeder);
       localStorage.removeItem('breeder');
       currentBreeder = null;
-      showMessage('Session expired. Please log in again.', 'error');
+      showMessage('Please log in again', 'error');
+      return;
     }
+    
+    // Get breeder details including animal_type
+    getBreederDetails().then(() => {
+      populateAnimalDropdowns();
+      loadDashboardData();
+    });
+  } catch (error) {
+    console.error('Error parsing breeder data:', error);
+    localStorage.removeItem('breeder');
+    currentBreeder = null;
+    showMessage('Session expired. Please log in again.', 'error');
   }
+}
 });
 
 // API Base URL - Use the same origin as the current page to avoid CORS issues
@@ -288,6 +311,19 @@ function logout() {
     showMessage('Logged out successfully', 'success');
     // Redirect to index.html after logout
     window.location.href = '/Frontend/index.html';
+}
+
+// Breeder API functions
+async function getBreederDetails() {
+    if (!currentBreeder) {
+        throw new Error('Not authenticated');
+    }
+    
+    const breederData = await apiRequest(`/breeders/${currentBreeder.breeder_id}`);
+    // Store the breeder's animal type for filtering
+    currentBreeder.animal_type = breederData.animal_type;
+    localStorage.setItem('breeder', JSON.stringify(currentBreeder));
+    return breederData;
 }
 
 // Animal API functions
@@ -381,23 +417,26 @@ async function handleAnimalRegistration(event) {
     try {
         // Debug: Check if form elements exist and have values
         console.log('Form elements:');
-        const animalType = document.getElementById('animalType');
         const breed = document.getElementById('breed');
         const gender = document.getElementById('gender');
         const dob = document.getElementById('dob');
         const parent1 = document.getElementById('parent1');
         const parent2 = document.getElementById('parent2');
         
-        console.log('animalType:', animalType?.value);
         console.log('breed:', breed?.value);
         console.log('gender:', gender?.value);
         console.log('dob:', dob?.value);
         console.log('parent1:', parent1?.value);
         console.log('parent2:', parent2?.value);
         
+        // Use breeder's animal type instead of user selection
+        if (!currentBreeder || !currentBreeder.animal_type) {
+            throw new Error('Breeder animal type not available. Please refresh the page.');
+        }
+        
         // Manually extract values instead of using FormData
         const animalData = {
-            animal_type: animalType.value,
+            animal_type: currentBreeder.animal_type,
             breed: breed.value,
             gender: gender.value,
             date_of_birth: dob.value,
@@ -463,6 +502,9 @@ async function populateAnimalDropdowns(animalType = null) {
     try {
         const animals = await getAnimals();
         
+        // Use breeder's animal type for filtering if not explicitly provided
+        const filterType = animalType || (currentBreeder ? currentBreeder.animal_type : null);
+        
         // Update parent dropdowns in animal registration form
         const parent1Select = document.getElementById('parent1');
         const parent2Select = document.getElementById('parent2');
@@ -472,8 +514,8 @@ async function populateAnimalDropdowns(animalType = null) {
             parent2Select.innerHTML = '<option value="">Select Dam (Optional)</option>';
             
             animals.forEach(animal => {
-                // Filter animals based on the selected animal type
-                if (animalType === null || animal.animal_type === animalType) {
+                // Filter animals based on the breeder's animal type
+                if (filterType === null || animal.animal_type === filterType) {
                     const option = document.createElement('option');
                     option.value = animal.id;
                     option.textContent = `${animal.animal_id} (${animal.gender} ${animal.breed})`;
@@ -496,8 +538,8 @@ async function populateAnimalDropdowns(animalType = null) {
             sireSelect.innerHTML = '<option value="">Select Sire (Optional)</option>';
             
             animals.forEach(animal => {
-                // Filter animals based on the selected animal type
-                if (animalType === null || animal.animal_type === animalType) {
+                // Filter animals based on the breeder's animal type
+                if (filterType === null || animal.animal_type === filterType) {
                     const option = document.createElement('option');
                     option.value = animal.id;
                     option.textContent = `${animal.animal_id} (${animal.gender} ${animal.breed})`;
@@ -516,8 +558,8 @@ async function populateAnimalDropdowns(animalType = null) {
         if (offspringSelect) {
             offspringSelect.innerHTML = '<option value="">Select Offspring (Optional)</option>';
             animals.forEach(animal => {
-                // Filter animals based on the selected animal type
-                if (animalType === null || animal.animal_type === animalType) {
+                // Filter animals based on the breeder's animal type
+                if (filterType === null || animal.animal_type === filterType) {
                     const option = document.createElement('option');
                     option.value = animal.id;
                     option.textContent = `${animal.animal_id} (${animal.breed})`;
@@ -526,7 +568,7 @@ async function populateAnimalDropdowns(animalType = null) {
             });
         }
         
-        console.log('Animal dropdowns populated successfully with', animals.length, 'animals');
+        console.log('Animal dropdowns populated successfully with', animals.length, 'animals filtered by type:', filterType);
         
     } catch (error) {
         console.error('Failed to populate animal dropdowns:', error);
@@ -589,6 +631,70 @@ async function loadDashboardData() {
         
     } catch (error) {
         console.error('Failed to load dashboard data:', error);
+    }
+}
+
+// Animal records loading function
+async function loadAnimalRecords() {
+    try {
+        const animals = await getAnimals();
+        const recordsTableBody = document.getElementById('recordsTableBody');
+        
+        if (!recordsTableBody) {
+            console.error('Records table body not found');
+            return;
+        }
+        
+        // Clear existing rows
+        recordsTableBody.innerHTML = '';
+        
+        if (animals.length === 0) {
+            const emptyRow = document.createElement('tr');
+            emptyRow.innerHTML = `
+                <td colspan="7" style="text-align: center; padding: 20px; color: #666;">
+                    No animals registered yet. <a href="#" onclick="document.querySelector('[data-section=\"register-page\"]').click(); return false;">Register your first animal</a>
+                </td>
+            `;
+            recordsTableBody.appendChild(emptyRow);
+            return;
+        }
+        
+        // Populate table with animal data
+        animals.forEach(animal => {
+            const row = document.createElement('tr');
+            
+            // Format parents information
+            let parentsInfo = 'Sire: -, Dam: -';
+            if (animal.sire_id || animal.dam_id) {
+                const sireInfo = animal.sire_id ? `Sire: ${animal.sire_id}` : 'Sire: -';
+                const damInfo = animal.dam_id ? `Dam: ${animal.dam_id}` : 'Dam: -';
+                parentsInfo = `${sireInfo}, ${damInfo}`;
+            }
+            
+            // Determine status (simple logic for now)
+            const status = animal.created_at ? 'Verified' : 'Pending';
+            const statusClass = status === 'Verified' ? 'status-verified' : 'status-pending';
+            
+            row.innerHTML = `
+                <td>${animal.animal_id}</td>
+                <td>${animal.animal_type}</td>
+                <td>${animal.breed}</td>
+                <td>${animal.gender}</td>
+                <td>${new Date(animal.date_of_birth).toLocaleDateString()}</td>
+                <td>${parentsInfo}</td>
+                <td>
+                    <span class="status-badge ${statusClass}">${status}</span>
+                </td>
+            `;
+            
+            recordsTableBody.appendChild(row);
+        });
+        
+        showMessage('Animal records loaded successfully!', 'success');
+        
+    } catch (error) {
+        console.error('Failed to load animal records:', error);
+        showMessage('Failed to load animal records. Please try again.', 'error');
     }
 }
 

@@ -21,6 +21,7 @@ class BreederResponse(BaseModel):
     id: int
     full_name: str
     national_id: str
+    animal_type: str
     farm_prefix: Optional[str] = None
     status: str
     approved_by: Optional[int] = None

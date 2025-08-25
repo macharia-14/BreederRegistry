@@ -62,21 +62,7 @@ function logout() {
     window.location.href = '/Frontend/index.html';
 }
 
-// Mock Data Functions (Deprecated - kept for backward compatibility)
-async function getAnimals() {
-  console.warn('⚠️ getAnimals() function is deprecated. This function should not be called.');
-  return [];
-}
 
-async function getBreeders() {
-  console.warn('⚠️ getBreeders() function is deprecated. This function should not be called.');
-  return [];
-}
-
-async function getBreedingEvents() {
-  console.warn('⚠️ getBreedingEvents() function is deprecated. This function should not be called.');
-  return [];
-}
 
 // Registration Form Handling
 const registerForm = document.getElementById('register-form');
@@ -156,10 +142,10 @@ if (registerForm) {
         alert(`Registration successful!\nYour farm prefix is: ${result.farm_prefix || 'Generated'}\nWe will be in contact for verification purposes.`);
         registerForm.reset();
         
+        // Clean up any breeder type related elements if they exist
         const breederTypeSelect = document.getElementById('breederType');
         if (breederTypeSelect) {
-          breederTypeSelect.value = 'individual';
-          toggleCompanyFields();
+          breederTypeSelect.value = '';
         }
         
         setTimeout(() => {
@@ -601,75 +587,6 @@ function generateLineageHtmlFromPostgres(lineageData) {
   return html;
 }
 
-function generateLineageHtml(animal, allAnimals, farmPrefix, breedingEvents) {
-  let html = `
-    <div class="lineage-item">
-      <h5>🐄 ${animal.id}</h5>
-      <p><strong>Breed:</strong> ${animal.breed}</p>
-      <p><strong>Date of Birth:</strong> ${new Date(animal.dob).toLocaleDateString()}</p>
-      <p><strong>Farm Prefix:</strong> ${farmPrefix}</p>
-      <p><strong>Registered:</strong> ${new Date(animal.registeredAt).toLocaleDateString()}</p>
-    </div>
-  `;
-
-  // Parent Information
-  if (animal.parentIds.length > 0) {
-    html += '<h5>👨‍👩‍👧‍👦 Parent Lineage</h5>';
-    animal.parentIds.forEach(pid => {
-      const parent = allAnimals.find(a => a.id === pid);
-      if (parent) {
-        const pBreeder = getBreeders().then(b => b.find(b => b.id === parent.breederId));
-        html += `
-          <div class="lineage-item">
-            <h6>🐄 ${parent.id}</h6>
-            <p><strong>Breed:</strong> ${parent.breed}</p>
-            <p><strong>Date of Birth:</strong> ${new Date(parent.dob).toLocaleDateString()}</p>
-            <p><strong>Farm:</strong> ${pBreeder?.prefix || 'Unknown'}</p>
-          </div>
-        `;
-      } else {
-        html += `<div class="lineage-item"><h6>🐄 ${pid}</h6><p><em>Parent info not available</em></p></div>`;
-      }
-    });
-  } else {
-    html += '<div class="lineage-item"><p><em>No parent information available</em></p></div>';
-  }
-
-  // Breeding events & offspring
-  const asParentEvents = breedingEvents.filter(ev => ev.parent1Id === animal.id || ev.parent2Id === animal.id);
-  if (asParentEvents.length > 0) {
-    html += '<h5>🍼 Breeding Events (As Parent)</h5>';
-    asParentEvents.forEach(ev => {
-      const otherParentId = ev.parent1Id === animal.id ? ev.parent2Id : ev.parent1Id;
-      html += `<div class="lineage-item">
-        <h6>💕 Event - ${new Date(ev.recordedAt).toLocaleDateString()}</h6>
-        <p><strong>Partners:</strong> ${animal.id} × ${otherParentId}</p>
-        <p><strong>Offspring:</strong> ${ev.offspringIds.join(', ')}</p>
-      </div>`;
-    });
-  }
-
-  const offspring = asParentEvents.flatMap(ev => ev.offspringIds);
-  const uniqueOffspring = [...new Set(offspring)];
-  if (uniqueOffspring.length > 0) {
-    html += '<h5>👶 Known Offspring</h5>';
-    uniqueOffspring.forEach(cid => {
-      const child = allAnimals.find(a => a.id === cid);
-      if (child) html += `<div class="lineage-item"><h6>🐄 ${child.id}</h6><p><strong>Breed:</strong> ${child.breed}</p></div>`;
-      else html += `<div class="lineage-item"><h6>🐄 ${cid}</h6><p><em>Details not available</em></p></div>`;
-    });
-  }
-
-  html += `<div class="lineage-item" style="background:#e8f4fd;border-left-color:#3498db;">
-    <h6>📊 Summary</h6>
-    <p><strong>Total Parents:</strong> ${animal.parentIds.length}</p>
-    <p><strong>Breeding Events (as parent):</strong> ${asParentEvents.length}</p>
-    <p><strong>Total Offspring:</strong> ${uniqueOffspring.length}</p>
-    <p><strong>Generation Status:</strong> ${animal.parentIds.length === 0 ? 'Foundation Animal' : 'Descendant'}</p>
-  </div>`;
-
-  return html;
-}
 
 // Admin functions
 async function fetchPendingApplications() {
@@ -693,7 +610,7 @@ async function renderPendingApplications() {
       <tr>
         <td>${app.full_name}</td>
         <td>${app.national_id}</td>
-        <td><span class="badge ${app.breeder_type === 'company' ? 'badge-company' : 'badge-individual'}">${app.breeder_type || 'Individual'}</span></td>
+        <td><span class="badge badge-individual">${app.animal_type || 'Unknown'}</span></td>
         <td>${app.farm_name || '-'}</td>
         <td>${app.county || '-'}</td>
         <td>${app.phone}</td>
@@ -785,7 +702,7 @@ async function renderApprovedBreeders() {
         <td>${breeder.farm_prefix || '-'}</td>
         <td>${breeder.farm_name || '-'}</td>
         <td>${breeder.county || '-'}</td>
-        <td><span class="badge ${breeder.breeder_type === 'company' ? 'badge-company' : 'badge-individual'}">${breeder.breeder_type || 'Individual'}</span></td>
+        <td><span class="badge badge-individual">${breeder.animal_type || 'Unknown'}</span></td>
         <td>${breeder.phone}</td>
         <td><span class="status-approved">Approved</span></td>
         <td>${breeder.approved_at ? new Date(breeder.approved_at).toLocaleDateString() : '-'}</td>
@@ -854,7 +771,7 @@ async function renderRejectedApplications() {
       <tr>
         <td>${app.full_name}</td>
         <td>${app.national_id}</td>
-        <td><span class="badge ${app.breeder_type === 'company' ? 'badge-company' : 'badge-individual'}">${app.breeder_type || 'Individual'}</span></td>
+        <td><span class="badge badge-individual">${app.animal_type || 'Unknown'}</span></td>
         <td>${app.farm_name || '-'}</td>
         <td>${app.county || '-'}</td>
         <td>${app.phone}</td>

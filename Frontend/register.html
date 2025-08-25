@@ -36,7 +36,7 @@
                 <option value="cattle">Cattle</option>
                 <option value="sheep">Sheep</option>
                 <option value="goat">Goat</option>
-                <option value="dog">Dog</option>
+                <option value="dog">Dogs</option>
               </select>
             </div>
 
@@ -45,7 +45,6 @@
               <input type="text" id="farmName" name="farm_name" required />
             </div>
 
-           
             <div class="form-group">
               <label for="farmLocation">Farm Location *</label>
               <input
@@ -102,8 +101,6 @@
     </main>
 
     <script>
-     
-
       // Asynchronous validation for farm prefix uniqueness
       (function () {
         const farmPrefixInput = document.getElementById("farmPrefix");
@@ -123,14 +120,13 @@
           if (prefix.length === 3) {
             debounceTimer = setTimeout(() => {
               checkPrefixUniqueness(prefix);
-            }, 500); // Debounce to avoid sending requests on every keystroke
+            }, 500); 
           }
         });
 
         async function checkPrefixUniqueness(prefix) {
           try {
-            // NOTE: This is a hypothetical API endpoint. You will need to implement it on your backend.
-            // It should return a JSON object like: {"isAvailable": true} or {"isAvailable": false}
+            
             const response = await fetch(
               `/api/breeders/check-prefix/${prefix}`
             );
@@ -190,7 +186,6 @@
       })();
     </script>
 
-    
     <script src="/Frontend/js/script.js"></script>
   </body>
 </html>
