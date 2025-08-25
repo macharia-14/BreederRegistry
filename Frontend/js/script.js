@@ -46,11 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
-
-    
 });
-
-
 
 function logout() {
     localStorage.removeItem('admin');
@@ -58,11 +54,8 @@ function logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('admin_id');
     localStorage.removeItem('breeder_id');
-    console.log('Logged out successfully');
     window.location.href = '/Frontend/index.html';
 }
-
-
 
 // Registration Form Handling
 const registerForm = document.getElementById('register-form');
@@ -74,8 +67,6 @@ if (registerForm) {
     formData.forEach((value, key) => {
       data[key] = value;
     });
-    
-    console.log('Form data collected:', data);
     
     if (!data.farm_name || data.farm_name.trim() === '') {
       data.farm_name = `${data.full_name}'s Farm`;
@@ -95,8 +86,6 @@ if (registerForm) {
       return;
     }
     
-    console.log('Sending registration data:', data);
-    
     try {
       const res = await fetch('/api/breeders/register', {
         method: 'POST',
@@ -104,23 +93,18 @@ if (registerForm) {
         body: JSON.stringify(data)
       });
       
-      console.log('Response status:', res.status);
-      
       let result;
       const contentType = res.headers.get('content-type');
       
       if (contentType && contentType.includes('application/json')) {
         result = await res.json();
-        console.log('Server response:', result);
       } else {
         const text = await res.text();
-        console.error('Non-JSON response:', text);
         alert(`Server error: ${res.status} - Please check server logs`);
         return;
       }
       
       if (!res.ok) {
-        console.error('Registration failed:', result);
         let errorMessage = 'Registration failed';
         
         if (result.detail) {
@@ -138,7 +122,6 @@ if (registerForm) {
         
         alert(errorMessage);
       } else {
-        console.log('Registration successful:', result);
         alert(`Registration successful!\nYour farm prefix is: ${result.farm_prefix || 'Generated'}\nWe will be in contact for verification purposes.`);
         registerForm.reset();
         
@@ -153,13 +136,10 @@ if (registerForm) {
         }, 3000);
       }
     } catch (err) {
-      console.error('Network or parsing error:', err);
       alert('Network error. Please check your connection and try again.');
     }
   });
 }
-
-
 
 // Simplified prefix validation
 (function () {
@@ -254,10 +234,8 @@ if (loginForm) {
                 return;
             } else {
                 const errorResult = await adminRes.json();
-                console.log('Admin login failed:', errorResult);
             }
         } catch (adminError) {
-            console.log('Admin login error:', adminError);
         }
     }
     
@@ -298,7 +276,6 @@ if (loginForm) {
         window.location.href = '/Frontend/breeders/dashboard.html';
         
     } catch (err) {
-        console.error(err);
         alert('Error logging in. Please try again.');
     }
   });
@@ -334,7 +311,6 @@ if (animalForm) {
       alert(result.message || 'Animal registered!');
       animalForm.reset();
     } catch (err) {
-      console.error(err);
       alert('Error registering animal.');
     }
   });
@@ -356,7 +332,6 @@ if (breedingForm) {
       alert(result.message || 'Breeding event recorded!');
       breedingForm.reset();
     } catch (err) {
-      console.error(err);
       alert('Error recording breeding event.');
     }
   });
@@ -452,7 +427,6 @@ async function searchBreed(breedName) {
     resultsContainer.innerHTML = html;
     
   } catch (error) {
-    console.error('Error searching breed:', error);
     let resultsContainer = document.getElementById('breed-search-results');
     if (!resultsContainer) {
       resultsContainer = document.createElement('div');
@@ -470,27 +444,21 @@ async function searchBreed(breedName) {
 
 // Lineage Search & HTML Generator
 async function searchLineage(animalId, isBreederSearch = false) {
-  console.log('🔍 searchLineage called with animalId:', animalId);
-  
   const resultsContainerId = isBreederSearch ? 'lineage-results' : 'lineage-results';
   const resultsContainer = document.getElementById(resultsContainerId);
   
   if (!resultsContainer) {
-    console.error('❌ Results container not found:', resultsContainerId);
     return;
   }
 
   // Show loading state
   resultsContainer.innerHTML = '<div class="loading">Searching lineage...</div>';
-  console.log('📊 Showing loading state');
 
   try {
     // Call the new backend endpoint
     const url = `/api/public/animals/lineage/${encodeURIComponent(animalId)}`;
-    console.log('🌐 Making API request to:', url);
     
     const response = await fetch(url);
-    console.log('📡 Response status:', response.status);
     
     if (!response.ok) {
       if (response.status === 404) {
@@ -500,20 +468,16 @@ async function searchLineage(animalId, isBreederSearch = false) {
     }
     
     const lineageData = await response.json();
-    console.log('✅ Received lineage data:', lineageData);
     
     if (!lineageData || lineageData.length === 0) {
       resultsContainer.innerHTML = `<div class="no-results">No lineage information found for animal ID "${animalId}"</div>`;
-      console.log('ℹ️ No lineage data found');
       return;
     }
 
     const lineageHtml = generateLineageHtmlFromPostgres(lineageData);
     resultsContainer.innerHTML = `<h4 class="lineage-header">Complete Lineage for ${animalId}</h4>${lineageHtml}`;
-    console.log('🎉 Lineage search completed successfully');
     
   } catch (error) {
-    console.error('❌ Error searching lineage:', error);
     resultsContainer.innerHTML = `<div class="error-message">${error.message}</div>`;
   }
 }
@@ -586,7 +550,6 @@ function generateLineageHtmlFromPostgres(lineageData) {
   html += '</div>';
   return html;
 }
-
 
 // Admin functions
 async function fetchPendingApplications() {

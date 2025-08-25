@@ -33,8 +33,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Show the target page
       const targetPage = document.getElementById(sectionId);
+      console.log('🔍 Target page:', targetPage); // Debugging line
       if (targetPage) {
+        console.log(`Removing 'hidden' class from: ${sectionId}`); // Debugging line
         targetPage.classList.remove("hidden");
+      } else {
+        console.error('Target page not found:', sectionId); // Debugging line
       }
 
       // Close sidebar on mobile after navigation
@@ -171,11 +175,35 @@ document.addEventListener("DOMContentLoaded", () => {
     breedingForm.addEventListener("submit", handleBreedingEvent);
   }
 
-  // Add event listener for settings form if it exists
-  const settingsForm = document.getElementById("settingsForm");
-  if (settingsForm) {
-    settingsForm.addEventListener("submit", handleSettingsUpdate);
-  }
+// Add event listener for settings form if it exists
+const settingsForm = document.getElementById("settingsForm");
+if (settingsForm) {
+  settingsForm.addEventListener("submit", handleSettingsUpdate);
+}
+
+// Add event listener for lineage query button
+const queryBtn = document.getElementById("queryBtn");
+const queryIdInput = document.getElementById("queryId");
+
+if (queryBtn && queryIdInput) {
+  queryBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    const animalId = queryIdInput.value.trim();
+    if (animalId) {
+      searchLineage(animalId, true);
+    } else {
+      showMessage("Please enter an Animal ID", "error");
+    }
+  });
+
+  // Also allow Enter key to trigger search
+  queryIdInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      queryBtn.click();
+    }
+  });
+}
 
 // Add event listener for records page navigation
 const recordsNavItem = document.querySelector('[data-section="records-page"]');
@@ -636,19 +664,42 @@ async function loadDashboardData() {
 
 // Animal records loading function
 async function loadAnimalRecords() {
+    console.log('🔍 loadAnimalRecords() called');
+    
     try {
-        const animals = await getAnimals();
-        const recordsTableBody = document.getElementById('recordsTableBody');
-        
-        if (!recordsTableBody) {
-            console.error('Records table body not found');
+        // Check authentication first
+        console.log('🔐 Checking authentication...');
+        if (!currentBreeder) {
+            const errorMsg = 'User not authenticated. Please log in.';
+            console.error('❌ Authentication error:', errorMsg);
+            showMessage(errorMsg, 'error');
             return;
         }
         
+        console.log('✅ Authenticated with breeder_id:', currentBreeder.breeder_id);
+        
+        // Fetch animals from API
+        console.log('🌐 Fetching animals from API...');
+        const animals = await getAnimals();
+        console.log('📊 API response received:', animals);
+        
+        const recordsTableBody = document.getElementById('recordsTableBody');
+        
+        if (!recordsTableBody) {
+            const errorMsg = 'Records table body not found in DOM';
+            console.error('❌ DOM error:', errorMsg);
+            showMessage(errorMsg, 'error');
+            return;
+        }
+        
+        console.log('✅ Records table body found');
+        
         // Clear existing rows
         recordsTableBody.innerHTML = '';
+        console.log('🧹 Cleared existing table rows');
         
         if (animals.length === 0) {
+            console.log('ℹ️ No animals found for this breeder');
             const emptyRow = document.createElement('tr');
             emptyRow.innerHTML = `
                 <td colspan="7" style="text-align: center; padding: 20px; color: #666;">
@@ -656,11 +707,16 @@ async function loadAnimalRecords() {
                 </td>
             `;
             recordsTableBody.appendChild(emptyRow);
+            showMessage('No animals registered yet. Please register your first animal.', 'info');
             return;
         }
         
+        console.log(`📋 Found ${animals.length} animals to display`);
+        
         // Populate table with animal data
-        animals.forEach(animal => {
+        animals.forEach((animal, index) => {
+            console.log(`🐄 Processing animal ${index + 1}:`, animal);
+            
             const row = document.createElement('tr');
             
             // Format parents information
@@ -688,13 +744,60 @@ async function loadAnimalRecords() {
             `;
             
             recordsTableBody.appendChild(row);
+            console.log('Current records table body:', recordsTableBody.innerHTML); // Debugging line
+            console.log(`✅ Added row for animal ${animal.animal_id}`);
         });
         
-        showMessage('Animal records loaded successfully!', 'success');
+        console.log('🎉 Animal records loaded successfully!');
+        showMessage(`Loaded ${animals.length} animal records successfully!`, 'success');
+        
+        // Check if animals array is empty
+        if (animals.length === 0) {
+            console.warn('No animals found in the response.');
+        } else {
+            console.log('Animals data:', animals);
+        }
+        
+        // Final visibility check
+        const recordsPage = document.getElementById('records-page');
+        if (recordsPage) {
+            console.log('📋 Records page visibility check:');
+            console.log('   - Has "hidden" class:', recordsPage.classList.contains('hidden'));
+            console.log('   - Computed display style:', window.getComputedStyle(recordsPage).display);
+            console.log('   - Computed visibility style:', window.getComputedStyle(recordsPage).visibility);
+        }
         
     } catch (error) {
-        console.error('Failed to load animal records:', error);
-        showMessage('Failed to load animal records. Please try again.', 'error');
+        console.error('❌ Failed to load animal records:', error);
+        
+        // More detailed error handling
+        let errorMessage = 'Failed to load animal records. ';
+        
+        if (error.message.includes('Not authenticated')) {
+            errorMessage += 'Please log in again.';
+        } else if (error.message.includes('NetworkError') || error.message.includes('Failed to fetch')) {
+            errorMessage += 'Network error. Please check your connection.';
+        } else if (error.message.includes('404')) {
+            errorMessage += 'API endpoint not found.';
+        } else if (error.message.includes('500')) {
+            errorMessage += 'Server error. Please try again later.';
+        } else {
+            errorMessage += error.message || 'Unknown error occurred.';
+        }
+        
+        showMessage(errorMessage, 'error');
+        
+        // Also show error in table for better UX
+        const recordsTableBody = document.getElementById('recordsTableBody');
+        if (recordsTableBody) {
+            const errorRow = document.createElement('tr');
+            errorRow.innerHTML = `
+                <td colspan="7" style="text-align: center; padding: 20px; color: #dc3545;">
+                    <i class="fas fa-exclamation-triangle"></i> Error loading records: ${errorMessage}
+                </td>
+            `;
+            recordsTableBody.appendChild(errorRow);
+        }
     }
 }
 
@@ -704,4 +807,123 @@ async function loadAnimalRecords() {
 async function handleSettingsUpdate(event) {
     event.preventDefault();
     showMessage('Settings updated successfully!', 'success');
+}
+
+// Lineage Search & HTML Generator
+async function searchLineage(animalId, isBreederSearch = false) {
+  console.log('🔍 searchLineage called with animalId:', animalId);
+  
+  const resultsContainerId = isBreederSearch ? 'lineageResult' : 'lineage-results';
+  const resultsContainer = document.getElementById(resultsContainerId);
+  
+  if (!resultsContainer) {
+    console.error('❌ Results container not found:', resultsContainerId);
+    return;
+  }
+
+  // Show loading state
+  resultsContainer.innerHTML = '<div class="loading">Searching lineage...</div>';
+  console.log('📊 Showing loading state');
+
+  try {
+    // Call the new backend endpoint
+    const url = `/api/public/animals/lineage/${encodeURIComponent(animalId)}`;
+    console.log('🌐 Making API request to:', url);
+    
+    const response = await fetch(url);
+    console.log('📡 Response status:', response.status);
+    
+    if (!response.ok) {
+      if (response.status === 404) {
+        throw new Error(`Animal with ID "${animalId}" not found`);
+      }
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const lineageData = await response.json();
+    console.log('✅ Received lineage data:', lineageData);
+    
+    if (!lineageData || lineageData.length === 0) {
+      resultsContainer.innerHTML = `<div class="no-results">No lineage information found for animal ID "${animalId}"</div>`;
+      console.log('ℹ️ No lineage data found');
+      return;
+    }
+
+    const lineageHtml = generateLineageHtmlFromPostgres(lineageData);
+    resultsContainer.innerHTML = `<h4 class="lineage-header">Complete Lineage for ${animalId}</h4>${lineageHtml}`;
+    console.log('🎉 Lineage search completed successfully');
+    
+  } catch (error) {
+    console.error('❌ Error searching lineage:', error);
+    resultsContainer.innerHTML = `<div class="error-message">${error.message}</div>`;
+  }
+}
+
+function generateLineageHtmlFromPostgres(lineageData) {
+  // Group by generation
+  const generations = {};
+  lineageData.forEach(animal => {
+    const gen = animal.generation;
+    if (!generations[gen]) {
+      generations[gen] = [];
+    }
+    generations[gen].push(animal);
+  });
+
+  let html = '<div class="lineage-tree">';
+  
+  // Sort generations in descending order (foundation first)
+  const sortedGenerations = Object.keys(generations).sort((a, b) => parseInt(a) - parseInt(b));
+  
+  sortedGenerations.forEach(gen => {
+    const animals = generations[gen];
+    html += `<div class="generation">
+      <h5>Generation ${gen}</h5>
+      <div class="generation-animals">`;
+    
+    animals.forEach(animal => {
+      const isFoundation = parseInt(gen) === 0;
+      html += `
+        <div class="animal-card ${isFoundation ? 'foundation' : ''}">
+          <h3>${animal.animal_id}</h3>
+          <p><strong>Breed:</strong> ${animal.breed || 'Unknown'}</p>
+          <p><strong>Gender:</strong> ${animal.gender || 'Unknown'}</p>
+          <p><strong>Date of Birth:</strong> ${animal.date_of_birth ? new Date(animal.date_of_birth).toLocaleDateString() : 'Unknown'}</p>
+          ${animal.sire_id ? `<p><strong>Sire:</strong> ${animal.sire_id}</p>` : ''}
+          ${animal.dam_id ? `<p><strong>Dam:</strong> ${animal.dam_id}</p>` : ''}
+        </div>
+      `;
+    });
+    
+    html += `</div></div>`;
+    
+    // Add connector between generations (except after the last generation)
+    if (parseInt(gen) < Math.max(...sortedGenerations.map(g => parseInt(g)))) {
+      html += '<div class="generation-connector"></div>';
+    }
+  });
+  
+  // Add summary
+  html += `
+    <div class="summary-card">
+      <h4>Lineage Summary</h4>
+      <div class="summary-stats">
+        <div class="stat-item">
+          <div class="stat-value">${lineageData.length}</div>
+          <div class="stat-label">Total Animals</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">${sortedGenerations.length}</div>
+          <div class="stat-label">Generations</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">${generations[0]?.length || 0}</div>
+          <div class="stat-label">Foundation Animals</div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  html += '</div>';
+  return html;
 }
