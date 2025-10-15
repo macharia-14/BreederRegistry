@@ -21,17 +21,20 @@ In Kenya, many sellers claim their animals are pure-breed when they’re not, ma
 
 1.  Clone the repo
     ```bash
-    
+    https://github.com/macharia-14/BreederRegistry.git
     ```
 2. Install dependencies
-    pip install -r requirements.txt
+
+-   pip install -r requirements.txt
 
 3. Set up your .env file
-    DATABASE_URL=postgresql://username:password@localhost:5432/animal_registry
-    SECRET_KEY=your-secret-key
+
+-   DATABASE_URL=postgresql://username:password@localhost:5432/animal_registry
+-   SECRET_KEY=your-secret-key
 
 4. Run the app
-   uvicorn main:app --reload --port 8000
+
+-   uvicorn main:app --reload --port 8000
 
 
    
