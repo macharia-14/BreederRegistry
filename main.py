@@ -29,10 +29,8 @@ app.include_router(breeders.router)
 app.include_router(admin.router)
 app.include_router(public.router)
 
-# Mount the 'Frontend' directory to serve static files like CSS, JS, images
-# This line is not strictly necessary for just index.html, but is good practice
-app.mount("/Frontend", StaticFiles(directory="Frontend"), name="Frontend")
-
-@app.get("/", include_in_schema=False)
-async def read_index():
-    return FileResponse('Frontend/index.html')
+# Mount the 'Frontend' directory to serve static files.
+# The `html=True` argument configures it to serve `index.html` for the root path,
+# and handles other static assets like CSS and JS. This is a common pattern for
+# Single Page Applications.
+app.mount("/", StaticFiles(directory="Frontend", html=True), name="static")

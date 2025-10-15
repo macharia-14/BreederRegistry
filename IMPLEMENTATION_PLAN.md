@@ -80,7 +80,7 @@ async function apiRequest(endpoint, options = {}) {
         },
         ...options,
     };
-    // ... rest of function
+    
 }
 
 // Update login function

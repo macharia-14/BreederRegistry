@@ -1,31 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Animal Lineage Search</title>
-  <link rel="stylesheet" href="/Frontend/css/style.css" />
-  <link rel="stylesheet" href="/Frontend/css/lineage_search.css" />
-</head>
-<body>
-  <nav class="nav">
-    <div class="container">
-      <a href="/Frontend/index.html" class="btn btn-text">Back</a>
-      <h1>Search Animal Lineage</h1>
-    </div>
-  </nav>
+  <head>
+    <meta charset="UTF-8" />
 
-  <main class="main">
-    <div class="lineage-search-container">
-      <form id="lineage-search-form">
-        <input type="text" id="lineage-search-input" placeholder="Enter Animal ID (e.g., ABC001)" required />
-        <button type="submit">Search Lineage</button>
-      </form>
-      <div id="lineage-results"></div>
-    </div>
-  </main>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Animal Lineage Search</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/lineage_search.css" />
+  </head>
+  <body>
+    <nav class="nav">
+      <div class="container">
+        <a href="index.html" class="btn btn-text">Back</a>
+        <h1>Search Animal Lineage</h1>
+      </div>
+    </nav>
 
-  <script src="/Frontend/js/script.js"></script>
-</body>
+    <main class="main">
+      <div class="lineage-search-container">
+        <form id="lineage-search-form">
+          <input
+            type="text"
+            id="lineage-search-input"
+            placeholder="Enter Animal ID (e.g., PBK-001)"
+            required
+          />
+          <button type="submit">Search Lineage</button>
+        </form>
+        <div id="lineage-results"></div>
+      </div>
+    </main>
+
+    <script src="js/script.js"></script>
+  </body>
 </html>

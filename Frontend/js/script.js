@@ -54,7 +54,7 @@ function logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('admin_id');
     localStorage.removeItem('breeder_id');
-    window.location.href = '/Frontend/index.html';
+    window.location.href = '/index.html';
 }
 
 // Registration Form Handling
@@ -64,9 +64,21 @@ if (registerForm) {
     e.preventDefault();
     const formData = new FormData(registerForm);
     const data = {};
+    const documentsInput = document.getElementById('documents');
     formData.forEach((value, key) => {
       data[key] = value;
     });
+    
+    // Handle document uploads
+    if (documentsInput && documentsInput.files.length > 0) {
+      const documents = Array.from(documentsInput.files).map(file => file.name);
+      data.documents = documents.join(','); // Store document names as comma-separated string
+    } else {
+      // If no documents are uploaded, the 'documents' field from FormData is a File object
+      // which stringifies to `{}`, causing a validation error.
+      // We delete it so it's not included in the request payload.
+      delete data.documents;
+    }
     
     if (!data.farm_name || data.farm_name.trim() === '') {
       data.farm_name = `${data.full_name}'s Farm`;
@@ -132,7 +144,7 @@ if (registerForm) {
         }
         
         setTimeout(() => {
-          window.location.href = './Frontend/index.html';
+          window.location.href = '/index.html';
         }, 3000);
       }
     } catch (err) {
@@ -230,7 +242,7 @@ if (loginForm) {
                 localStorage.setItem('token', 'admin-token-placeholder');
                 localStorage.setItem('admin', 'true');
                 localStorage.setItem('admin_id', result.admin_id);
-                window.location.href = '/Frontend/admin/admin.html';
+                window.location.href = '/admin/admin.html';
                 return;
             } else {
                 const errorResult = await adminRes.json();
@@ -273,7 +285,7 @@ if (loginForm) {
         
         localStorage.setItem('token', 'breeder-token-placeholder');
         localStorage.setItem('breeder', JSON.stringify({ breeder_id: result.breeder_id }));
-        window.location.href = '/Frontend/breeders/dashboard.html';
+        window.location.href = '/breeders/dashboard.html';
         
     } catch (err) {
         alert('Error logging in. Please try again.');
@@ -396,35 +408,54 @@ async function searchBreed(breedName) {
       heroSearchForm.parentNode.appendChild(resultsContainer);
     }
     
+    resultsContainer.textContent = '';
+    
     if (breeders.length === 0) {
-      resultsContainer.innerHTML = `
-        <div class="alert alert-info">
-          No breeders found for breed: "${breedName}"
-        </div>
-      `;
+      const noResultsDiv = document.createElement('div');
+      noResultsDiv.className = 'alert alert-info';
+      noResultsDiv.textContent = `No breeders found for breed: "${breedName}"`;
+      resultsContainer.appendChild(noResultsDiv);
       return;
     }
     
-    let html = `
-      <h4>Breeders for "${breedName}"</h4>
-      <div class="breeders-grid">
-    `;
+    const header = document.createElement('h4');
+    header.textContent = `Breeders for "${breedName}"`;
+    resultsContainer.appendChild(header);
+    
+    const breedersGrid = document.createElement('div');
+    breedersGrid.className = 'breeders-grid';
+    resultsContainer.appendChild(breedersGrid);
     
     breeders.forEach(breeder => {
-      html += `
-        <div class="breeder-card">
-          <h5>🏠 ${breeder.farm_name || 'Unnamed Farm'}</h5>
-          <p><strong>Farm Prefix:</strong> ${breeder.farm_prefix || 'Unknown'}</p>
-          <p><strong>Location:</strong> ${breeder.farm_location || 'Unknown'}</p>
-          <p><strong>County:</strong> ${breeder.county || 'Unknown'}</p>
-          <p><strong>Phone:</strong> ${breeder.phone || 'Not provided'}</p>
-          <p><strong>Email:</strong> ${breeder.email || 'Not provided'}</p>
-        </div>
-      `;
+      const breederCard = document.createElement('div');
+      breederCard.className = 'breeder-card';
+      
+      const farmName = document.createElement('h5');
+      farmName.textContent = `🏠 ${breeder.farm_name || 'Unnamed Farm'}`;
+      breederCard.appendChild(farmName);
+      
+      const farmPrefix = document.createElement('p');
+      farmPrefix.innerHTML = `<strong>Farm Prefix:</strong> ${breeder.farm_prefix || 'Unknown'}`;
+      breederCard.appendChild(farmPrefix);
+      
+      const location = document.createElement('p');
+      location.innerHTML = `<strong>Location:</strong> ${breeder.farm_location || 'Unknown'}`;
+      breederCard.appendChild(location);
+      
+      const county = document.createElement('p');
+      county.innerHTML = `<strong>County:</strong> ${breeder.county || 'Unknown'}`;
+      breederCard.appendChild(county);
+      
+      const phone = document.createElement('p');
+      phone.innerHTML = `<strong>Phone:</strong> ${breeder.phone || 'Not provided'}`;
+      breederCard.appendChild(phone);
+      
+      const email = document.createElement('p');
+      email.innerHTML = `<strong>Email:</strong> ${breeder.email || 'Not provided'}`;
+      breederCard.appendChild(email);
+      
+      breedersGrid.appendChild(breederCard);
     });
-    
-    html += '</div>';
-    resultsContainer.innerHTML = html;
     
   } catch (error) {
     let resultsContainer = document.getElementById('breed-search-results');
@@ -434,11 +465,12 @@ async function searchBreed(breedName) {
       resultsContainer.className = 'search-results-container';
       breedSearchForm.parentNode.appendChild(resultsContainer);
     }
-    resultsContainer.innerHTML = `
-      <div class="alert alert-error">
-        Error searching for breed: ${error.message}
-      </div>
-    `;
+    
+    resultsContainer.textContent = '';
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'alert alert-error';
+    errorDiv.textContent = `Error searching for breed: ${error.message}`;
+    resultsContainer.appendChild(errorDiv);
   }
 }
 
@@ -451,8 +483,12 @@ async function searchLineage(animalId, isBreederSearch = false) {
     return;
   }
 
-  // Show loading state
-  resultsContainer.innerHTML = '<div class="loading">Searching lineage...</div>';
+  // Show loading state - use textContent instead of innerHTML
+  resultsContainer.textContent = '';
+  const loadingDiv = document.createElement('div');
+  loadingDiv.className = 'loading';
+  loadingDiv.textContent = 'Searching lineage...';
+  resultsContainer.appendChild(loadingDiv);
 
   try {
     // Call the new backend endpoint
@@ -470,15 +506,35 @@ async function searchLineage(animalId, isBreederSearch = false) {
     const lineageData = await response.json();
     
     if (!lineageData || lineageData.length === 0) {
-      resultsContainer.innerHTML = `<div class="no-results">No lineage information found for animal ID "${animalId}"</div>`;
+      resultsContainer.textContent = '';
+      const noResultsDiv = document.createElement('div');
+      noResultsDiv.className = 'no-results';
+      noResultsDiv.textContent = `No lineage information found for animal ID "${animalId}"`;
+      resultsContainer.appendChild(noResultsDiv);
       return;
     }
 
     const lineageHtml = generateLineageHtmlFromPostgres(lineageData);
-    resultsContainer.innerHTML = `<h4 class="lineage-header">Complete Lineage for ${animalId}</h4>${lineageHtml}`;
+    resultsContainer.textContent = '';
+    
+    const header = document.createElement('h4');
+    header.className = 'lineage-header';
+    header.textContent = `Complete Lineage for ${animalId}`;
+    resultsContainer.appendChild(header);
+    
+    // Create a temporary container to parse the HTML safely
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = lineageHtml;
+    while (tempDiv.firstChild) {
+      resultsContainer.appendChild(tempDiv.firstChild);
+    }
     
   } catch (error) {
-    resultsContainer.innerHTML = `<div class="error-message">${error.message}</div>`;
+    resultsContainer.textContent = '';
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-message';
+    errorDiv.textContent = error.message;
+    resultsContainer.appendChild(errorDiv);
   }
 }
 
@@ -561,37 +617,96 @@ async function fetchPendingApplications() {
 async function renderPendingApplications() {
   const tbody = document.getElementById('applications-tbody');
   if (!tbody) return;
-  tbody.innerHTML = '<tr><td colspan="9">Loading...</td></tr>';
+  
+  // Clear existing content safely
+  while (tbody.firstChild) {
+    tbody.removeChild(tbody.firstChild);
+  }
+  
+  const loadingRow = document.createElement('tr');
+  const loadingCell = document.createElement('td');
+  loadingCell.colSpan = 9;
+  loadingCell.textContent = 'Loading...';
+  loadingRow.appendChild(loadingCell);
+  tbody.appendChild(loadingRow);
+  
   const applications = await fetchPendingApplications();
+  
+  // Clear loading row
+  while (tbody.firstChild) {
+    tbody.removeChild(tbody.firstChild);
+  }
+  
   if (applications.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="9">No pending applications.</td></tr>';
+    const noAppsRow = document.createElement('tr');
+    const noAppsCell = document.createElement('td');
+    noAppsCell.colSpan = 9;
+    noAppsCell.textContent = 'No pending applications.';
+    noAppsRow.appendChild(noAppsCell);
+    tbody.appendChild(noAppsRow);
     return;
   }
-  tbody.innerHTML = '';
+  
   applications.forEach(app => {
-    tbody.innerHTML += `
-      <tr>
-        <td>${app.full_name}</td>
-        <td>${app.national_id}</td>
-        <td><span class="badge badge-individual">${app.animal_type || 'Unknown'}</span></td>
-        <td>${app.farm_name || '-'}</td>
-        <td>${app.county || '-'}</td>
-        <td>${app.phone}</td>
-        <td>${app.email}</td>
-        <td>${new Date(app.created_at).toLocaleDateString()}</td>
-        <td>
-          <button class="action-btn approve-btn" onclick="approveApplication(${app.id})">
-            <i class="fas fa-check"></i> Approve
-          </button>
-          <button class="action-btn reject-btn" onclick="rejectApplication(${app.id})">
-            <i class="fas fa-times"></i> Reject
-          </button>
-          <button class="action-btn view-btn" onclick="viewApplication(${app.id})">
-            <i class="fas fa-eye"></i> View
-          </button>
-        </td>
-      </tr>
-    `;
+    const row = document.createElement('tr');
+    
+    const fullNameCell = document.createElement('td');
+    fullNameCell.textContent = app.full_name;
+    row.appendChild(fullNameCell);
+    
+    const nationalIdCell = document.createElement('td');
+    nationalIdCell.textContent = app.national_id;
+    row.appendChild(nationalIdCell);
+    
+    const animalTypeCell = document.createElement('td');
+    const badge = document.createElement('span');
+    badge.className = 'badge badge-individual';
+    badge.textContent = app.animal_type || 'Unknown';
+    animalTypeCell.appendChild(badge);
+    row.appendChild(animalTypeCell);
+    
+    const farmNameCell = document.createElement('td');
+    farmNameCell.textContent = app.farm_name || '-';
+    row.appendChild(farmNameCell);
+    
+    const countyCell = document.createElement('td');
+    countyCell.textContent = app.county || '-';
+    row.appendChild(countyCell);
+    
+    const phoneCell = document.createElement('td');
+    phoneCell.textContent = app.phone;
+    row.appendChild(phoneCell);
+    
+    const emailCell = document.createElement('td');
+    emailCell.textContent = app.email;
+    row.appendChild(emailCell);
+    
+    const createdAtCell = document.createElement('td');
+    createdAtCell.textContent = new Date(app.created_at).toLocaleDateString();
+    row.appendChild(createdAtCell);
+    
+    const actionsCell = document.createElement('td');
+    
+    const approveBtn = document.createElement('button');
+    approveBtn.className = 'action-btn approve-btn';
+    approveBtn.onclick = () => approveApplication(app.id);
+    approveBtn.innerHTML = '<i class="fas fa-check"></i> Approve';
+    actionsCell.appendChild(approveBtn);
+    
+    const rejectBtn = document.createElement('button');
+    rejectBtn.className = 'action-btn reject-btn';
+    rejectBtn.onclick = () => rejectApplication(app.id);
+    rejectBtn.innerHTML = '<i class="fas fa-times"></i> Reject';
+    actionsCell.appendChild(rejectBtn);
+    
+    const viewBtn = document.createElement('button');
+    viewBtn.className = 'action-btn view-btn';
+    viewBtn.onclick = () => viewApplication(app.id);
+    viewBtn.innerHTML = '<i class="fas fa-eye"></i> View';
+    actionsCell.appendChild(viewBtn);
+    
+    row.appendChild(actionsCell);
+    tbody.appendChild(row);
   });
 }
 
@@ -620,8 +735,85 @@ async function rejectApplication(breederId) {
   }
 }
 
-function viewApplication(breederId) {
-  alert(`Viewing application details for breeder ID: ${breederId}\nThis would show complete application data in a modal.`);
+function createModal() {
+  const modal = document.createElement('div');
+  modal.className = 'modal-overlay';
+  modal.innerHTML = `<div class="modal-content"></div>`;
+  return modal;
+}
+
+function closeModal() {
+  const modal = document.querySelector('.modal-overlay');
+  if (modal) {
+    document.body.removeChild(modal);
+  }
+}
+
+async function approveAndClose(breederId) {
+  // The approveApplication function already has a confirm dialog
+  await approveApplication(breederId);
+  closeModal();
+}
+
+async function rejectAndClose(breederId) {
+  // The rejectApplication function already has a confirm dialog
+  await rejectApplication(breederId);
+  closeModal();
+}
+
+async function viewApplication(breederId) {
+  const modal = createModal();
+  const modalContent = modal.querySelector('.modal-content');
+  modalContent.innerHTML = '<div class="loading">Loading application...</div>';
+  document.body.appendChild(modal);
+
+  try {
+    const res = await fetch(`/api/admins/applications/${breederId}`);
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({ detail: 'Failed to load application details.' }));
+      throw new Error(errorData.detail || `Error: ${res.status}`);
+    }
+    const app = await res.json();
+
+    let documentsHtml = 'Not provided';
+    if (app.documents) {
+      const docList = app.documents.split(',').map(doc => `<li>${doc.trim()}</li>`).join('');
+      documentsHtml = `<ul class="document-list">${docList}</ul>`;
+    }
+
+    modalContent.innerHTML = `
+      <span class="close-button">&times;</span>
+      <h2>Application Details</h2>
+      <div class="application-details">
+        <p><strong>Full Name:</strong> ${app.full_name}</p>
+        <p><strong>National ID:</strong> ${app.national_id}</p>
+        <p><strong>Animal Type:</strong> <span class="badge badge-individual">${app.animal_type}</span></p>
+        <p><strong>Farm Name:</strong> ${app.farm_name}</p>
+        <p><strong>Farm Prefix:</strong> ${app.farm_prefix || 'N/A'}</p>
+        <p><strong>Farm Location:</strong> ${app.farm_location}</p>
+        <p><strong>County:</strong> ${app.county}</p>
+        <p><strong>Phone:</strong> ${app.phone}</p>
+        <p><strong>Email:</strong> ${app.email}</p>
+        <p><strong>Submitted On:</strong> ${new Date(app.created_at).toLocaleString()}</p>
+        <div><strong>Uploaded Documents:</strong> ${documentsHtml}</div>
+      </div>
+      <div class="modal-actions">
+        <button class="action-btn approve-btn" onclick="approveAndClose(${app.id})"><i class="fas fa-check"></i> Approve</button>
+        <button class="action-btn reject-btn" onclick="rejectAndClose(${app.id})"><i class="fas fa-times"></i> Reject</button>
+      </div>
+    `;
+
+    modal.querySelector('.close-button').addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+
+  } catch (error) {
+    modalContent.innerHTML = `<span class="close-button">&times;</span><div class="error-message">${error.message}</div>`;
+    modal.querySelector('.close-button').addEventListener('click', closeModal);
+  }
 }
 
 async function deleteBreeder(breederId) {
@@ -651,31 +843,90 @@ async function fetchApprovedBreeders() {
 async function renderApprovedBreeders() {
   const tbody = document.getElementById('farmers-tbody');
   if (!tbody) return;
-  tbody.innerHTML = '<tr><td colspan="9">Loading...</td></tr>';
+  
+  // Clear existing content safely
+  while (tbody.firstChild) {
+    tbody.removeChild(tbody.firstChild);
+  }
+  
+  const loadingRow = document.createElement('tr');
+  const loadingCell = document.createElement('td');
+  loadingCell.colSpan = 9;
+  loadingCell.textContent = 'Loading...';
+  loadingRow.appendChild(loadingCell);
+  tbody.appendChild(loadingRow);
+  
   const breeders = await fetchApprovedBreeders();
+  
+  // Clear loading row
+  while (tbody.firstChild) {
+    tbody.removeChild(tbody.firstChild);
+  }
+  
   if (breeders.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="9">No approved breeders found.</td></tr>';
+    const noBreedersRow = document.createElement('tr');
+    const noBreedersCell = document.createElement('td');
+    noBreedersCell.colSpan = 9;
+    noBreedersCell.textContent = 'No approved breeders found.';
+    noBreedersRow.appendChild(noBreedersCell);
+    tbody.appendChild(noBreedersRow);
     return;
   }
-  tbody.innerHTML = '';
+  
   breeders.forEach(breeder => {
-    tbody.innerHTML += `
-      <tr>
-        <td>${breeder.full_name}</td>
-        <td>${breeder.farm_prefix || '-'}</td>
-        <td>${breeder.farm_name || '-'}</td>
-        <td>${breeder.county || '-'}</td>
-        <td><span class="badge badge-individual">${breeder.animal_type || 'Unknown'}</span></td>
-        <td>${breeder.phone}</td>
-        <td><span class="status-approved">Approved</span></td>
-        <td>${breeder.approved_at ? new Date(breeder.approved_at).toLocaleDateString() : '-'}</td>
-        <td>
-          <button class="action-btn delete-btn" onclick="deleteBreeder(${breeder.id})">
-            <i class="fas fa-trash"></i> Delete
-          </button>
-        </td>
-      </tr>
-    `;
+    const row = document.createElement('tr');
+    
+    const fullNameCell = document.createElement('td');
+    fullNameCell.textContent = breeder.full_name;
+    row.appendChild(fullNameCell);
+    
+    const farmPrefixCell = document.createElement('td');
+    farmPrefixCell.textContent = breeder.farm_prefix || '-';
+    row.appendChild(farmPrefixCell);
+    
+    const farmNameCell = document.createElement('td');
+    farmNameCell.textContent = breeder.farm_name || '-';
+    row.appendChild(farmNameCell);
+    
+    const countyCell = document.createElement('td');
+    countyCell.textContent = breeder.county || '-';
+    row.appendChild(countyCell);
+    
+    const animalTypeCell = document.createElement('td');
+    const badge = document.createElement('span');
+    badge.className = 'badge badge-individual';
+    badge.textContent = breeder.animal_type || 'Unknown';
+    animalTypeCell.appendChild(badge);
+    row.appendChild(animalTypeCell);
+    
+    const emailCell = document.createElement('td');
+    emailCell.textContent = breeder.email || 'Not provided';
+    row.appendChild(emailCell);
+    
+    const phoneCell = document.createElement('td');
+    phoneCell.textContent = breeder.phone;
+    row.appendChild(phoneCell);
+    
+    const statusCell = document.createElement('td');
+    const statusSpan = document.createElement('span');
+    statusSpan.className = 'status-approved';
+    statusSpan.textContent = 'Approved';
+    statusCell.appendChild(statusSpan);
+    row.appendChild(statusCell);
+    
+    const approvedAtCell = document.createElement('td');
+    approvedAtCell.textContent = breeder.approved_at ? new Date(breeder.approved_at).toLocaleDateString() : '-';
+    row.appendChild(approvedAtCell);
+    
+    const actionsCell = document.createElement('td');
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'action-btn delete-btn';
+    deleteBtn.onclick = () => deleteBreeder(breeder.id);
+    deleteBtn.innerHTML = '<i class="fas fa-trash"></i> Delete';
+    actionsCell.appendChild(deleteBtn);
+    row.appendChild(actionsCell);
+    
+    tbody.appendChild(row);
   });
 }
 
@@ -722,26 +973,78 @@ async function fetchRejectedApplications() {
 async function renderRejectedApplications() {
   const tbody = document.getElementById('rejected-tbody');
   if (!tbody) return;
-  tbody.innerHTML = '<tr><td colspan="9">Loading...</td></tr>';
+  
+  // Clear existing content safely
+  while (tbody.firstChild) {
+    tbody.removeChild(tbody.firstChild);
+  }
+  
+  const loadingRow = document.createElement('tr');
+  const loadingCell = document.createElement('td');
+  loadingCell.colSpan = 9;
+  loadingCell.textContent = 'Loading...';
+  loadingRow.appendChild(loadingCell);
+  tbody.appendChild(loadingRow);
+  
   const applications = await fetchRejectedApplications();
+  
+  // Clear loading row
+  while (tbody.firstChild) {
+    tbody.removeChild(tbody.firstChild);
+  }
+  
   if (applications.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="9">No rejected applications.</td></tr>';
+    const noAppsRow = document.createElement('tr');
+    const noAppsCell = document.createElement('td');
+    noAppsCell.colSpan = 9;
+    noAppsCell.textContent = 'No rejected applications.';
+    noAppsRow.appendChild(noAppsCell);
+    tbody.appendChild(noAppsRow);
     return;
   }
-  tbody.innerHTML = '';
+  
   applications.forEach(app => {
-    tbody.innerHTML += `
-      <tr>
-        <td>${app.full_name}</td>
-        <td>${app.national_id}</td>
-        <td><span class="badge badge-individual">${app.animal_type || 'Unknown'}</span></td>
-        <td>${app.farm_name || '-'}</td>
-        <td>${app.county || '-'}</td>
-        <td>${app.phone}</td>
-        <td>${app.email}</td>
-        <td>${new Date(app.created_at).toLocaleDateString()}</td>
-        <td>${app.rejected_at ? new Date(app.rejected_at).toLocaleDateString() : '-'}</td>
-      </tr>
-    `;
+    const row = document.createElement('tr');
+    
+    const fullNameCell = document.createElement('td');
+    fullNameCell.textContent = app.full_name;
+    row.appendChild(fullNameCell);
+    
+    const nationalIdCell = document.createElement('td');
+    nationalIdCell.textContent = app.national_id;
+    row.appendChild(nationalIdCell);
+    
+    const animalTypeCell = document.createElement('td');
+    const badge = document.createElement('span');
+    badge.className = 'badge badge-individual';
+    badge.textContent = app.animal_type || 'Unknown';
+    animalTypeCell.appendChild(badge);
+    row.appendChild(animalTypeCell);
+    
+    const farmNameCell = document.createElement('td');
+    farmNameCell.textContent = app.farm_name || '-';
+    row.appendChild(farmNameCell);
+    
+    const countyCell = document.createElement('td');
+    countyCell.textContent = app.county || '-';
+    row.appendChild(countyCell);
+    
+    const phoneCell = document.createElement('td');
+    phoneCell.textContent = app.phone;
+    row.appendChild(phoneCell);
+    
+    const emailCell = document.createElement('td');
+    emailCell.textContent = app.email;
+    row.appendChild(emailCell);
+    
+    const createdAtCell = document.createElement('td');
+    createdAtCell.textContent = new Date(app.created_at).toLocaleDateString();
+    row.appendChild(createdAtCell);
+    
+    const rejectedAtCell = document.createElement('td');
+    rejectedAtCell.textContent = app.rejected_at ? new Date(app.rejected_at).toLocaleDateString() : '-';
+    row.appendChild(rejectedAtCell);
+    
+    tbody.appendChild(row);
   });
 }

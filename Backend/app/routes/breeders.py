@@ -46,7 +46,8 @@ def register_breeder(b: schemas.BreederCreate, db: Session = Depends(database.ge
         county=b.county,
         phone=b.phone,
         email=b.email,
-        password_hash=hashed_pw
+        password_hash=hashed_pw,
+        documents=getattr(b, 'documents', None)  # Add documents field if provided
     )
     
     try:

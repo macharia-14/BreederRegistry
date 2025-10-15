@@ -196,7 +196,7 @@ if (queryBtn && queryIdInput) {
     }
   });
 
-  // Also allow Enter key to trigger search
+  
   queryIdInput.addEventListener("keypress", (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -216,7 +216,7 @@ if (recordsNavItem) {
   });
 } else {
   console.error('Records navigation item NOT found!');
-  // Debug: Log all navigation items to see what's available
+  
   const allNavItems = document.querySelectorAll('.nav-item');
   console.log('All navigation items found:', allNavItems.length);
   allNavItems.forEach((item, index) => {
@@ -252,7 +252,6 @@ if (savedBreeder) {
 }
 });
 
-// API Base URL - Use the same origin as the current page to avoid CORS issues
 const API_BASE_URL = `${window.location.origin}/api`;
 
 // Store authentication state
@@ -322,8 +321,6 @@ async function login(identifier, password) {
             body: { identifier, password }
         });
         
-        // The backend returns {success: true, breeder_id: X, status: "active"}
-        // We need to store the breeder_id for API calls
         currentBreeder = { breeder_id: response.breeder_id };
         localStorage.setItem('breeder', JSON.stringify(currentBreeder));
         showMessage('Login successful!', 'success');
@@ -338,7 +335,7 @@ function logout() {
     localStorage.removeItem('breeder');
     showMessage('Logged out successfully', 'success');
     // Redirect to index.html after logout
-    window.location.href = '/Frontend/index.html';
+    window.location.href = 'index.html';
 }
 
 // Breeder API functions
@@ -744,7 +741,7 @@ async function loadAnimalRecords() {
             `;
             
             recordsTableBody.appendChild(row);
-            console.log('Current records table body:', recordsTableBody.innerHTML); // Debugging line
+            console.log('Current records table body:', recordsTableBody.innerHTML); 
             console.log(`✅ Added row for animal ${animal.animal_id}`);
         });
         
@@ -770,7 +767,6 @@ async function loadAnimalRecords() {
     } catch (error) {
         console.error('❌ Failed to load animal records:', error);
         
-        // More detailed error handling
         let errorMessage = 'Failed to load animal records. ';
         
         if (error.message.includes('Not authenticated')) {

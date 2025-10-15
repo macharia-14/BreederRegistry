@@ -16,6 +16,7 @@ class BreederBase(BaseModel):
 
 class BreederCreate(BreederBase):
     password: str = Field(..., min_length=8)
+    documents: Optional[str] = None  # New field for storing document paths
 
 class BreederResponse(BaseModel):
     id: int

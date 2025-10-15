@@ -34,6 +34,7 @@ class Breeder(Base):
     approved_at = Column(TIMESTAMP)
     created_at = Column(TIMESTAMP, server_default=text("CURRENT_TIMESTAMP"))
     role = Column(String(50), server_default="breeder")
+    documents = Column(String(500), nullable=True)  # New field for storing document paths
 
     approved_by_admin = relationship("Admin", backref="approved_breeders")
     animals = relationship("Animal", back_populates="breeder")
