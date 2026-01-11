@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - Overview</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">
+        <div class="logo-icon">🔥</div>
+        <div class="logo-title">Livestock Registry</div>
+      </div>
+
+      <div class="role-selector">
+        <div class="role-label">Role</div>
+        <div class="role-buttons">
+          <button class="role-btn">Breeder</button>
+          <button class="role-btn active">Admin</button>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="overview.html" class="nav-item">
+          <span class="nav-icon"><i class="fa-solid fa-house"></i></span>
+          <span>Overview</span>
+        </a>
+
+        <a href="breeder-management.html" class="nav-item active">
+          <span class="nav-icon"><i class="fa-solid fa-users"></i></span>
+          <span>Breeder Management</span>
+        </a>
+
+        <a href="animal-management.html" class="nav-item">
+          <span class="nav-icon"><i class="fa-solid fa-cow"></i></span>
+          <span>Animal Management</span>
+        </a>
+
+        <a href="breeding-monitoring.html" class="nav-item">
+          <span class="nav-icon"
+            ><i class="fa-solid fa-clipboard-list"></i
+          ></span>
+          <span>Breeding Monitoring</span>
+        </a>
+
+        <a href="reports-analytics.html" class="nav-item">
+          <span class="nav-icon"><i class="fa-solid fa-chart-line"></i></span>
+          <span>Reports & Analytics</span>
+        </a>
+
+        <a href="settings.html" class="nav-item">
+          <span class="nav-icon"><i class="fa-solid fa-gear"></i></span>
+          <span>Settings</span>
+        </a>
+      </nav>
+
+      <div class="version">v1.0 • Demo</div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="page-header">
+        <h1 class="page-title">Admin Dashboard</h1>
+      </div>
+
+      <!-- Stats Overview -->
+      <div class="stats-container">
+        <div class="stat-card">
+          <div class="stat-label">Total Breeders</div>
+          <div class="stat-value">2</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Pending Approvals</div>
+          <div class="stat-value">1</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Approved</div>
+          <div class="stat-value">1</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Rejected</div>
+          <div class="stat-value">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Animals</div>
+          <div class="stat-value">5</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">M/F</div>
+          <div class="stat-value">2/3</div>
+        </div>
+      </div>
+
+      <!-- Events & Upcoming Births Section -->
+      <div class="content-section">
+        <h2 class="section-title">Overview: Events & Upcoming Births</h2>
+        <div class="events-grid">
+          <!-- Events by Method Chart -->
+          <div class="events-chart">
+            <h3 class="chart-title">Events by Method</h3>
+            <div class="breeding-methods">
+              <div class="method-stat">
+                <div class="method-count">(1)</div>
+                <div class="method-name">AI</div>
+              </div>
+              <div class="method-stat">
+                <div class="method-count">(2)</div>
+                <div class="method-name">Natural</div>
+              </div>
+              <div class="method-stat">
+                <div class="method-count">(1)</div>
+                <div class="method-name">Embryo Transfer</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Upcoming Expected Births -->
+          <div class="upcoming-births">
+            <h3 class="chart-title">Upcoming Expected Births</h3>
+            <div class="no-data">No upcoming births scheduled</div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="js/script.js"></script>
+  </body>
+</html>

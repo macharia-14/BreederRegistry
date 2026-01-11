@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - Animal Management</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- Mobile Menu Toggle -->
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">
+        <div class="logo-icon">🔥</div>
+        <div class="logo-title">Livestock Registry</div>
+      </div>
+
+      <div class="role-selector">
+        <div class="role-label">Role</div>
+        <div class="role-buttons">
+          <button class="role-btn">Breeder</button>
+          <button class="role-btn active">Admin</button>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="overview.html" class="nav-item">
+          <span class="nav-icon">🏠</span>
+          <span>Overview</span>
+        </a>
+        <a href="breeder-management.html" class="nav-item">
+          <span class="nav-icon">👥</span>
+          <span>Breeder Management</span>
+        </a>
+        <a href="animal-management.html" class="nav-item active">
+          <span class="nav-icon">🐄</span>
+          <span>Animal Management</span>
+        </a>
+        <a href="breeding-monitoring.html" class="nav-item">
+          <span class="nav-icon">📋</span>
+          <span>Breeding Monitoring</span>
+        </a>
+        <a href="reports-analytics.html" class="nav-item">
+          <span class="nav-icon">📊</span>
+          <span>Reports & Analytics</span>
+        </a>
+        <a href="settings.html" class="nav-item">
+          <span class="nav-icon">⚙️</span>
+          <span>Settings</span>
+        </a>
+      </nav>
+
+      
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="page-header">
+        <h1 class="page-title">Admin Dashboard</h1>
+      </div>
+
+      <!-- Animal Management Section -->
+      <div class="management-section">
+        <div class="section-header">
+          <h2 class="section-title">Animal Management</h2>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters">
+          <select class="filter-select" id="filterAll">
+            <option value="all">All</option>
+            <option value="cattle">Cattle</option>
+            <option value="goat">Goat</option>
+          </select>
+          <select class="filter-select" id="filterSpecies">
+            <option value="all">All</option>
+            <option value="cattle">Cattle</option>
+            <option value="goat">Goat</option>
+          </select>
+          <select class="filter-select" id="filterBreed">
+            <option value="all">All</option>
+            <option value="friesian">Friesian</option>
+            <option value="ayrshire">Ayrshire</option>
+            <option value="boer">Boer</option>
+            <option value="saanen">Saanen</option>
+          </select>
+          <select class="filter-select" id="filterGender">
+            <option value="all">All</option>
+            <option value="female">Female</option>
+            <option value="male">Male</option>
+          </select>
+          <select class="filter-select" id="filterBreeder">
+            <option value="all">All</option>
+            <option value="sunrise">Sunrise Farm</option>
+            <option value="green">Green Pastures</option>
+          </select>
+        </div>
+
+        <!-- Animal Table -->
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Animal ID</th>
+                <th>Species</th>
+                <th>Breed</th>
+                <th>Gender</th>
+                <th>Breeder</th>
+              </tr>
+            </thead>
+            <tbody id="animalTableBody">
+              <tr
+                data-species="cattle"
+                data-breed="friesian"
+                data-gender="female"
+                data-breeder="sunrise"
+              >
+                <td>SR-001</td>
+                <td>Cattle</td>
+                <td>Friesian</td>
+                <td>Female</td>
+                <td>Sunrise Farm</td>
+              </tr>
+              <tr
+                data-species="cattle"
+                data-breed="ayrshire"
+                data-gender="male"
+                data-breeder="sunrise"
+              >
+                <td>SR-002</td>
+                <td>Cattle</td>
+                <td>Ayrshire</td>
+                <td>Male</td>
+                <td>Sunrise Farm</td>
+              </tr>
+              <tr
+                data-species="cattle"
+                data-breed="friesian"
+                data-gender="female"
+                data-breeder="sunrise"
+              >
+                <td>SR-003</td>
+                <td>Cattle</td>
+                <td>Friesian</td>
+                <td>Female</td>
+                <td>Sunrise Farm</td>
+              </tr>
+              <tr
+                data-species="goat"
+                data-breed="boer"
+                data-gender="female"
+                data-breeder="green"
+              >
+                <td>GP-001</td>
+                <td>Goat</td>
+                <td>Boer</td>
+                <td>Female</td>
+                <td>Green Pastures</td>
+              </tr>
+              <tr
+                data-species="goat"
+                data-breed="saanen"
+                data-gender="male"
+                data-breeder="green"
+              >
+                <td>GP-002</td>
+                <td>Goat</td>
+                <td>Saanen</td>
+                <td>Male</td>
+                <td>Green Pastures</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+    <script src="js/script.js"></script>
+  </body>
+</html>

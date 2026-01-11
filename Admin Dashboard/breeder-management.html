@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - Breeder Management</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- Mobile Menu Toggle -->
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">
+        <div class="logo-icon">🔥</div>
+        <div class="logo-title">Livestock Registry</div>
+      </div>
+
+      <div class="role-selector">
+        <div class="role-label">Role</div>
+        <div class="role-buttons">
+          <button class="role-btn">Breeder</button>
+          <button class="role-btn active">Admin</button>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="overview.html" class="nav-item">
+          <i class="va va-home" style="color: #eee8e8"> </i>
+          <span>Overview</span>
+        </a>
+        <a href="breeder-management.html" class="nav-item active">
+          <i class="va va-users"></i>
+          <span>Breeder Management</span>
+        </a>
+        <a href="animal-management.html" class="nav-item">
+          <i class="va va-cow"></i>
+          <span>Animal Management</span>
+        </a>
+        <a href="breeding-monitoring.html" class="nav-item">
+          <i class="va va-clipboard"></i>
+          <span>Breeding Monitoring</span>
+        </a>
+        <a href="reports-analytics.html" class="nav-item">
+          <i class="va va-chart"></i>
+          <span>Reports & Analytics</span>
+        </a>
+        <a href="settings.html" class="nav-item">
+          <i class="va va-cog"></i>
+          <span>Settings</span>
+        </a>
+      </nav>
+
+      <div class="version">v1.0 • Demo</div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="page-header">
+        <h1 class="page-title">Admin Dashboard</h1>
+      </div>
+
+      <!-- Breeder Management Section -->
+      <div class="management-section">
+        <div class="section-header">
+          <h2 class="section-title">Breeder Management / Verification</h2>
+          <div class="export-buttons">
+            <button class="btn" onclick="exportCSV()">Export CSV</button>
+            <button class="btn" onclick="exportPDF()">Export PDF</button>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters">
+          <select class="filter-select" id="filterStatus">
+            <option value="all">All</option>
+            <option value="approved">Approved</option>
+            <option value="pending">Pending</option>
+            <option value="rejected">Rejected</option>
+          </select>
+          <select class="filter-select" id="filterSpecies">
+            <option value="all">All</option>
+            <option value="cattle">Cattle</option>
+            <option value="goats">Goats</option>
+            <option value="sheep">Sheep</option>
+          </select>
+        </div>
+
+        <!-- Breeder Table -->
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Breeder</th>
+                <th>Farm</th>
+                <th>County</th>
+                <th>Species</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="breederTableBody">
+              <tr data-status="approved" data-species="cattle">
+                <td>Jane Mwangi</td>
+                <td>Sunrise Farm</td>
+                <td>Nyeri</td>
+                <td>Cattle</td>
+                <td>
+                  <span class="status-badge status-approved">approved</span>
+                </td>
+                <td><span class="action-approved">approved</span></td>
+              </tr>
+              <tr data-status="pending" data-species="goats">
+                <td>Peter Otieno</td>
+                <td>Green Pastures</td>
+                <td>Uasin Gishu</td>
+                <td>Goats</td>
+                <td>
+                  <span class="status-badge status-pending">pending</span>
+                </td>
+                <td>
+                  <div class="action-buttons">
+                    <button
+                      class="action-btn btn-approve"
+                      onclick="approveBreeder(this)"
+                    >
+                      Approve
+                    </button>
+                    <button
+                      class="action-btn btn-reject"
+                      onclick="rejectBreeder(this)"
+                    >
+                      Reject
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+    <script src="js/script.js"></script>
+  </body>
+</html>

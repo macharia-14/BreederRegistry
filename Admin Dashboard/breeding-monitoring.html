@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Breeding Monitoring</title>
+   <link rel="stylesheet" href="css/style.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+
+     
+</head>
+<body>
+    <!-- Mobile Menu Toggle -->
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="logo">
+            <div class="logo-icon">🔥</div>
+            <div class="logo-title">Livestock Registry</div>
+            <div class="logo-subtitle">Admin Dashboard</div>
+        </div>
+
+        <div class="role-selector">
+            <div class="role-label">Role</div>
+            <div class="role-buttons">
+                <button class="role-btn">Breeder</button>
+                <button class="role-btn active">Admin</button>
+            </div>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="overview.html" class="nav-item">
+                <span class="nav-icon">🏠</span>
+                <span>Overview</span>
+            </a>
+            <a href="breeder-management.html" class="nav-item">
+                <span class="nav-icon">👥</span>
+                <span>Breeder Management</span>
+            </a>
+            <a href="animal-management.html" class="nav-item">
+                <span class="nav-icon">🐄</span>
+                <span>Animal Management</span>
+            </a>
+            <a href="breeding-monitoring.html" class="nav-item active">
+                <span class="nav-icon">📋</span>
+                <span>Breeding Monitoring</span>
+            </a>
+            <a href="reports-analytics.html" class="nav-item">
+                <span class="nav-icon">📊</span>
+                <span>Reports & Analytics</span>
+            </a>
+            <a href="settings.html" class="nav-item">
+                <span class="nav-icon">⚙️</span>
+                <span>Settings</span>
+            </a>
+        </nav>
+
+        <div class="version">v1.0 • Demo</div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Admin Dashboard</h1>
+        </div>
+
+        <!-- Breeding Monitoring Section -->
+        <div class="monitoring-section">
+            <h2 class="section-title">Breeding Monitoring</h2>
+
+            <div class="content-grid">
+                <!-- Events Table -->
+                <div class="events-container">
+                    <h3 class="subsection-title">Events</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Method</th>
+                                    <th>Dam</th>
+                                    <th>Sire</th>
+                                    <th>Due</th>
+                                    <th>Offspring</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>E-001</td>
+                                    <td>AI</td>
+                                    <td>SR-001</td>
+                                    <td>SR-100</td>
+                                    <td>Nov 20, 2024</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td>E-002</td>
+                                    <td>Natural</td>
+                                    <td>SR-003</td>
+                                    <td>SR-200</td>
+                                    <td>Oct 5, 2024</td>
+                                    <td>SR-004</td>
+                                </tr>
+                                <tr>
+                                    <td>E-003</td>
+                                    <td>Embryo Transfer</td>
+                                    <td>GP-001</td>
+                                    <td>GP-110</td>
+                                    <td>Aug 28, 2024</td>
+                                    <td>GP-003</td>
+                                </tr>
+                                <tr>
+                                    <td>E-004</td>
+                                    <td>Natural</td>
+                                    <td>GP-001</td>
+                                    <td>GP-100</td>
+                                    <td>Feb 5, 2025</td>
+                                    <td>-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Highlights Panel -->
+                <div class="highlights-container">
+                    <h3 class="subsection-title">Highlights</h3>
+                    
+                    <div class="highlight-card">
+                        <div class="highlight-label">Upcoming due: 0</div>
+                    </div>
+
+                    <div class="highlight-card">
+                        <div class="highlight-label">Top performers:</div>
+                        <div class="highlight-value">SR-200(1), SR-003(1), GP-110(1), GP-001(1)</div>
+                    </div>
+
+                    <div class="highlight-card">
+                        <div class="highlight-label">Success rate:</div>
+                        <div class="highlight-value">50%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+   <script src="js/script.js"></script>
+</body>
+</html>
