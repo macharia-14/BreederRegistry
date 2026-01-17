@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+SQLAlchemy
+python-dotenv
+passlib[bcrypt]
+email-validator
+# Add your database driver here depending on your DATABASE_URL
+# e.g., psycopg2-binary for PostgreSQL
+# or mysqlclient for MySQL
