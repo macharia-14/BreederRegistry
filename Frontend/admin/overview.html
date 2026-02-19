@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+        <link rel="icon" type="image/png" href="./images/admin_logo.png" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - Overview</title>
+    <link rel="stylesheet" href="./css/admin.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body>
+    <!-- Mobile Menu Toggle -->
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">
+        <div class="logo-icon">🔥</div>
+        <div class="logo-title">Breeder Registry</div>
+      </div>
+
+      
+
+      <nav class="nav-menu">
+        <a href="overview.html" class="nav-item">
+          <span class="nav-icon"><i class="fa-solid fa-house"></i></span>
+          <span>Overview</span>
+        </a>
+
+        <a href="breeder-management.html" class="nav-item">
+          <span class="nav-icon"><i class="fa-solid fa-users"></i></span>
+          <span>Breeder Management</span>
+        </a>
+
+        <a href="animal-management.html" class="nav-item">
+          <span class="nav-icon"><i class="fa-solid fa-cow"></i></span>
+          <span>Animal Management</span>
+        </a>
+
+        <a href="breeding-monitoring.html" class="nav-item">
+          <span class="nav-icon"
+            ><i class="fa-solid fa-clipboard-list"></i
+          ></span>
+          <span>Breeding Monitoring</span>
+        </a>
+
+        <a href="reports-analytics.html" class="nav-item">
+          <span class="nav-icon"><i class="fa-solid fa-chart-line"></i></span>
+          <span>Reports & Analytics</span>
+        </a>
+
+        <a href="settings.html" class="nav-item">
+          <span class="nav-icon"><i class="fa-solid fa-gear"></i></span>
+          <span>Settings</span>
+        </a>
+      </nav>
+
+      <div class="version">v1</div>
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="page-header">
+        <h1 class="page-title">Admin Dashboard</h1>
+      </div>
+
+      <!-- Stats Overview -->
+      <div class="stats-container">
+        <div class="stat-card">
+          <div class="stat-label">Total Breeders</div>
+          <div class="stat-value" id="totalBreeders">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Pending Approvals</div>
+          <div class="stat-value" id="pendingApprovals">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Approved</div>
+          <div class="stat-value" id="approvedBreeders">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Rejected</div>
+          <div class="stat-value" id="rejectedBreeders">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Animals</div>
+          <div class="stat-value" id="totalAnimals">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">M/F</div>
+          <div class="stat-value" id="genderRatio">-/-</div>
+        </div>
+      </div>
+
+      <!-- Events & Upcoming Births Section -->
+      <div class="content-section">
+        <h2 class="section-title">Overview: Events & Upcoming Births</h2>
+        <div class="events-grid">
+          <!-- Events by Method Chart -->
+          <div class="events-chart">
+            <h3 class="chart-title">Events by Method</h3>
+            <div class="breeding-methods" id="breedingMethods">
+              <div class="method-stat">
+                <div class="method-count">-</div>
+                <div class="method-name">Loading...</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Upcoming Expected Births -->
+          <div class="upcoming-births">
+            <h3 class="chart-title">Upcoming Expected Births</h3>
+            <div class="no-data" id="upcomingBirths">Loading...</div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script src="js/script.js"></script>
+    <script>
+      // Fetch admin statistics on page load
+      async function loadDashboardData() {
+        try {
+          const statsRes = await fetch('/api/admins/stats');
+          if (!statsRes.ok) throw new Error('Failed to fetch stats');
+          const stats = await statsRes.json();
+
+          // Update stats cards
+          document.getElementById('totalBreeders').textContent = stats.total_breeders || 0;
+          document.getElementById('pendingApprovals').textContent = stats.pending_applications || 0;
+          document.getElementById('totalAnimals').textContent = stats.total_animals || 0;
+
+          // Fetch additional data for approved/rejected counts
+          const allBreedersRes = await fetch('/api/admins/approved-breeders');
+          if (allBreedersRes.ok) {
+            const approvedBreeders = await allBreedersRes.json();
+            document.getElementById('approvedBreeders').textContent = approvedBreeders.length || 0;
+          }
+
+          const rejectedRes = await fetch('/api/admins/rejected-applications');
+          if (rejectedRes.ok) {
+            const rejectedBreeders = await rejectedRes.json();
+            document.getElementById('rejectedBreeders').textContent = rejectedBreeders.length || 0;
+          }
+
+          // Fetch animals for gender ratio
+          const animalsRes = await fetch('/api/public/animals');
+          if (animalsRes.ok) {
+            const animals = await animalsRes.json();
+            const maleCount = animals.filter(a => a.gender?.toLowerCase() === 'm' || a.gender?.toLowerCase() === 'male').length;
+            const femaleCount = animals.filter(a => a.gender?.toLowerCase() === 'f' || a.gender?.toLowerCase() === 'female').length;
+            document.getElementById('genderRatio').textContent = `${maleCount}/${femaleCount}`;
+          }
+        } catch (error) {
+          console.error('Error loading dashboard data:', error);
+        }
+      }
+
+      // Load data when page loads
+      document.addEventListener('DOMContentLoaded', loadDashboardData);
+    </script>
+      <script>
+        (function(){
+          const btn = document.getElementById('logoutBtn');
+          if (btn) {
+            btn.addEventListener('click', function(e){
+              localStorage.removeItem('admin');
+              localStorage.removeItem('breeder');
+              localStorage.removeItem('token');
+              localStorage.removeItem('admin_id');
+              localStorage.removeItem('breeder_id');
+              window.location.href = '/index.html';
+            });
+          }
+        })();
+      </script>
+  </body>
+</html>

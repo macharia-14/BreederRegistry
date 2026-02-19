@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - Animal Management</title>
+    <link rel="stylesheet" href="./css/admin.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- Mobile Menu Toggle -->
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <!-- Sidebar -->
+     <aside class="sidebar">
+      <div class="logo">
+        <div class="logo-icon">🔥</div>
+        <div class="logo-title">Breeder Registry</div>
+      </div>
+
+    
+
+      <nav class="nav-menu">
+        <a href="overview.html" class="nav-item">
+          <span class="nav-icon"><i class="fa-solid fa-house"></i></span>
+          <span>Overview</span>
+        </a>
+
+        <a href="breeder-management.html" class="nav-item">
+          <span class="nav-icon"><i class="fa-solid fa-users"></i></span>
+          <span>Breeder Management</span>
+        </a>
+
+        <a href="animal-management.html" class="nav-item">
+          <span class="nav-icon"><i class="fa-solid fa-cow"></i></span>
+          <span>Animal Management</span>
+        </a>
+
+        <a href="breeding-monitoring.html" class="nav-item">
+          <span class="nav-icon"
+            ><i class="fa-solid fa-clipboard-list"></i
+          ></span>
+          <span>Breeding Monitoring</span>
+        </a>
+
+        <a href="reports-analytics.html" class="nav-item">
+          <span class="nav-icon"><i class="fa-solid fa-chart-line"></i></span>
+          <span>Reports & Analytics</span>
+        </a>
+
+        <a href="settings.html" class="nav-item">
+          <span class="nav-icon"><i class="fa-solid fa-gear"></i></span>
+          <span>Settings</span>
+        </a>
+      </nav>
+
+      <div class="version">v1</div>
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="page-header">
+        <h1 class="page-title">Admin Dashboard</h1>
+      </div>
+
+      <!-- Animal Management Section -->
+      <div class="management-section">
+        <div class="section-header">
+          <h2 class="section-title">Animal Management</h2>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters">
+          <select class="filter-select" id="filterAll">
+            <option value="all">All</option>
+            <option value="cattle">Cattle</option>
+            <option value="goat">Goat</option>
+          </select>
+          <select class="filter-select" id="filterSpecies">
+            <option value="all">All</option>
+            <option value="cattle">Cattle</option>
+            <option value="goat">Goat</option>
+          </select>
+          <select class="filter-select" id="filterBreed">
+            <option value="all">All Breeds</option>
+          </select>
+          <select class="filter-select" id="filterGender">
+            <option value="all">All</option>
+            <option value="female">Female</option>
+            <option value="male">Male</option>
+          </select>
+          <select class="filter-select" id="filterBreeder">
+            <option value="all">All Breeders</option>
+          </select>
+        </div>
+
+        <!-- Animal Table -->
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Animal ID</th>
+                <th>Species</th>
+                <th>Breed</th>
+                <th>Gender</th>
+                <th>Breeder</th>
+              </tr>
+            </thead>
+            <tbody id="animalTableBody">
+              <tr>
+                <td colspan="5" style="text-align: center; padding: 20px;">Loading animals...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+    <script src="js/script.js"></script>
+    <script>
+      // Fetch and load all animals
+      async function loadAnimals() {
+        try {
+          const res = await fetch('/api/admins/animals');
+          if (!res.ok) throw new Error('Failed to fetch animals');
+          const animals = await res.json();
+
+          const tableBody = document.getElementById('animalTableBody');
+          tableBody.innerHTML = ''; // Clear loading message
+
+          if (animals.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">No animals found</td></tr>';
+            return;
+          }
+
+          // Populate filter dropdowns with unique values
+          const breeds = new Set();
+          const breeders = new Set();
+          
+          animals.forEach(animal => {
+            if (animal.breed) breeds.add(animal.breed);
+            if (animal.breeder_name) breeders.add(animal.breeder_name);
+          });
+
+          // Update breed filter
+          const breedSelect = document.getElementById('filterBreed');
+          breeds.forEach(breed => {
+            const option = document.createElement('option');
+            option.value = breed.toLowerCase();
+            option.textContent = breed;
+            breedSelect.appendChild(option);
+          });
+
+          // Update breeder filter
+          const breederSelect = document.getElementById('filterBreeder');
+          breeders.forEach(breeder => {
+            const option = document.createElement('option');
+            option.value = breeder.toLowerCase();
+            option.textContent = breeder;
+            breederSelect.appendChild(option);
+          });
+
+          // Populate table rows
+          animals.forEach(animal => {
+            const row = document.createElement('tr');
+            row.setAttribute('data-species', (animal.animal_type || '').toLowerCase());
+            row.setAttribute('data-breed', (animal.breed || '').toLowerCase());
+            row.setAttribute('data-gender', (animal.gender || '').toLowerCase());
+            row.setAttribute('data-breeder', (animal.breeder_name || '').toLowerCase());
+            
+            row.innerHTML = `
+              <td>${animal.animal_id || 'N/A'}</td>
+              <td>${animal.animal_type || 'N/A'}</td>
+              <td>${animal.breed || 'N/A'}</td>
+              <td>${animal.gender || 'N/A'}</td>
+              <td>${animal.breeder_name || 'N/A'}</td>
+            `;
+            tableBody.appendChild(row);
+          });
+        } catch (error) {
+          console.error('Error loading animals:', error);
+          const tableBody = document.getElementById('animalTableBody');
+          tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: red;">Error loading animals: ${error.message}</td></tr>`;
+        }
+      }
+
+      // Filter table function
+      function filterTable() {
+        const allValue = document.getElementById('filterAll').value;
+        const speciesValue = document.getElementById('filterSpecies').value;
+        const breedValue = document.getElementById('filterBreed').value;
+        const genderValue = document.getElementById('filterGender').value;
+        const breederValue = document.getElementById('filterBreeder').value;
+        
+        const rows = document.querySelectorAll('#animalTableBody tr');
+
+        rows.forEach(row => {
+          const rowSpecies = row.getAttribute('data-species');
+          const rowBreed = row.getAttribute('data-breed');
+          const rowGender = row.getAttribute('data-gender');
+          const rowBreeder = row.getAttribute('data-breeder');
+
+          const allMatch = allValue === 'all' || rowSpecies === allValue;
+          const speciesMatch = speciesValue === 'all' || rowSpecies === speciesValue;
+          const breedMatch = breedValue === 'all' || rowBreed === breedValue;
+          const genderMatch = genderValue === 'all' || rowGender === genderValue;
+          const breederMatch = breederValue === 'all' || rowBreeder === breederValue;
+
+          if (allMatch && speciesMatch && breedMatch && genderMatch && breederMatch) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      }
+
+      // Add event listeners to filters
+      document.addEventListener('DOMContentLoaded', () => {
+        loadAnimals();
+
+        const filterAll = document.getElementById('filterAll');
+        const filterSpecies = document.getElementById('filterSpecies');
+        const filterBreed = document.getElementById('filterBreed');
+        const filterGender = document.getElementById('filterGender');
+        const filterBreeder = document.getElementById('filterBreeder');
+
+        filterAll.addEventListener('change', filterTable);
+        filterSpecies.addEventListener('change', filterTable);
+        filterBreed.addEventListener('change', filterTable);
+        filterGender.addEventListener('change', filterTable);
+        filterBreeder.addEventListener('change', filterTable);
+      });
+    </script>
+  </body>
+</html>
+    <script>
+      (function(){
+        const btn = document.getElementById('logoutBtn');
+        if (btn) {
+          btn.addEventListener('click', function(e){
+            localStorage.removeItem('admin');
+            localStorage.removeItem('breeder');
+            localStorage.removeItem('token');
+            localStorage.removeItem('admin_id');
+            localStorage.removeItem('breeder_id');
+            window.location.href = '/index.html';
+          });
+        }
+      })();
+    </script>

@@ -116,6 +116,24 @@ def get_rejected_applications(db: Session = Depends(database.get_db)):
     rejected_applications = db.query(models.Breeder).filter(models.Breeder.status == "rejected").all()
     return rejected_applications
 
+@router.get("/animals")
+def get_all_animals(db: Session = Depends(database.get_db)):
+    animals = db.query(models.Animal).all()
+    result = []
+    for animal in animals:
+        breeder = db.query(models.Breeder).filter(models.Breeder.id == animal.breeder_id).first()
+        result.append({
+            "id": animal.id,
+            "animal_id": animal.animal_id,
+            "animal_type": animal.animal_type,
+            "breed": animal.breed,
+            "gender": animal.gender,
+            "date_of_birth": animal.date_of_birth,
+            "breeder_id": animal.breeder_id,
+            "breeder_name": breeder.farm_name if breeder else "Unknown"
+        })
+    return result
+
 @router.get("/stats")
 def get_admin_stats(db: Session = Depends(database.get_db)):
     total_breeders = db.query(models.Breeder).count()

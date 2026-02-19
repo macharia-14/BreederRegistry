@@ -1,47 +1,477 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Breeder Login</title>
-  <link rel="stylesheet" href="css/style.css" />
-</head>
-<body>
-  <nav class="nav">
-    <div class="container">
-      <a href="index.html" class="btn btn-text">Back</a>
-      <h1>Animal Breed Registry</h1>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login — BreedRegistry</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --green-dark: #1B4332;
+        --green-primary: #2D6A4F;
+        --green-mid: #40916C;
+        --tan: #D4A96A;
+        --tan-light: #F0D9B5;
+        --bg: #F7F4EF;
+        --surface: #FFFFFF;
+        --text: #1C1C1C;
+        --muted: #6B7280;
+        --border: rgba(0,0,0,0.08);
+        --danger: #E63946;
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+
+      /* ── LEFT PANEL ── */
+      .left-panel {
+        background: linear-gradient(160deg, var(--green-dark) 0%, #1a3d2b 60%, #0f2419 100%);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 2.5rem;
+        position: relative;
+        overflow: hidden;
+        min-height: 100vh;
+      }
+
+      .left-panel::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0);
+        background-size: 36px 36px;
+      }
+
+      .left-panel::after {
+        content: '';
+        position: absolute;
+        bottom: -150px; right: -150px;
+        width: 500px; height: 500px;
+        border-radius: 50%;
+        border: 1px solid rgba(149,213,178,0.1);
+        box-shadow: inset 0 0 0 80px rgba(149,213,178,0.04);
+      }
+
+      .left-content { position: relative; z-index: 1; }
+
+      .panel-logo {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        text-decoration: none;
+        margin-bottom: 4rem;
+      }
+      .panel-logo-icon {
+        width: 40px; height: 40px;
+        background: var(--tan);
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        font-size: 1.2rem;
+      }
+      .panel-logo-text {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.1rem;
+        color: #fff;
+        font-weight: 600;
+      }
+
+      .panel-heading {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(1.8rem, 3vw, 2.6rem);
+        color: #fff;
+        line-height: 1.2;
+        margin-bottom: 1rem;
+      }
+      .panel-heading span { color: var(--tan); }
+
+      .panel-sub {
+        color: rgba(255,255,255,0.55);
+        font-size: 0.95rem;
+        line-height: 1.7;
+        font-weight: 300;
+        max-width: 340px;
+        margin-bottom: 3rem;
+      }
+
+      .panel-features {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .panel-feature {
+        display: flex;
+        align-items: center;
+        gap: 0.9rem;
+        color: rgba(255,255,255,0.7);
+        font-size: 0.88rem;
+      }
+      .panel-feature-icon {
+        width: 36px; height: 36px;
+        min-width: 36px;
+        background: rgba(255,255,255,0.08);
+        border-radius: 8px;
+        display: grid;
+        place-items: center;
+        font-size: 1rem;
+      }
+
+      .panel-footer {
+        position: relative;
+        z-index: 1;
+        color: rgba(255,255,255,0.3);
+        font-size: 0.78rem;
+      }
+
+      /* ── RIGHT PANEL ── */
+      .right-panel {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 3rem 2.5rem;
+        min-height: 100vh;
+      }
+
+      .form-wrapper {
+        width: 100%;
+        max-width: 420px;
+      }
+
+      .form-header {
+        margin-bottom: 2.5rem;
+      }
+
+      .form-label-top {
+        font-size: 0.78rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--green-mid);
+        margin-bottom: 0.5rem;
+      }
+
+      .form-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 2rem;
+        color: var(--green-dark);
+        margin-bottom: 0.4rem;
+      }
+
+      .form-sub {
+        font-size: 0.88rem;
+        color: var(--muted);
+        font-weight: 300;
+      }
+
+      /* Tabs */
+      .login-tabs {
+        display: flex;
+        background: rgba(45,106,79,0.08);
+        border-radius: 10px;
+        padding: 4px;
+        margin-bottom: 2rem;
+        gap: 4px;
+      }
+
+      .tab-btn {
+        flex: 1;
+        padding: 0.6rem;
+        border: none;
+        border-radius: 7px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.88rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: transparent;
+        color: var(--muted);
+      }
+      .tab-btn.active {
+        background: var(--surface);
+        color: var(--green-dark);
+        font-weight: 600;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      }
+
+      /* Form fields */
+      .form-group {
+        margin-bottom: 1.25rem;
+      }
+
+      .form-group label {
+        display: block;
+        font-size: 0.83rem;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 0.45rem;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        border: 1.5px solid var(--border);
+        border-radius: 10px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.95rem;
+        color: var(--text);
+        background: var(--bg);
+        outline: none;
+        transition: border 0.2s, box-shadow 0.2s;
+      }
+      .form-group input:focus {
+        border-color: var(--green-mid);
+        box-shadow: 0 0 0 3px rgba(64,145,108,0.1);
+        background: #fff;
+      }
+      .form-group input.error { border-color: var(--danger); }
+
+      .input-hint {
+        font-size: 0.75rem;
+        color: var(--muted);
+        margin-top: 0.35rem;
+      }
+
+      .submit-btn {
+        width: 100%;
+        padding: 0.9rem;
+        background: var(--green-primary);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-top: 0.5rem;
+      }
+      .submit-btn:hover { background: var(--green-dark); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(45,106,79,0.25); }
+      .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+
+      .form-footer {
+        text-align: center;
+        margin-top: 1.5rem;
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+      .form-footer a {
+        color: var(--green-primary);
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .form-footer a:hover { text-decoration: underline; }
+
+      /* Alert */
+      .alert {
+        display: none;
+        padding: 0.85rem 1rem;
+        border-radius: 10px;
+        font-size: 0.85rem;
+        margin-bottom: 1.25rem;
+        font-weight: 500;
+      }
+      .alert-error {
+        background: rgba(230,57,70,0.08);
+        border: 1px solid rgba(230,57,70,0.2);
+        color: var(--danger);
+      }
+      .alert-success {
+        background: rgba(64,145,108,0.1);
+        border: 1px solid rgba(64,145,108,0.25);
+        color: var(--green-mid);
+      }
+      .alert.show { display: block; }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 768px) {
+        body { grid-template-columns: 1fr; }
+        .left-panel { display: none; }
+        .right-panel { padding: 3rem 1.5rem; }
+      }
+
+      @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(16px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+      .form-wrapper { animation: fadeUp 0.5s ease both; }
+    </style>
+  </head>
+  <body>
+
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+      <div class="left-content">
+        <a href="index.html" class="panel-logo">
+          <div class="panel-logo-icon">🐄</div>
+          <span class="panel-logo-text">BreedRegistry</span>
+        </a>
+
+        <h2 class="panel-heading">Welcome <span>back</span> to Kenya's Breed Registry</h2>
+        <p class="panel-sub">Manage your animals, record breeding events, and track lineage — all in one secure platform.</p>
+
+        <div class="panel-features">
+          <div class="panel-feature">
+            <div class="panel-feature-icon">🐄</div>
+            <span>Register and manage your animals</span>
+          </div>
+          <div class="panel-feature">
+            <div class="panel-feature-icon">🧬</div>
+            <span>Record breeding events and track offspring</span>
+          </div>
+          <div class="panel-feature">
+            <div class="panel-feature-icon">✅</div>
+            <span>Your records are verified and tamper-proof</span>
+          </div>
+          <div class="panel-feature">
+            <div class="panel-feature-icon">🔒</div>
+            <span>Secure login with encrypted credentials</span>
+          </div>
+        </div>
+      </div>
+      <div class="panel-footer">© 2025 Animal Breed Registry System</div>
     </div>
-  </nav>
 
-  <main class="main">
-    <div class="container">
-      <div class="form-container">
-        <h2>Breeder Login</h2>
-        <form id="login-form" class="form">
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+      <div class="form-wrapper">
+
+        <div class="form-header">
+          <p class="form-label-top">Welcome back</p>
+          <h1 class="form-title">Sign In</h1>
+          <p class="form-sub">Log in to your breeder or admin account</p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="login-tabs">
+          <button class="tab-btn active" onclick="switchTab('breeder', this)">🌾 Breeder</button>
+          <button class="tab-btn" onclick="switchTab('admin', this)">🛡 Admin</button>
+        </div>
+
+        <div id="alert-box" class="alert"></div>
+
+        <!-- Breeder Login Form -->
+        <form id="breeder-form" onsubmit="handleLogin(event, 'breeder')">
           <div class="form-group">
-            <label for="loginEmail">Email *</label>
-            <input type="text" id="loginEmail" name="loginEmail" required />
+            <label for="breeder-identifier">Email or National ID</label>
+            <input type="text" id="breeder-identifier" placeholder="your@email.com or ID number" autocomplete="username" />
+            <p class="input-hint">You can log in with either your email or national ID</p>
           </div>
-
           <div class="form-group">
-            <label for="loginPassword">Password *</label>
-            <input type="password" id="loginPassword" name="loginPassword" required />
+            <label for="breeder-password">Password</label>
+            <input type="password" id="breeder-password" placeholder="••••••••" autocomplete="current-password" />
           </div>
-
-          <button type="submit" class="btn btn-primary">Login</button>
+          <button type="submit" class="submit-btn" id="breeder-submit">Sign In as Breeder</button>
         </form>
 
-        <p class="register-link">
-          Don't have an account?
-          <a href="register.html" class="btn btn-text">Register as Breeder</a>
-        </p>
+        <!-- Admin Login Form (hidden by default) -->
+        <form id="admin-form" style="display:none;" onsubmit="handleLogin(event, 'admin')">
+          <div class="form-group">
+            <label for="admin-email">Admin Email</label>
+            <input type="email" id="admin-email" placeholder="admin@breedery.com" autocomplete="username" />
+          </div>
+          <div class="form-group">
+            <label for="admin-password">Password</label>
+            <input type="password" id="admin-password" placeholder="••••••••" autocomplete="current-password" />
+          </div>
+          <button type="submit" class="submit-btn" id="admin-submit">Sign In as Admin</button>
+        </form>
+
+        <div class="form-footer">
+          Don't have an account? <a href="register.html">Register as Breeder</a>
+        </div>
+
       </div>
     </div>
-  </main>
 
-  <script crossorigin="anonymous" src="//unpkg.com/same-runtime/dist/index.global.js"></script>
-  <script src="js/script.js"></script>
-</body>
+    <script src="js/script.js"></script>
+    <script>
+      function switchTab(role, btn) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        document.getElementById('breeder-form').style.display = role === 'breeder' ? 'block' : 'none';
+        document.getElementById('admin-form').style.display   = role === 'admin'   ? 'block' : 'none';
+
+        hideAlert();
+      }
+
+      function showAlert(msg, type = 'error') {
+        const box = document.getElementById('alert-box');
+        box.textContent = msg;
+        box.className = `alert alert-${type} show`;
+      }
+
+      function hideAlert() {
+        document.getElementById('alert-box').className = 'alert';
+      }
+
+      async function handleLogin(e, role) {
+        e.preventDefault();
+        hideAlert();
+
+        const btn = document.getElementById(`${role}-submit`);
+        btn.disabled = true;
+        btn.textContent = 'Signing in...';
+
+        try {
+          let body, url;
+
+          if (role === 'breeder') {
+            url = '/api/breeders/login';
+            body = {
+              identifier: document.getElementById('breeder-identifier').value.trim(),
+              password:   document.getElementById('breeder-password').value,
+            };
+          } else {
+            url = '/api/admins/login';
+            body = {
+              email:    document.getElementById('admin-email').value.trim(),
+              password: document.getElementById('admin-password').value,
+            };
+          }
+
+          const res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+          });
+
+          const data = await res.json();
+
+          if (!res.ok) {
+            showAlert(data.detail || 'Login failed. Please check your credentials.');
+            return;
+          }
+
+          // Store token & redirect
+          localStorage.setItem('token', data.access_token);
+          localStorage.setItem('role', role);
+
+          showAlert('Login successful! Redirecting...', 'success');
+
+          setTimeout(() => {
+            // Redirect to actual pages in the project
+            window.location.href = role === 'admin' ? '/admin/overview.html' : '/breeders/dashboard.html';
+          }, 800);
+
+        } catch (err) {
+          showAlert('Could not connect to the server. Please try again.');
+        } finally {
+          btn.disabled = false;
+          btn.textContent = role === 'breeder' ? 'Sign In as Breeder' : 'Sign In as Admin';
+        }
+      }
+    </script>
+  </body>
 </html>

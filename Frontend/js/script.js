@@ -242,7 +242,7 @@ if (loginForm) {
                 localStorage.setItem('token', 'admin-token-placeholder');
                 localStorage.setItem('admin', 'true');
                 localStorage.setItem('admin_id', result.admin_id);
-                window.location.href = '/admin/admin.html';
+                window.location.href = '/admin/overview.html';
                 return;
             } else {
                 const errorResult = await adminRes.json();

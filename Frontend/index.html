@@ -2,98 +2,832 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Animal Breed Registry System</title>
-    <link rel="stylesheet" href="css/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --green-dark: #1B4332;
+        --green-primary: #2D6A4F;
+        --green-mid: #40916C;
+        --green-light: #95D5B2;
+        --tan: #D4A96A;
+        --tan-light: #F0D9B5;
+        --bg: #F7F4EF;
+        --surface: #FFFFFF;
+        --text: #1C1C1C;
+        --muted: #6B7280;
+        --danger: #E63946;
+        --warning: #E9C46A;
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      html { scroll-behavior: smooth; }
+
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        overflow-x: hidden;
+      }
+
+      /* ── NAV ── */
+      nav {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 2.5rem;
+        background: rgba(29, 68, 50, 0.96);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+      }
+
+      .nav-logo {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        text-decoration: none;
+      }
+
+      .nav-logo-icon {
+        width: 36px; height: 36px;
+        background: var(--tan);
+        border-radius: 8px;
+        display: grid;
+        place-items: center;
+        font-size: 1.1rem;
+      }
+
+      .nav-logo-text {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.05rem;
+        color: #fff;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .nav-links a {
+        text-decoration: none;
+        font-size: 0.88rem;
+        font-weight: 500;
+        padding: 0.5rem 1.1rem;
+        border-radius: 6px;
+        transition: all 0.2s;
+      }
+
+      .nav-link-ghost {
+        color: rgba(255,255,255,0.8);
+      }
+      .nav-link-ghost:hover { color: #fff; background: rgba(255,255,255,0.1); }
+
+      .nav-link-solid {
+        background: var(--tan);
+        color: var(--green-dark);
+        font-weight: 600;
+      }
+      .nav-link-solid:hover { background: #e0b87a; }
+
+      /* ── HERO ── */
+      .hero {
+        min-height: 100vh;
+        background:
+          radial-gradient(ellipse at 70% 40%, rgba(64,145,108,0.18) 0%, transparent 60%),
+          radial-gradient(ellipse at 20% 80%, rgba(212,169,106,0.12) 0%, transparent 50%),
+          linear-gradient(160deg, var(--green-dark) 0%, #1a3d2b 50%, #0f2419 100%);
+        display: flex;
+        align-items: center;
+        padding: 7rem 2.5rem 5rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Decorative background pattern */
+      .hero::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image:
+          radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0);
+        background-size: 40px 40px;
+        pointer-events: none;
+      }
+
+      /* Decorative ring */
+      .hero::after {
+        content: '';
+        position: absolute;
+        right: -200px; top: 50%;
+        transform: translateY(-50%);
+        width: 700px; height: 700px;
+        border-radius: 50%;
+        border: 1px solid rgba(149,213,178,0.12);
+        box-shadow:
+          inset 0 0 0 60px rgba(149,213,178,0.04),
+          inset 0 0 0 130px rgba(149,213,178,0.03);
+        pointer-events: none;
+      }
+
+      .hero-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: center;
+        position: relative;
+        z-index: 1;
+      }
+
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(212,169,106,0.15);
+        border: 1px solid rgba(212,169,106,0.3);
+        color: var(--tan-light);
+        font-size: 0.8rem;
+        font-weight: 500;
+        padding: 0.35rem 0.9rem;
+        border-radius: 20px;
+        margin-bottom: 1.5rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+
+      .hero-title {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(2.4rem, 5vw, 3.6rem);
+        font-weight: 700;
+        color: #fff;
+        line-height: 1.15;
+        margin-bottom: 1.2rem;
+      }
+
+      .hero-title span {
+        color: var(--tan);
+      }
+
+      .hero-tagline {
+        font-size: 1.05rem;
+        color: rgba(255,255,255,0.65);
+        line-height: 1.7;
+        margin-bottom: 2.5rem;
+        font-weight: 300;
+        max-width: 420px;
+      }
+
+      .hero-cta {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.75rem 1.6rem;
+        border-radius: 8px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.92rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s;
+        cursor: pointer;
+        border: none;
+      }
+
+      .btn-primary {
+        background: var(--tan);
+        color: var(--green-dark);
+      }
+      .btn-primary:hover { background: #e0b87a; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(212,169,106,0.35); }
+
+      .btn-ghost {
+        background: rgba(255,255,255,0.1);
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.2);
+      }
+      .btn-ghost:hover { background: rgba(255,255,255,0.18); }
+
+      .btn-green {
+        background: var(--green-primary);
+        color: #fff;
+      }
+      .btn-green:hover { background: var(--green-mid); transform: translateY(-1px); }
+
+      .btn-outline {
+        background: transparent;
+        color: var(--green-primary);
+        border: 2px solid var(--green-primary);
+      }
+      .btn-outline:hover { background: var(--green-primary); color: #fff; }
+
+      /* Hero Search Card */
+      .hero-search-card {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 20px;
+        padding: 2rem;
+        backdrop-filter: blur(12px);
+      }
+
+      .search-card-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.3rem;
+        color: #fff;
+        margin-bottom: 0.4rem;
+      }
+
+      .search-card-sub {
+        font-size: 0.85rem;
+        color: rgba(255,255,255,0.5);
+        margin-bottom: 1.5rem;
+      }
+
+      .search-row {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .search-input {
+        flex: 1;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        border: 1px solid rgba(255,255,255,0.15);
+        background: rgba(255,255,255,0.08);
+        color: #fff;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.92rem;
+        outline: none;
+        transition: border 0.2s;
+      }
+      .search-input::placeholder { color: rgba(255,255,255,0.35); }
+      .search-input:focus { border-color: var(--tan); }
+
+      .search-btn {
+        padding: 0.75rem 1.2rem;
+        background: var(--green-mid);
+        border: none;
+        border-radius: 8px;
+        color: #fff;
+        font-weight: 600;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        white-space: nowrap;
+      }
+      .search-btn:hover { background: var(--green-primary); }
+
+      .search-hint {
+        font-size: 0.78rem;
+        color: rgba(255,255,255,0.35);
+        margin-top: 0.75rem;
+      }
+
+      .search-divider {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin: 1.25rem 0;
+        color: rgba(255,255,255,0.25);
+        font-size: 0.78rem;
+      }
+      .search-divider::before, .search-divider::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: rgba(255,255,255,0.1);
+      }
+
+      .lineage-link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.85rem 1rem;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 10px;
+        text-decoration: none;
+        transition: all 0.2s;
+      }
+      .lineage-link:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
+
+      .lineage-link-text { color: rgba(255,255,255,0.8); font-size: 0.88rem; }
+      .lineage-link-label { font-weight: 600; display: block; color: #fff; font-size: 0.92rem; }
+      .lineage-link-arrow { color: var(--tan); font-size: 1.1rem; }
+
+      /* ── STATS STRIP ── */
+      .stats-strip {
+        background: var(--green-primary);
+        padding: 1.5rem 2.5rem;
+      }
+
+      .stats-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .stat-item {
+        text-align: center;
+        color: #fff;
+      }
+
+      .stat-number {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--tan-light);
+        display: block;
+      }
+
+      .stat-label {
+        font-size: 0.8rem;
+        color: rgba(255,255,255,0.7);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+
+      /* ── FEATURES ── */
+      .features {
+        padding: 6rem 2.5rem;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+
+      .section-label {
+        font-size: 0.78rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--green-mid);
+        margin-bottom: 0.75rem;
+      }
+
+      .section-title {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(1.8rem, 3vw, 2.4rem);
+        color: var(--green-dark);
+        margin-bottom: 0.75rem;
+        line-height: 1.2;
+      }
+
+      .section-sub {
+        color: var(--muted);
+        font-size: 1rem;
+        line-height: 1.7;
+        max-width: 520px;
+        margin-bottom: 3rem;
+        font-weight: 300;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+      }
+
+      .feature-card {
+        background: var(--surface);
+        border: 1px solid rgba(0,0,0,0.07);
+        border-radius: 16px;
+        padding: 2rem 1.75rem;
+        transition: all 0.25s;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--green-primary), var(--tan));
+        opacity: 0;
+        transition: opacity 0.25s;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(45,106,79,0.12);
+        border-color: rgba(45,106,79,0.15);
+      }
+      .feature-card:hover::before { opacity: 1; }
+
+      .feature-icon {
+        width: 48px; height: 48px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        font-size: 1.4rem;
+        margin-bottom: 1.25rem;
+      }
+
+      .icon-green { background: rgba(45,106,79,0.1); }
+      .icon-tan { background: rgba(212,169,106,0.15); }
+      .icon-blue { background: rgba(59,130,246,0.1); }
+
+      .feature-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.1rem;
+        color: var(--green-dark);
+        margin-bottom: 0.6rem;
+        font-weight: 600;
+      }
+
+      .feature-desc {
+        font-size: 0.88rem;
+        color: var(--muted);
+        line-height: 1.7;
+        font-weight: 300;
+      }
+
+      /* ── HOW IT WORKS ── */
+      .how-it-works {
+        background: var(--green-dark);
+        padding: 6rem 2.5rem;
+      }
+
+      .how-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+
+      .how-it-works .section-label { color: var(--tan); }
+      .how-it-works .section-title { color: #fff; }
+      .how-it-works .section-sub { color: rgba(255,255,255,0.55); }
+
+      .steps-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2rem;
+        position: relative;
+      }
+
+      .steps-grid::before {
+        content: '';
+        position: absolute;
+        top: 28px;
+        left: calc(12.5% + 24px);
+        right: calc(12.5% + 24px);
+        height: 1px;
+        background: rgba(255,255,255,0.1);
+      }
+
+      .step {
+        text-align: center;
+        position: relative;
+      }
+
+      .step-number {
+        width: 56px; height: 56px;
+        border-radius: 50%;
+        background: var(--green-primary);
+        border: 2px solid rgba(149,213,178,0.3);
+        display: grid;
+        place-items: center;
+        font-family: 'Playfair Display', serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--tan-light);
+        margin: 0 auto 1.25rem;
+        position: relative;
+        z-index: 1;
+      }
+
+      .step-title {
+        font-weight: 600;
+        color: #fff;
+        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .step-desc {
+        font-size: 0.82rem;
+        color: rgba(255,255,255,0.45);
+        line-height: 1.6;
+        font-weight: 300;
+      }
+
+      /* ── CTA BAND ── */
+      .cta-band {
+        background: var(--tan-light);
+        padding: 5rem 2.5rem;
+        text-align: center;
+        border-top: 4px solid var(--tan);
+      }
+
+      .cta-band .section-title { color: var(--green-dark); }
+      .cta-band .section-sub { margin: 0 auto 2.5rem; }
+
+      .cta-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      /* ── FOOTER ── */
+      footer {
+        background: #0f2419;
+        color: rgba(255,255,255,0.5);
+        padding: 2.5rem;
+        text-align: center;
+        font-size: 0.85rem;
+      }
+
+      footer a { color: var(--tan); text-decoration: none; }
+      footer a:hover { text-decoration: underline; }
+
+      .footer-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      /* ── SEARCH RESULTS ── */
+      #search-results {
+        display: none;
+        margin-top: 1.5rem;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+
+      .result-item {
+        padding: 0.9rem 1.1rem;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        color: rgba(255,255,255,0.85);
+        font-size: 0.88rem;
+      }
+      .result-item:last-child { border-bottom: none; }
+      .result-item strong { color: #fff; }
+
+      /* ── ANIMATIONS ── */
+      @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(24px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+
+      .hero-badge  { animation: fadeUp 0.5s ease both; animation-delay: 0.1s; }
+      .hero-title  { animation: fadeUp 0.6s ease both; animation-delay: 0.2s; }
+      .hero-tagline{ animation: fadeUp 0.6s ease both; animation-delay: 0.3s; }
+      .hero-cta    { animation: fadeUp 0.6s ease both; animation-delay: 0.4s; }
+      .hero-search-card { animation: fadeUp 0.7s ease both; animation-delay: 0.35s; }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 900px) {
+        .hero-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+        .hero::after { display: none; }
+        .features-grid { grid-template-columns: 1fr 1fr; }
+        .steps-grid { grid-template-columns: 1fr 1fr; }
+        .steps-grid::before { display: none; }
+      }
+
+      @media (max-width: 560px) {
+        nav { padding: 1rem 1.25rem; }
+        .hero { padding: 6rem 1.25rem 3rem; }
+        .features, .how-inner { padding: 4rem 1.25rem; }
+        .features-grid, .steps-grid { grid-template-columns: 1fr; }
+        .nav-links .nav-link-ghost { display: none; }
+      }
+    </style>
   </head>
   <body>
-    <!-- Landing Page -->
-    <div id="landing-page" class="page active">
-      <!-- Hero Section -->
-      <header class="hero">
-        <div class="container">
-          <h1 class="hero-title">Animal Breed Registry System</h1>
+
+    <!-- NAV -->
+    <nav>
+      <a href="/" class="nav-logo">
+        <div class="nav-logo-icon">🐄</div>
+        <span class="nav-logo-text">BreedRegistry</span>
+      </a>
+      <div class="nav-links">
+        <a href="lineage_search.html" class="nav-link-ghost btn">Lineage Search</a>
+        <a href="login.html" class="nav-link-ghost btn">Login</a>
+        <a href="register.html" class="nav-link-solid btn">Register</a>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <header class="hero">
+      <div class="hero-inner">
+        <!-- Left: copy -->
+        <div class="hero-left">
+          <div class="hero-badge">🌿 Kenya's Official Breed Registry</div>
+          <h1 class="hero-title">
+            Trusted Records for <span>Animal Breeders</span>
+          </h1>
           <p class="hero-tagline">
-            Breed records with verified farmer identities.
+            A secure, government-backed platform to register animals, track bloodlines, and connect verified breeders across Kenya.
           </p>
-          <div class="hero-buttons">
-            <a href="register.html" class="btn btn-primary"
-              >Register as Breeder</a
-            >
-            <a href="login.html" class="btn btn-secondary">Login</a>
-          </div>
-          <!-- Prominent Search Section -->
-          <div class="hero-search-section">
-            <h2 class="search-title">Search Animal Breeders</h2>
-            <form id="hero-search-form" class="hero-search-form">
-              <div class="search-input-container">
-                <input
-                  type="text"
-                  id="hero-search-input"
-                  placeholder="Enter Breed Name (e.g., Angus)"
-                  required
-                  class="hero-search-input"
-                />
-                <button type="submit" class="hero-search-btn">
-                  <span>🔍 Search Breeders</span>
-                </button>
-              </div>
-            </form>
-            <p class="search-hint">
-              Find breeders who specialize in specific animal breeds
-            </p>
+          <div class="hero-cta">
+            <a href="register.html" class="btn btn-primary">Register as Breeder</a>
+            <a href="login.html" class="btn btn-ghost">Login →</a>
           </div>
         </div>
-      </header>
 
-      <!-- Navigation to Public Search -->
-      <section class="public-search-section">
-        <div class="container">
-          <h2>Search Animal Lineage</h2>
-          <p>Look up any animal's breeding history and lineage</p>
-          <a href="lineage_search.html" class="btn btn-outline"
-            >Public Lineage Search</a
-          >
-        </div>
-      </section>
+        <!-- Right: search card -->
+        <div class="hero-search-card">
+          <p class="search-card-title">Find a Breeder</p>
+          <p class="search-card-sub">Search by breed to find verified registered breeders</p>
+          <form id="hero-search-form" onsubmit="handleSearch(event)">
+            <div class="search-row">
+              <input
+                type="text"
+                id="hero-search-input"
+                class="search-input"
+                placeholder="e.g. Angus, Friesian, Boer..."
+              />
+              <button type="submit" class="search-btn">Search</button>
+            </div>
+            <p class="search-hint">Only approved breeders are shown in results</p>
+          </form>
+          <div id="search-results"></div>
 
-      <!-- Info Section -->
-      <section class="info-section">
-        <div class="container">
-          <h2>About the System</h2>
-          <div class="info-grid">
-            <div class="info-card">
-              <h3>🔒 Secure Records</h3>
-              <p>All animal breeding records are stored safely.</p>
-            </div>
-            <div class="info-card">
-              <h3>✅ Verified Breeders</h3>
-              <p>
-                Only verified and approved breeders can register animals and
-                record breeding events.
-              </p>
-            </div>
-            <div class="info-card">
-              <h3>🔍 Public Lineage</h3>
-              <p>
-                Anyone can search and verify animal lineage using our public
-                search system.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+          <div class="search-divider">or</div>
 
-      <!-- Footer -->
-      <footer class="footer">
-        <div class="container">
-          <p>&copy; 2025 Animal Breed Registry. All rights reserved.</p>
-          <p>Contact: machariaelick1454@gmail.com | Phone:</p>
+          <a href="lineage_search.html" class="lineage-link">
+            <div>
+              <span class="lineage-link-label">🧬 Public Lineage Search</span>
+              <span class="lineage-link-text">Trace any animal's full breeding history</span>
+            </div>
+            <span class="lineage-link-arrow">→</span>
+          </a>
         </div>
-      </footer>
+      </div>
+    </header>
+
+    <!-- STATS -->
+    <div class="stats-strip">
+      <div class="stats-inner">
+        <div class="stat-item">
+          <span class="stat-number" id="stat-breeders">—</span>
+          <span class="stat-label">Registered Breeders</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" id="stat-animals">—</span>
+          <span class="stat-label">Animals Recorded</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" id="stat-breeds">—</span>
+          <span class="stat-label">Breed Categories</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">🇰🇪</span>
+          <span class="stat-label">Serving Kenya</span>
+        </div>
+      </div>
     </div>
 
-    <script src="js/script.js"></script>
+    <!-- FEATURES -->
+    <section class="features">
+      <p class="section-label">Why use BreedRegistry</p>
+      <h2 class="section-title">Built for breeders, trusted by all</h2>
+      <p class="section-sub">
+        A transparent, verified system that protects the integrity of animal breeding records across Kenya.
+      </p>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon icon-green">🔒</div>
+          <h3 class="feature-title">Secure Records</h3>
+          <p class="feature-desc">All animal breeding records are encrypted and tamper-proof, maintaining the integrity of your breeding history.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon icon-tan">✅</div>
+          <h3 class="feature-title">Verified Breeders</h3>
+          <p class="feature-desc">Every breeder undergoes an approval process with identity verification before they can register animals.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon icon-blue">🧬</div>
+          <h3 class="feature-title">Full Lineage Tracing</h3>
+          <p class="feature-desc">Anyone can look up an animal's complete ancestry, sire and dam records, and breeding history publicly.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="how-it-works">
+      <div class="how-inner">
+        <p class="section-label">Simple process</p>
+        <h2 class="section-title">How it works</h2>
+        <p class="section-sub">From registration to recording — get started in four straightforward steps.</p>
+        <div class="steps-grid">
+          <div class="step">
+            <div class="step-number">1</div>
+            <p class="step-title">Apply to Register</p>
+            <p class="step-desc">Submit your details and farming documents for verification.</p>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <p class="step-title">Get Approved</p>
+            <p class="step-desc">An admin reviews and approves your breeder application.</p>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <p class="step-title">Register Animals</p>
+            <p class="step-desc">Add your animals with breed info, date of birth, and parentage.</p>
+          </div>
+          <div class="step">
+            <div class="step-number">4</div>
+            <p class="step-title">Record Events</p>
+            <p class="step-desc">Log breeding events, AI procedures, and track offspring.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA BAND -->
+    <section class="cta-band">
+      <p class="section-label">Ready to get started?</p>
+      <h2 class="section-title">Join Kenya's Breed Registry today</h2>
+      <p class="section-sub">
+        Whether you're a cattle farmer, goat breeder, or veterinary professional — this platform is built for you.
+      </p>
+      <div class="cta-buttons">
+        <a href="register.html" class="btn btn-green">Register as Breeder</a>
+        <a href="lineage_search.html" class="btn btn-outline">Public Lineage Search</a>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-inner">
+        <span>© 2025 Animal Breed Registry System. All rights reserved.</span>
+        <span>
+          📧 <a href="mailto:machariaelick1454@gmail.com">machariaelick1454@gmail.com</a>
+        </span>
+      </div>
+    </footer>
+
+    <script>
+      // Load stats from API
+      async function loadStats() {
+        try {
+          const res = await fetch('/api/admins/stats');
+          const data = await res.json();
+          if (data.total_breeders !== undefined)
+            document.getElementById('stat-breeders').textContent = data.total_breeders;
+          if (data.total_animals !== undefined)
+            document.getElementById('stat-animals').textContent = data.total_animals;
+          if (data.total_breeds !== undefined)
+            document.getElementById('stat-breeds').textContent = data.total_breeds;
+        } catch (e) {
+          // silently fail — stats just stay as dashes
+        }
+      }
+
+      // Breeder search
+      async function handleSearch(e) {
+        e.preventDefault();
+        const query = document.getElementById('hero-search-input').value.trim();
+        if (!query) return;
+
+        const resultsEl = document.getElementById('search-results');
+        resultsEl.style.display = 'block';
+        resultsEl.innerHTML = '<div class="result-item">Searching...</div>';
+
+        try {
+          const res = await fetch(`/api/public/breed-summary?breed=${encodeURIComponent(query)}`);
+          const data = await res.json();
+
+          if (!data.length) {
+            resultsEl.innerHTML = '<div class="result-item">No approved breeders found for that breed.</div>';
+            return;
+          }
+
+          resultsEl.innerHTML = data.map(b => `
+            <div class="result-item">
+              <strong>${b.breeder_name}</strong> — ${b.breed}<br>
+              📍 ${b.farm_location}${b.county ? ', ' + b.county : ''} &nbsp;|&nbsp; 📞 ${b.phone}
+            </div>
+          `).join('');
+        } catch (err) {
+          resultsEl.innerHTML = '<div class="result-item">Search failed. Please try again.</div>';
+        }
+      }
+
+      loadStats();
+    </script>
+
   </body>
 </html>
