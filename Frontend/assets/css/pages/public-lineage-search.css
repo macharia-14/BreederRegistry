@@ -1,0 +1,761 @@
+/* Frontend/assets/css/pages/public-lineage-search.css: styles the matching Animal Breed Registry page/components. */
+:root {
+        --green-dark: #1B4332;
+        --green-primary: #2D6A4F;
+        --green-mid: #40916C;
+        --green-light: #95D5B2;
+        --tan: #D4A96A;
+        --tan-light: #F0D9B5;
+        --bg: #F7F4EF;
+        --surface: #FFFFFF;
+        --text: #1C1C1C;
+        --muted: #6B7280;
+        --border: rgba(0,0,0,0.08);
+      }
+
+/* Base page layout and typography. */
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+      }
+
+      nav {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 2.5rem;
+        background: rgba(29, 68, 50, 0.96);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+      }
+
+      .nav-logo {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        text-decoration: none;
+      }
+      .nav-logo-icon {
+        width: 36px; height: 36px;
+        background: var(--tan);
+        border-radius: 8px;
+        display: grid;
+        place-items: center;
+        font-size: 1.1rem;
+      }
+      .nav-logo-text {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.05rem;
+        color: #fff;
+        font-weight: 600;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .nav-links a {
+        text-decoration: none;
+        font-size: 0.88rem;
+        font-weight: 500;
+        padding: 0.5rem 1.1rem;
+        border-radius: 6px;
+        transition: all 0.2s;
+      }
+      .nav-ghost { color: rgba(255,255,255,0.8); }
+      .nav-ghost:hover { color: #fff; background: rgba(255,255,255,0.1); }
+      .nav-solid { background: var(--tan); color: var(--green-dark) !important; font-weight: 600; }
+      .nav-solid:hover { background: #e0b87a; }
+
+      .page-header {
+        background: linear-gradient(135deg, var(--green-dark) 0%, #1a3d2b 100%);
+        padding: 7rem 2.5rem 4rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .page-header::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0);
+        background-size: 40px 40px;
+      }
+      .page-header-inner { position: relative; z-index: 1; }
+
+      .page-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(212,169,106,0.15);
+        border: 1px solid rgba(212,169,106,0.3);
+        color: var(--tan-light);
+        font-size: 0.78rem;
+        font-weight: 500;
+        padding: 0.35rem 0.9rem;
+        border-radius: 20px;
+        margin-bottom: 1.2rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .page-title {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(2rem, 4vw, 3rem);
+        color: #fff;
+        margin-bottom: 0.75rem;
+      }
+      .page-title span { color: var(--tan); }
+
+      .page-sub {
+        color: rgba(255,255,255,0.55);
+        font-size: 1rem;
+        font-weight: 300;
+        max-width: 480px;
+        margin: 0 auto;
+        line-height: 1.7;
+      }
+
+      main {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 3rem 2rem 5rem;
+      }
+
+      .search-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 2.5rem;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+        margin-bottom: 2.5rem;
+      }
+
+      .search-label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--green-mid);
+        margin-bottom: 0.5rem;
+      }
+
+      .search-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.4rem;
+        color: var(--green-dark);
+        margin-bottom: 0.4rem;
+      }
+
+      .search-desc {
+        font-size: 0.88rem;
+        color: var(--muted);
+        margin-bottom: 1.75rem;
+        font-weight: 300;
+      }
+
+      .search-row {
+        display: flex;
+        gap: 0.75rem;
+      }
+
+      .search-input {
+        flex: 1;
+        padding: 0.85rem 1.1rem;
+        border: 1.5px solid var(--border);
+        border-radius: 10px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.95rem;
+        color: var(--text);
+        background: var(--bg);
+        outline: none;
+        transition: border 0.2s, box-shadow 0.2s;
+      }
+      .search-input::placeholder { color: #aaa; }
+      .search-input:focus {
+        border-color: var(--green-mid);
+        box-shadow: 0 0 0 3px rgba(64,145,108,0.1);
+        background: #fff;
+      }
+
+      .search-btn {
+        padding: 0.85rem 1.75rem;
+        background: var(--green-primary);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.92rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        white-space: nowrap;
+      }
+      .search-btn:hover { background: var(--green-dark); transform: translateY(-1px); }
+      .search-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+      .search-examples {
+        margin-top: 0.85rem;
+        font-size: 0.8rem;
+        color: var(--muted);
+      }
+      .search-examples span {
+        display: inline-block;
+        background: rgba(45,106,79,0.08);
+        color: var(--green-primary);
+        border-radius: 4px;
+        padding: 0.15rem 0.5rem;
+        margin: 0.2rem 0.2rem 0 0;
+        cursor: pointer;
+        transition: background 0.15s;
+        font-weight: 500;
+      }
+      .search-examples span:hover { background: rgba(45,106,79,0.15); }
+
+      #lineage-results { }
+
+      .result-loading {
+        text-align: center;
+        padding: 3rem;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .result-loading .spinner {
+        width: 32px; height: 32px;
+        border: 3px solid rgba(45,106,79,0.15);
+        border-top-color: var(--green-primary);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin: 0 auto 1rem;
+      }
+
+      @keyframes spin { to { transform: rotate(360deg); } }
+
+      .result-empty {
+        text-align: center;
+        padding: 3rem;
+        background: var(--surface);
+        border-radius: 16px;
+        border: 1px solid var(--border);
+      }
+      .result-empty-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+      .result-empty h3 { font-family: 'Playfair Display', serif; color: var(--green-dark); margin-bottom: 0.4rem; }
+      .result-empty p { color: var(--muted); font-size: 0.88rem; }
+
+      .animal-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+        margin-bottom: 1.5rem;
+        animation: fadeUp 0.4s ease both;
+      }
+
+      @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(16px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+
+      .animal-card-header {
+        background: linear-gradient(135deg, var(--green-primary), var(--green-dark));
+        padding: 1.75rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+
+      .animal-id-badge {
+        background: rgba(255,255,255,0.15);
+        border: 1px solid rgba(255,255,255,0.25);
+        color: #fff;
+        font-size: 0.78rem;
+        font-weight: 600;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        letter-spacing: 0.05em;
+      }
+
+      .animal-name {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.6rem;
+        color: #fff;
+        font-weight: 700;
+      }
+
+      .animal-type-badge {
+        background: var(--tan);
+        color: var(--green-dark);
+        font-size: 0.82rem;
+        font-weight: 600;
+        padding: 0.35rem 0.9rem;
+        border-radius: 20px;
+      }
+
+      .animal-card-body {
+        padding: 1.75rem 2rem;
+      }
+
+      .detail-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.25rem;
+        margin-bottom: 2rem;
+      }
+
+      .detail-item { }
+      .detail-label {
+        font-size: 0.73rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+      }
+      .detail-value {
+        font-size: 0.95rem;
+        color: var(--text);
+        font-weight: 500;
+      }
+
+      .lineage-section {
+        border-top: 1px solid var(--border);
+        padding-top: 1.75rem;
+      }
+
+      .lineage-section-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.1rem;
+        color: var(--green-dark);
+        margin-bottom: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .lineage-tree {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+
+      .parent-card {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.1rem 1.25rem;
+        border-left: 4px solid transparent;
+        transition: all 0.2s;
+      }
+      .parent-card.sire { border-left-color: var(--green-mid); }
+      .parent-card.dam  { border-left-color: var(--tan); }
+      .parent-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+
+      .parent-role {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-weight: 700;
+        margin-bottom: 0.35rem;
+      }
+      .parent-card.sire .parent-role { color: var(--green-mid); }
+      .parent-card.dam .parent-role { color: var(--tan); }
+
+      .parent-name {
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: var(--text);
+        margin-bottom: 0.2rem;
+      }
+      .parent-details {
+        font-size: 0.8rem;
+        color: var(--muted);
+      }
+
+      .parent-unknown {
+        color: #ccc;
+        font-style: italic;
+        font-size: 0.88rem;
+      }
+
+      .breeder-section {
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .breeder-info { }
+      .breeder-label {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+      }
+      .breeder-name {
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: var(--green-dark);
+      }
+      .breeder-farm {
+        font-size: 0.83rem;
+        color: var(--muted);
+      }
+
+      .verified-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        background: rgba(64,145,108,0.1);
+        color: var(--green-mid);
+        font-size: 0.78rem;
+        font-weight: 600;
+        padding: 0.35rem 0.85rem;
+        border-radius: 20px;
+        border: 1px solid rgba(64,145,108,0.2);
+      }
+
+      .pedigree-section {
+        border-top: 1px solid var(--border);
+        padding-top: 1.75rem;
+        margin-top: 1.75rem;
+      }
+      .pedigree-section-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.1rem;
+        color: var(--green-dark);
+        margin-bottom: 1.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .pedigree-tree {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+        user-select: none;
+      }
+
+      .pedigree-row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 3rem;
+        position: relative;
+        width: 100%;
+      }
+      .pedigree-row.grandparent-row { gap: 1.5rem; }
+
+      .pedigree-connectors {
+        position: relative;
+        height: 44px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+      .connector-svg {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        overflow: visible;
+      }
+
+      .pedigree-node {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: pointer;
+        transition: transform 0.18s;
+      }
+      .pedigree-node:hover { transform: translateY(-3px); }
+      .pedigree-node:hover .node-avatar { box-shadow: 0 6px 20px rgba(45,106,79,0.25); }
+
+      .node-avatar {
+        width: 68px; height: 68px;
+        border-radius: 50%;
+        border: 3px solid #fff;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+        background: var(--bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.6rem;
+        transition: box-shadow 0.18s;
+        position: relative;
+        overflow: hidden;
+      }
+      .node-avatar.sire-avatar { border-color: var(--green-mid); }
+      .node-avatar.dam-avatar  { border-color: var(--tan); }
+      .node-avatar.self-avatar {
+        width: 80px; height: 80px;
+        border-color: var(--green-primary);
+        border-width: 4px;
+      }
+      .node-avatar.unknown-avatar {
+        background: #f0f0f0;
+        border-color: #ddd;
+        border-style: dashed;
+      }
+
+      .node-label {
+        margin-top: 0.5rem;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--text);
+        text-align: center;
+        max-width: 80px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .node-role-tag {
+        font-size: 0.65rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-top: 0.2rem;
+        padding: 0.1rem 0.45rem;
+        border-radius: 20px;
+      }
+      .tag-sire  { background: rgba(64,145,108,0.12); color: var(--green-mid); }
+      .tag-dam   { background: rgba(212,169,106,0.2); color: #a07030; }
+      .tag-self  { background: var(--green-primary); color: #fff; }
+      .tag-grand { background: rgba(27,67,50,0.1); color: var(--green-dark); }
+      .tag-unknown { background: #f0f0f0; color: #aaa; }
+
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.45);
+        backdrop-filter: blur(4px);
+        z-index: 500;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        animation: fadeIn 0.2s ease;
+      }
+      .modal-overlay.open { display: flex; }
+
+      @keyframes fadeIn { from { opacity:0 } to { opacity:1 } }
+
+      .modal-card {
+        background: var(--surface);
+        border-radius: 24px;
+        width: 100%;
+        max-width: 380px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+        animation: slideUp 0.25s cubic-bezier(0.34,1.56,0.64,1) both;
+      }
+      @keyframes slideUp {
+        from { opacity:0; transform: translateY(30px) scale(0.95) }
+        to   { opacity:1; transform: translateY(0) scale(1) }
+      }
+
+      .modal-header {
+        background: linear-gradient(135deg, var(--green-primary), var(--green-dark));
+        padding: 1.75rem 1.5rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        position: relative;
+      }
+      .modal-close {
+        position: absolute;
+        top: 1rem; right: 1rem;
+        width: 30px; height: 30px;
+        background: rgba(255,255,255,0.15);
+        border: none;
+        border-radius: 50%;
+        color: #fff;
+        font-size: 1rem;
+        cursor: pointer;
+        display: grid;
+        place-items: center;
+        transition: background 0.15s;
+      }
+      .modal-close:hover { background: rgba(255,255,255,0.25); }
+
+      .modal-avatar {
+        width: 80px; height: 80px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.15);
+        border: 3px solid rgba(255,255,255,0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin-bottom: 0.85rem;
+      }
+      .modal-name {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.25rem;
+        color: #fff;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+      }
+      .modal-role-badge {
+        font-size: 0.72rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        padding: 0.2rem 0.75rem;
+        border-radius: 20px;
+        background: rgba(255,255,255,0.15);
+        color: rgba(255,255,255,0.85);
+        border: 1px solid rgba(255,255,255,0.2);
+      }
+
+      .modal-body {
+        padding: 1.5rem;
+      }
+      .modal-fields {
+        display: flex;
+        flex-direction: column;
+        gap: 0.9rem;
+      }
+      .modal-field {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        padding-bottom: 0.9rem;
+        border-bottom: 1px solid var(--border);
+      }
+      .modal-field:last-child { border-bottom: none; padding-bottom: 0; }
+      .modal-field-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: var(--muted);
+      }
+      .modal-field-value {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--text);
+        text-align: right;
+      }
+      .modal-field-value.badge-male   { color: var(--green-mid); }
+      .modal-field-value.badge-female { color: #a07030; }
+
+      .how-to {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.75rem 2rem;
+        margin-top: 1.5rem;
+      }
+      .how-to-title {
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--green-mid);
+        margin-bottom: 1rem;
+      }
+      .how-to-steps {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.25rem;
+      }
+      .how-step {
+        display: flex;
+        gap: 0.75rem;
+        align-items: flex-start;
+      }
+      .how-step-num {
+        width: 28px; height: 28px;
+        min-width: 28px;
+        background: var(--green-primary);
+        color: #fff;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        font-size: 0.78rem;
+        font-weight: 700;
+      }
+      .how-step-text {
+        font-size: 0.83rem;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+      .how-step-text strong { color: var(--text); display: block; margin-bottom: 0.15rem; }
+
+      .breeder-results h3 {
+        font-family: 'Playfair Display', serif;
+        color: var(--green-dark);
+        margin-bottom: 1.5rem;
+        font-size: 1.5rem;
+      }
+      .breeder-list {
+        display: grid;
+        gap: 1rem;
+      }
+      .breeder-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      }
+      .breeder-name {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--green-dark);
+        margin-bottom: 0.75rem;
+      }
+      .breeder-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      footer {
+        background: #0f2419;
+        color: rgba(255,255,255,0.5);
+        padding: 2rem 2.5rem;
+        font-size: 0.85rem;
+      }
+      .footer-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+      }
+      footer a { color: var(--tan); text-decoration: none; }
+
+/* Responsive adjustments for smaller screens. */
+      @media (max-width: 640px) {
+        nav { padding: 1rem 1.25rem; }
+        .page-header { padding: 6rem 1.25rem 3rem; }
+        main { padding: 2rem 1.25rem 4rem; }
+        .search-card { padding: 1.5rem; }
+        .search-row { flex-direction: column; }
+        .detail-grid { grid-template-columns: 1fr 1fr; }
+        .lineage-tree { grid-template-columns: 1fr; }
+        .how-to-steps { grid-template-columns: 1fr; }
+        .animal-card-header { flex-direction: column; align-items: flex-start; }
+      }

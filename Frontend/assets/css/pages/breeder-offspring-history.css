@@ -1,0 +1,196 @@
+/* Frontend/assets/css/pages/breeder-offspring-history.css: styles the matching Animal Breed Registry page/components. */
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+/* Base page layout and typography. */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f7fa;
+            color: #2c3e50;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+/* Sidebar navigation styling. */
+        .sidebar {
+            width: 250px;
+            background-color: #ffffff;
+            border-right: 1px solid #e0e6ed;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            transition: transform 0.3s;
+        }
+
+        .role-selector {
+            padding: 15px 20px;
+            border-bottom: 1px solid #e0e6ed;
+        }
+
+        .role-label {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        .role-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .role-btn {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #e0e6ed;
+            background-color: #ffffff;
+            color: #64748b;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .role-btn.active {
+            background-color: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+
+        .role-btn:hover:not(.active) {
+            background-color: #f1f5f9;
+        }
+         .logout-btn {
+            margin: 15px 20px; padding: 10px 20px; background: #e63946; color: #fff;
+            border: none; border-radius: 6px; cursor: pointer; font-size: 14px;
+            font-weight: 600; width: calc(100% - 40px); transition: all .2s;
+            text-align: center;
+        }
+
+        .content-section {
+            background-color: #ffffff;
+            border: 1px solid #e0e6ed;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        tbody tr {
+            transition: background-color 0.2s;
+        }
+
+        .chart-container {
+            background-color: #f8fafc;
+            border: 1px solid #e0e6ed;
+            border-radius: 8px;
+            padding: 25px;
+            min-height: 300px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .chart-label {
+            font-size: 12px;
+            color: #64748b;
+            text-align: center;
+        }
+
+        .offspring-chip {
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .export-btn {
+            padding: 15px 30px;
+            border-radius: 8px;
+            border: 1px solid #e0e6ed;
+            background-color: #ffffff;
+            color: #2c3e50;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .export-btn:hover {
+            background-color: #2563eb;
+            border-color: #2563eb;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+/* Responsive adjustments for smaller screens. */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                height: 100vh;
+                z-index: 999;
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .main-content {
+                padding: 80px 15px 15px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .breeder-select {
+                width: 100%;
+            }
+
+            .page-title {
+                font-size: 22px;
+            }
+
+            .content-section {
+                padding: 20px;
+            }
+
+            .export-buttons {
+                flex-direction: column;
+            }
+
+            .export-btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 70px 10px 10px;
+            }
+
+            .content-section {
+                padding: 15px;
+            }
+        }

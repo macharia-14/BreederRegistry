@@ -1,199 +1,242 @@
+<!-- Frontend/admin/settings.html: page layout for the Animal Breed Registry System. -->
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Dashboard - Settings</title>
-    <link rel="stylesheet" href="./css/admin.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-  </head>
-  <body>
-    <!-- Mobile Menu Toggle -->
-    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
-
-     <aside class="sidebar">
-      <div class="logo">
-        <div class="logo-icon">🔥</div>
-        <div class="logo-title">Breeder Registry</div>
-      </div>
-
-
-      <nav class="nav-menu">
-        <a href="overview.html" class="nav-item">
-          <span class="nav-icon"><i class="fa-solid fa-house"></i></span>
-          <span>Overview</span>
-        </a>
-
-        <a href="breeder-management.html" class="nav-item">
-          <span class="nav-icon"><i class="fa-solid fa-users"></i></span>
-          <span>Breeder Management</span>
-        </a>
-
-        <a href="animal-management.html" class="nav-item">
-          <span class="nav-icon"><i class="fa-solid fa-cow"></i></span>
-          <span>Animal Management</span>
-        </a>
-
-        <a href="breeding-monitoring.html" class="nav-item">
-          <span class="nav-icon"
-            ><i class="fa-solid fa-clipboard-list"></i
-          ></span>
-          <span>Breeding Monitoring</span>
-        </a>
-
-        <a href="reports-analytics.html" class="nav-item">
-          <span class="nav-icon"><i class="fa-solid fa-chart-line"></i></span>
-          <span>Reports & Analytics</span>
-        </a>
-
-        <a href="settings.html" class="nav-item">
-          <span class="nav-icon"><i class="fa-solid fa-gear"></i></span>
-          <span>Settings</span>
-        </a>
-      </nav>
-
-      <div class="version">v1</div>
-      <button id="logoutBtn" class="logout-btn">Logout</button>
-    </aside>
-    <!-- Main Content -->
-    <main class="main-content">
-      <div class="page-header">
-        <h1 class="page-title">Admin Dashboard</h1>
-      </div>
-
-      <!-- Settings Section -->
-      <div class="settings-section">
-        <h2 class="section-title">Settings</h2>
-        <p class="section-description">System preferences placeholder (demo)</p>
-
-        <div class="settings-grid">
-          <!-- Email Notifications -->
-          <div class="setting-item">
-            <div class="setting-header">
-              <div>
-                <div class="setting-label">Email Notifications</div>
-                <div class="setting-description">
-                  Receive email alerts for new breeder registrations and
-                  breeding events
-                </div>
-              </div>
-              <div class="toggle-switch active" onclick="toggleSwitch(this)">
-                <div class="toggle-slider"></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Auto-Approval -->
-          <div class="setting-item">
-            <div class="setting-header">
-              <div>
-                <div class="setting-label">Auto-Approval</div>
-                <div class="setting-description">
-                  Automatically approve breeder registrations (not recommended)
-                </div>
-              </div>
-              <div class="toggle-switch" onclick="toggleSwitch(this)">
-                <div class="toggle-slider"></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Data Retention -->
-          <div class="setting-item">
-            <div class="setting-header">
-              <div style="width: 100%">
-                <div class="setting-label">Data Retention Period</div>
-                <div class="setting-description">
-                  How long to keep archived records
-                </div>
-                <select class="setting-select">
-                  <option value="1">1 Year</option>
-                  <option value="2" selected>2 Years</option>
-                  <option value="5">5 Years</option>
-                  <option value="10">10 Years</option>
-                  <option value="permanent">Permanent</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <!-- System Language -->
-          <div class="setting-item">
-            <div class="setting-header">
-              <div style="width: 100%">
-                <div class="setting-label">System Language</div>
-                <div class="setting-description">
-                  Default language for system interface
-                </div>
-                <select class="setting-select">
-                  <option value="en" selected>English</option>
-                  <option value="sw">Swahili</option>
-                  <option value="fr">French</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <!-- Admin Email -->
-          <div class="setting-item">
-            <div class="setting-header">
-              <div style="width: 100%">
-                <div class="setting-label">Admin Email</div>
-                <div class="setting-description">
-                  Primary email for system notifications
-                </div>
-                <input
-                  type="email"
-                  class="setting-input"
-                  placeholder="admin@example.com"
-                  value="admin@livestock-registry.co.ke"
-                />
-              </div>
-            </div>
-          </div>
-
-          <!-- Backup Frequency -->
-          <div class="setting-item">
-            <div class="setting-header">
-              <div style="width: 100%">
-                <div class="setting-label">Backup Frequency</div>
-                <div class="setting-description">
-                  Automatic database backup schedule
-                </div>
-                <select class="setting-select">
-                  <option value="daily" selected>Daily</option>
-                  <option value="weekly">Weekly</option>
-                  <option value="monthly">Monthly</option>
-                </select>
-              </div>
-            </div>
-          </div>
+ <head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>
+   Admin Dashboard - Settings
+  </title>
+  <link href="/assets/css/app.css" rel="stylesheet">
+  <link href="/assets/css/admin.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="/assets/css/shell-standard.css" rel="stylesheet">
+ </head>
+ <body>
+  <button aria-controls="sidebar" aria-expanded="false" aria-label="Open sidebar" class="menu-toggle" id="menu-toggle" type="button">
+   <i aria-hidden="true" class="fa fa-bars">
+   </i>
+  </button>
+  <!-- Sidebar navigation shared across dashboard pages. -->
+  <aside class="sidebar" id="sidebar">
+   <div class="logo">
+    <img alt="LineageX" class="logo-img" src="/images/lineagex-app-icon.png">
+    <div class="logo-copy">
+     <div class="logo-title">
+      Livestock Registry
+     </div>
+     <div class="logo-subtitle">
+      Admin Console
+     </div>
+    </div>
+   </div>
+   <!-- Navigation links for moving between related pages. -->
+   <nav aria-label="Admin Console navigation" class="nav-menu">
+    <a class="nav-item" href="overview.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-tachometer-alt">
+      </i>
+     </span>
+     Overview
+    </a>
+    <a class="nav-item" href="breeder-management.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-users">
+      </i>
+     </span>
+     Breeder Management
+    </a>
+    <a class="nav-item" href="animal-management.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-paw">
+      </i>
+     </span>
+     Animal Management
+    </a>
+    <a class="nav-item" href="breeding-monitoring.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-heartbeat">
+      </i>
+     </span>
+     Breeding Monitoring
+    </a>
+    <a class="nav-item" href="reports-analytics.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-chart-line">
+      </i>
+     </span>
+     Reports & Analytics
+    </a>
+    <a class="nav-item active" href="settings.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-cog">
+      </i>
+     </span>
+     Settings
+    </a>
+   </nav>
+   <button class="logout-btn" id="logoutBtn" type="button">
+    <i aria-hidden="true" class="fa fa-sign-out-alt">
+    </i>
+    Logout
+   </button>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay">
+  </div>
+  <!-- Main page content shown to the user. -->
+  <main class="main-content">
+   <div class="page-header">
+    <h1 class="page-title">
+     Admin Dashboard
+    </h1>
+   </div>
+   <div class="settings-section">
+    <h2 class="section-title">
+     Settings
+    </h2>
+    <p class="section-description">
+     System preferences placeholder (demo)
+    </p>
+    <div class="settings-grid">
+     <div class="setting-item">
+      <div class="setting-header">
+       <div>
+        <div class="setting-label">
+         Email Notifications
         </div>
-
-        <button class="save-button" onclick="saveSettings()">
-          Save Changes
-        </button>
+        <div class="setting-description">
+         Receive email alerts for new breeder registrations and
+                  breeding events
+        </div>
+       </div>
+       <div class="toggle-switch active" onclick="toggleSwitch(this)">
+        <div class="toggle-slider">
+        </div>
+       </div>
       </div>
-    </main>
-
-    <script src="js/script.js"></script>
-    <script>
-      (function(){
-        const btn = document.getElementById('logoutBtn');
-        if (btn) {
-          btn.addEventListener('click', function(e){
-            localStorage.removeItem('admin');
-            localStorage.removeItem('breeder');
-            localStorage.removeItem('token');
-            localStorage.removeItem('admin_id');
-            localStorage.removeItem('breeder_id');
-            window.location.href = '/index.html';
-          });
-        }
-      })();
-    </script>
-  </body>
+     </div>
+     <div class="setting-item">
+      <div class="setting-header">
+       <div>
+        <div class="setting-label">
+         Auto-Approval
+        </div>
+        <div class="setting-description">
+         Automatically approve breeder registrations (not recommended)
+        </div>
+       </div>
+       <div class="toggle-switch" onclick="toggleSwitch(this)">
+        <div class="toggle-slider">
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="setting-item">
+      <div class="setting-header">
+       <div style="width: 100%">
+        <div class="setting-label">
+         Data Retention Period
+        </div>
+        <div class="setting-description">
+         How long to keep archived records
+        </div>
+        <select class="setting-select">
+         <option value="1">
+          1 Year
+         </option>
+         <option selected value="2">
+          2 Years
+         </option>
+         <option value="5">
+          5 Years
+         </option>
+         <option value="10">
+          10 Years
+         </option>
+         <option value="permanent">
+          Permanent
+         </option>
+        </select>
+       </div>
+      </div>
+     </div>
+     <div class="setting-item">
+      <div class="setting-header">
+       <div style="width: 100%">
+        <div class="setting-label">
+         System Language
+        </div>
+        <div class="setting-description">
+         Default language for system interface
+        </div>
+        <select class="setting-select">
+         <option selected value="en">
+          English
+         </option>
+         <option value="sw">
+          Swahili
+         </option>
+         <option value="fr">
+          French
+         </option>
+        </select>
+       </div>
+      </div>
+     </div>
+     <div class="setting-item">
+      <div class="setting-header">
+       <div style="width: 100%">
+        <div class="setting-label">
+         Admin Email
+        </div>
+        <div class="setting-description">
+         Primary email for system notifications
+        </div>
+        <input class="setting-input" placeholder="admin@example.com" type="email" value="admin@livestock-registry.co.ke">
+       </div>
+      </div>
+     </div>
+     <div class="setting-item">
+      <div class="setting-header">
+       <div style="width: 100%">
+        <div class="setting-label">
+         Backup Frequency
+        </div>
+        <div class="setting-description">
+         Automatic database backup schedule
+        </div>
+        <select class="setting-select">
+         <option selected value="daily">
+          Daily
+         </option>
+         <option value="weekly">
+          Weekly
+         </option>
+         <option value="monthly">
+          Monthly
+         </option>
+        </select>
+       </div>
+      </div>
+     </div>
+    </div>
+    <button class="save-button" onclick="saveSettings()">
+     Save Changes
+    </button>
+   </div>
+  </main>
+  <!-- Scripts loaded for page behavior and API calls. -->
+  <script src="/assets/js/core/config.js">
+  </script>
+  <script src="/assets/js/core/api.js">
+  </script>
+  <script src="/assets/js/core/ui.js">
+  </script>
+  <script src="/assets/js/core/common.js">
+  </script>
+  <script src="/assets/js/admin.js">
+  </script>
+  <script src="/assets/js/sidebar-standard.js">
+  </script>
+ </body>
 </html>

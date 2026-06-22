@@ -1,0 +1,724 @@
+/* Extracted from Frontend/breeders/animal_management.html */
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+/* Base page layout and typography. */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f7fa;
+            color: #2c3e50;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: #ffffff;
+            border-right: 1px solid #e0e6ed;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            transition: transform 0.3s;
+        }
+
+        .logo {
+            padding: 0 20px 30px;
+            border-bottom: 1px solid #e0e6ed;
+        }
+
+        .logo-icon {
+            color: #2563eb;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .logo-title {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 2px;
+        }
+
+        .logo-subtitle {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+         .logout-btn {
+            margin:15px 20px; padding:10px 20px; background:#e63946; color:#fff;
+            border:none; border-radius:6px; cursor:pointer; font-size:14px;
+            font-weight:600; width:calc(100% - 40px); transition:all .2s;
+        }
+        .logout-btn:hover { background:#dc2626; transform:translateY(-1px); }
+
+        .role-selector {
+            padding: 15px 20px;
+            border-bottom: 1px solid #e0e6ed;
+        }
+
+        .role-label {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        .role-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .role-btn {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #e0e6ed;
+            background-color: #ffffff;
+            color: #64748b;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .role-btn.active {
+            background-color: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+
+        .role-btn:hover:not(.active) {
+            background-color: #f1f5f9;
+        }
+
+        .nav-menu {
+            flex: 1;
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #475569;
+            text-decoration: none;
+            transition: background-color 0.2s;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .nav-item:hover {
+            background-color: #f1f5f9;
+        }
+
+        .nav-item.active {
+            background-color: #eff6ff;
+            border-right: 3px solid #2563eb;
+            color: #2563eb;
+        }
+
+        .nav-icon {
+            width: 20px;
+            margin-right: 15px;
+            font-size: 18px;
+        }
+
+        .version {
+            padding: 15px 20px;
+            font-size: 12px;
+            color: #94a3b8;
+            border-top: 1px solid #e0e6ed;
+        }
+
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background-color: #2563eb;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 40px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .breeder-select {
+            padding: 10px 20px;
+            background-color: #ffffff;
+            border: 1px solid #e0e6ed;
+            border-radius: 6px;
+            color: #2c3e50;
+            font-size: 14px;
+            cursor: pointer;
+            min-width: 200px;
+        }
+
+        .breeder-select:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        /* My Animals Section */
+        .my-animals {
+            background-color: #ffffff;
+            border: 1px solid #e0e6ed;
+            border-radius: 12px;
+            padding: 30px;
+        }
+
+        .animals-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .add-animal-btn {
+            padding: 10px 20px;
+            background-color: #2563eb;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .add-animal-btn:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        .export-btn {
+            padding: 10px 20px;
+            background-color: #ffffff;
+            border: 1px solid #e0e6ed;
+            border-radius: 6px;
+            color: #2c3e50;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .export-btn:hover {
+            background-color: #2563eb;
+            border-color: #2563eb;
+            color: white;
+        }
+
+        .showing-count {
+            font-size: 13px;
+            color: #8b98a5;
+            margin-bottom: 15px;
+            text-align: right;
+        }
+
+        /* Filters */
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .filter-select {
+            padding: 10px 15px;
+            background-color: #ffffff;
+            border: 1px solid #e0e6ed;
+            border-radius: 6px;
+            color: #2c3e50;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background-color: #f8fafc;
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            border-bottom: 1px solid #e0e6ed;
+        }
+
+        td {
+            padding: 18px 15px;
+            font-size: 14px;
+            color: #2c3e50;
+            border-bottom: 1px solid #e0e6ed;
+        }
+
+        tbody tr {
+            transition: background-color 0.2s;
+        }
+
+        tbody tr:hover {
+            background-color: #f8fafc;
+            cursor: pointer;
+        }
+
+        .view-link {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .view-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: #ffffff;
+            border: 1px solid #e0e6ed;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 30px;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-title {
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: #64748b;
+            font-size: 28px;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .close-modal:hover {
+            color: #2c3e50;
+        }
+
+/* Form field layout and spacing. */
+        .form-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+
+        .form-input, .form-select {
+            padding: 12px 15px;
+            background-color: #ffffff;
+            border: 1px solid #e0e6ed;
+            border-radius: 6px;
+            color: #2c3e50;
+            font-size: 14px;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        .form-select {
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            padding: 12px;
+            background-color: #2563eb;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background-color: #1d4ed8;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1024px) {
+            .filters {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                height: 100vh;
+                z-index: 999;
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .main-content {
+                padding: 80px 15px 15px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .breeder-select {
+                width: 100%;
+            }
+
+            .page-title {
+                font-size: 22px;
+            }
+
+            .my-animals {
+                padding: 20px;
+            }
+
+            .animals-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .header-actions {
+                width: 100%;
+                flex-direction: column;
+            }
+
+            .add-animal-btn, .export-btn {
+                width: 100%;
+            }
+
+            .modal-content {
+                padding: 20px;
+                max-height: 85vh;
+            }
+
+            .modal-title {
+                font-size: 18px;
+            }
+
+            /* Logout Button Style */
+            .logout-btn {
+                margin: 15px 20px; padding: 10px 20px; background: #e63946; color: #fff;
+                border: none; border-radius: 6px; cursor: pointer; font-size: 14px;
+                font-weight: 600; width: calc(100% - 40px); transition: all .2s;
+            }
+            .logout-btn:hover { background: #dc2626; transform: translateY(-1px); }
+        }
+
+        /* Action Dropdown */
+        .actions-cell {
+            position: relative;
+            text-align: right;
+            padding-right: 25px;
+        }
+
+        .actions-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            color: #64748b;
+            padding: 5px 10px;
+            border-radius: 6px;
+        }
+        .actions-btn:hover {
+            background-color: #f1f5f9;
+        }
+
+        .actions-dropdown {
+            display: none;
+            position: absolute;
+            right: 20px;
+            top: 55px;
+            background-color: white;
+            border: 1px solid #e0e6ed;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            z-index: 10;
+            width: 185px;
+            overflow: hidden;
+        }
+
+        .actions-dropdown.show {
+            display: block;
+        }
+
+        .actions-dropdown a {
+            display: block;
+            padding: 10px 15px;
+            font-size: 14px;
+            color: #2c3e50;
+            text-decoration: none;
+        }
+
+        .actions-dropdown a:hover {
+            background-color: #f1f5f9;
+        }
+
+        .actions-dropdown a.delete {
+            color: #dc2626;
+        }
+
+        .actions-dropdown a.delete:hover {
+            background-color: #fee2e2;
+        }
+
+       /* New Lineage Tree Styles */
+       .pedigree-tree {
+            white-space: nowrap;
+            overflow-x: auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .pedigree-tree ul {
+            padding-top: 20px;
+            position: relative;
+            display: inline-flex;
+            transition: all 0.5s;
+        }
+        .pedigree-tree li {
+            text-align: center;
+            list-style-type: none;
+            position: relative;
+            padding: 20px 5px 0 5px;
+            transition: all 0.5s;
+        }
+        .pedigree-tree li::before, .pedigree-tree li::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 50%;
+            border-top: 2px solid #ccc;
+            width: 50%;
+            height: 20px;
+        }
+        .pedigree-tree li::after {
+            right: auto;
+            left: 50%;
+            border-left: 2px solid #ccc;
+        }
+        .pedigree-tree li:only-child::after, .pedigree-tree li:only-child::before {
+            display: none;
+        }
+        .pedigree-tree li:only-child {
+            padding-top: 0;
+        }
+        .pedigree-tree li:first-child::before, .pedigree-tree li:last-child::after {
+            border: 0 none;
+        }
+        .pedigree-tree li:last-child::before {
+            border-right: 2px solid #ccc;
+            border-radius: 0 5px 0 0;
+        }
+        .pedigree-tree li:first-child::after {
+            border-radius: 5px 0 0 0;
+        }
+        .pedigree-tree ul ul::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            border-left: 2px solid #ccc;
+            width: 0;
+            height: 20px;
+        }
+        .pedigree-tree .animal-card {
+            border: 1px solid #e0e6ed;
+            padding: 15px;
+            text-decoration: none;
+            background-color: #f8fafc;
+            display: inline-block;
+            border-radius: 8px;
+            min-width: 220px;
+            text-align: left;
+        }
+        .pedigree-tree .animal-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 10px; }
+        .pedigree-tree .animal-card p { font-size: 13px; margin-bottom: 5px; color: #475569; }
+        .pedigree-tree .animal-card.foundation { border-top: 3px solid #2563eb; }
+        .pedigree-tree .animal-card.sire { border-top: 3px solid #3b82f6; background-color: #eff6ff; }
+        .pedigree-tree .animal-card.dam { border-top: 3px solid #ec4899; background-color: #fdf2f8; }
+
+        .view-ancestry-btn {
+            margin-top: 10px;
+            width: 100%;
+            padding: 6px;
+            background: #e2e8f0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            color: #475569;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .view-ancestry-btn:hover {
+            background: #cbd5e1;
+            color: #1e293b;
+        }
+        .summary-card {
+            background: #eff6ff;
+            border: 1px solid #dbeafe;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .loading, .error-message, .no-results {
+            text-align: center;
+            padding: 40px;
+            font-size: 16px;
+            color: #64748b;
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 70px 10px 10px;
+            }
+
+            .my-animals {
+                padding: 15px;
+            }
+
+            .modal-content {
+                padding: 15px;
+            }
+        }
+
+        .animal-detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 0.85rem;
+        }
+        .animal-detail-section {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1rem;
+            background: #fff;
+        }
+        .animal-detail-section h4 {
+            margin: 0 0 0.75rem;
+            color: #1B4332;
+            font-size: 0.92rem;
+        }
+        .animal-detail-item {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 0.42rem 0;
+            border-bottom: 1px dashed #edf2f7;
+            font-size: 0.84rem;
+        }
+        .animal-detail-item:last-child { border-bottom: none; }
+        .animal-detail-label { color: #64748b; }
+        .animal-detail-value { color: #0f172a; font-weight: 600; text-align: right; word-break: break-word; }
+        .measurement-history-table { width: 100%; border-collapse: collapse; margin-top: 0.6rem; }
+        .measurement-history-table th, .measurement-history-table td { padding: 0.55rem; border-bottom: 1px solid #e5e7eb; font-size: 0.82rem; text-align: left; }
+        .measurement-history-table th { color: #475569; background: #f8fafc; }

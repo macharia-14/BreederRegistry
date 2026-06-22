@@ -1,0 +1,356 @@
+/* Extracted from Frontend/breeders/offspring_history.html */
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+/* Base page layout and typography. */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f7fa;
+            color: #2c3e50;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: #ffffff;
+            border-right: 1px solid #e0e6ed;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            transition: transform 0.3s;
+        }
+
+        .logo {
+            padding: 0 20px 30px;
+            border-bottom: 1px solid #e0e6ed;
+        }
+
+        .logo-icon {
+            color: #2563eb;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .logo-title {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 2px;
+        }
+
+        .logo-subtitle {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .role-selector {
+            padding: 15px 20px;
+            border-bottom: 1px solid #e0e6ed;
+        }
+
+        .role-label {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        .role-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .role-btn {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #e0e6ed;
+            background-color: #ffffff;
+            color: #64748b;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .role-btn.active {
+            background-color: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+
+        .role-btn:hover:not(.active) {
+            background-color: #f1f5f9;
+        }
+         .logout-btn {
+            margin: 15px 20px; padding: 10px 20px; background: #e63946; color: #fff;
+            border: none; border-radius: 6px; cursor: pointer; font-size: 14px;
+            font-weight: 600; width: calc(100% - 40px); transition: all .2s;
+            text-align: center;
+        }
+        .logout-btn:hover { background: #dc2626; transform: translateY(-1px); }
+
+        .nav-menu {
+            flex: 1;
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #475569;
+            text-decoration: none;
+            transition: background-color 0.2s;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .nav-item:hover {
+            background-color: #f1f5f9;
+        }
+
+        .nav-item.active {
+            background-color: #eff6ff;
+            border-right: 3px solid #2563eb;
+            color: #2563eb;
+        }
+
+        .nav-icon {
+            width: 20px;
+            margin-right: 15px;
+            font-size: 18px;
+        }
+
+        .version {
+            padding: 15px 20px;
+            font-size: 12px;
+            color: #94a3b8;
+            border-top: 1px solid #e0e6ed;
+        }
+
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background-color: #2563eb;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 40px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .breeder-select {
+            padding: 10px 20px;
+            background-color: #ffffff;
+            border: 1px solid #e0e6ed;
+            border-radius: 6px;
+            color: #2c3e50;
+            font-size: 14px;
+            cursor: pointer;
+            min-width: 200px;
+        }
+
+        .breeder-select:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        /* Content Section */
+        .content-section {
+            background-color: #ffffff;
+            border: 1px solid #e0e6ed;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 25px;
+        }
+
+        /* Offspring Table */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background-color: #f8fafc;
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            border-bottom: 1px solid #e0e6ed;
+        }
+
+        td {
+            padding: 18px 15px;
+            font-size: 14px;
+            color: #2c3e50;
+            border-bottom: 1px solid #e0e6ed;
+        }
+
+        tbody tr {
+            transition: background-color 0.2s;
+        }
+
+        tbody tr:hover {
+            background-color: #f8fafc;
+            cursor: pointer;
+        }
+
+        /* Monthly Trends Chart */
+        .chart-container {
+            background-color: #f8fafc;
+            border: 1px solid #e0e6ed;
+            border-radius: 8px;
+            padding: 25px;
+            min-height: 300px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .chart-label {
+            font-size: 12px;
+            color: #64748b;
+            text-align: center;
+        }
+
+        .offspring-chip {
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        /* Reports Section */
+        .export-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .export-btn {
+            padding: 15px 30px;
+            border-radius: 8px;
+            border: 1px solid #e0e6ed;
+            background-color: #ffffff;
+            color: #2c3e50;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .export-btn:hover {
+            background-color: #2563eb;
+            border-color: #2563eb;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                height: 100vh;
+                z-index: 999;
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .main-content {
+                padding: 80px 15px 15px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .breeder-select {
+                width: 100%;
+            }
+
+            .page-title {
+                font-size: 22px;
+            }
+
+            .content-section {
+                padding: 20px;
+            }
+
+            .export-buttons {
+                flex-direction: column;
+            }
+
+            .export-btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 70px 10px 10px;
+            }
+
+            .content-section {
+                padding: 15px;
+            }
+        }

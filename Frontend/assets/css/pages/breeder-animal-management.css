@@ -1,0 +1,354 @@
+/* Frontend/assets/css/pages/breeder-animal-management.css: styles the matching Animal Breed Registry page/components. */
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+/* Base page layout and typography. */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f7fa;
+            color: #2c3e50;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+/* Sidebar navigation styling. */
+        .sidebar {
+            width: 250px;
+            background-color: #ffffff;
+            border-right: 1px solid #e0e6ed;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            transition: transform 0.3s;
+        }
+         .logout-btn {
+            margin:15px 20px; padding:10px 20px; background:#e63946; color:#fff;
+            border:none; border-radius:6px; cursor:pointer; font-size:14px;
+            font-weight:600; width:calc(100% - 40px); transition:all .2s;
+        }
+        .logout-btn:hover { background:#dc2626; transform:translateY(-1px); }
+
+        .role-selector {
+            padding: 15px 20px;
+            border-bottom: 1px solid #e0e6ed;
+        }
+
+        .role-label {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        .role-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .role-btn {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #e0e6ed;
+            background-color: #ffffff;
+            color: #64748b;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .role-btn.active {
+            background-color: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+
+        .role-btn:hover:not(.active) {
+            background-color: #f1f5f9;
+        }
+
+        .my-animals {
+            background-color: #ffffff;
+            border: 1px solid #e0e6ed;
+            border-radius: 12px;
+            padding: 30px;
+        }
+
+        .animals-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .add-animal-btn {
+            padding: 10px 20px;
+            background-color: #2563eb;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .add-animal-btn:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        .export-btn {
+            padding: 10px 20px;
+            background-color: #ffffff;
+            border: 1px solid #e0e6ed;
+            border-radius: 6px;
+            color: #2c3e50;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .export-btn:hover {
+            background-color: #2563eb;
+            border-color: #2563eb;
+            color: white;
+        }
+
+        .showing-count {
+            font-size: 13px;
+            color: #8b98a5;
+            margin-bottom: 15px;
+            text-align: right;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .filter-select {
+            padding: 10px 15px;
+            background-color: #ffffff;
+            border: 1px solid #e0e6ed;
+            border-radius: 6px;
+            color: #2c3e50;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        tbody tr {
+            transition: background-color 0.2s;
+        }
+
+        .view-link {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .view-link:hover {
+            text-decoration: underline;
+        }
+
+/* Form field layout and spacing. */
+        .form-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .form-input, .form-select {
+            padding: 12px 15px;
+            background-color: #ffffff;
+            border: 1px solid #e0e6ed;
+            border-radius: 6px;
+            color: #2c3e50;
+            font-size: 14px;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        .submit-btn {
+            padding: 12px;
+            background-color: #2563eb;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background-color: #1d4ed8;
+        }
+
+/* Responsive adjustments for smaller screens. */
+        @media (max-width: 1024px) {
+            .filters {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                height: 100vh;
+                z-index: 999;
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .main-content {
+                padding: 80px 15px 15px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .breeder-select {
+                width: 100%;
+            }
+
+            .page-title {
+                font-size: 22px;
+            }
+
+            .my-animals {
+                padding: 20px;
+            }
+
+            .animals-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .header-actions {
+                width: 100%;
+                flex-direction: column;
+            }
+
+            .add-animal-btn, .export-btn {
+                width: 100%;
+            }
+
+            .modal-content {
+                padding: 20px;
+                max-height: 85vh;
+            }
+
+            .modal-title {
+                font-size: 18px;
+            }
+
+            .logout-btn {
+                margin: 15px 20px; padding: 10px 20px; background: #e63946; color: #fff;
+                border: none; border-radius: 6px; cursor: pointer; font-size: 14px;
+                font-weight: 600; width: calc(100% - 40px); transition: all .2s;
+            }
+            .logout-btn:hover { background: #dc2626; transform: translateY(-1px); }
+        }
+
+        .actions-dropdown {
+            display: none;
+            position: absolute;
+            right: 20px;
+            top: 55px;
+            background-color: white;
+            border: 1px solid #e0e6ed;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            z-index: 10;
+            width: 185px;
+            overflow: hidden;
+        }
+        .pedigree-tree li:only-child::after, .pedigree-tree li:only-child::before {
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 70px 10px 10px;
+            }
+
+            .my-animals {
+                padding: 15px;
+            }
+
+            .modal-content {
+                padding: 15px;
+            }
+        }
+
+        .animal-detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 0.85rem;
+        }
+        .animal-detail-section {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1rem;
+            background: #fff;
+        }
+        .animal-detail-section h4 {
+            margin: 0 0 0.75rem;
+            color: #1B4332;
+            font-size: 0.92rem;
+        }
+        .animal-detail-item {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 0.42rem 0;
+            border-bottom: 1px dashed #edf2f7;
+            font-size: 0.84rem;
+        }
+        .animal-detail-item:last-child { border-bottom: none; }
+        .animal-detail-label { color: #64748b; }
+        .animal-detail-value { color: #0f172a; font-weight: 600; text-align: right; word-break: break-word; }
+        .measurement-history-table { width: 100%; border-collapse: collapse; margin-top: 0.6rem; }
+        .measurement-history-table th, .measurement-history-table td { padding: 0.55rem; border-bottom: 1px solid #e5e7eb; font-size: 0.82rem; text-align: left; }
+        .measurement-history-table th { color: #475569; background: #f8fafc; }
+
+        #pedigreeAnimalPopup { display: none; }
+        #pedigreeAnimalPopup.active { display: flex; }

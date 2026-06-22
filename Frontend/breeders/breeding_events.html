@@ -1,0 +1,434 @@
+<!-- Frontend/breeders/breeding_events.html: page layout for the Animal Breed Registry System. -->
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>
+   Breeder Dashboard - Breeding & Pregnancy
+  </title>
+  <link href="/images/LineageX.png" rel="icon" type="image/png">
+  <link href="/assets/css/app.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="/assets/css/breeders.css" rel="stylesheet">
+  <link href="/assets/css/pages/breeder-breeding-events.css" rel="stylesheet">
+  <link href="/assets/css/shell-standard.css" rel="stylesheet">
+ </head>
+ <body>
+  <button aria-controls="sidebar" aria-expanded="false" aria-label="Open sidebar" class="menu-toggle" id="menu-toggle" type="button">
+   <i aria-hidden="true" class="fa fa-bars">
+   </i>
+  </button>
+  <!-- Sidebar navigation shared across dashboard pages. -->
+  <aside class="sidebar" id="sidebar">
+   <div class="logo">
+    <img alt="LineageX" class="logo-img" src="/images/lineagex-app-icon.png">
+    <div class="logo-copy">
+     <div class="logo-title">
+      Livestock Registry
+     </div>
+     <div class="logo-subtitle">
+      Breeder Dashboard
+     </div>
+    </div>
+   </div>
+   <!-- Navigation links for moving between related pages. -->
+   <nav aria-label="Breeder Dashboard navigation" class="nav-menu">
+    <a class="nav-item" href="overview.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-home">
+      </i>
+     </span>
+     Overview
+    </a>
+    <a class="nav-item" href="animal_management.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-paw">
+      </i>
+     </span>
+     Animals
+    </a>
+    <a class="nav-item active" href="breeding_events.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-heartbeat">
+      </i>
+     </span>
+     Breeding & Pregnancy
+    </a>
+    <a class="nav-item" href="offspring_history.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-baby">
+      </i>
+     </span>
+     Offspring Register
+    </a>
+    <a class="nav-item" href="genetics.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-dna">
+      </i>
+     </span>
+     Genetics & Recommendations
+    </a>
+    <a class="nav-item" href="reports.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-chart-bar">
+      </i>
+     </span>
+     Reports
+    </a>
+    <a class="nav-item" href="setting.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-cog">
+      </i>
+     </span>
+     Settings
+    </a>
+   </nav>
+   <button class="logout-btn" id="logoutBtn" type="button">
+    <i aria-hidden="true" class="fa fa-sign-out-alt">
+    </i>
+    Logout
+   </button>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay">
+  </div>
+  <!-- Main page content shown to the user. -->
+  <main class="main-content">
+   <div class="page-header">
+    <h1 class="page-title">
+     Breeder Dashboard
+    </h1>
+    <select class="breeder-select" id="breederSelect">
+    </select>
+   </div>
+   <div class="calendar-section">
+    <div class="calendar-header">
+     <h2 class="section-title">
+      Breeding Calendar & Events
+     </h2>
+     <button class="add-event-btn" onclick="openModal()">
+      + Register Event
+     </button>
+    </div>
+    <div class="calendar-content">
+     <div class="subsection">
+      <h3 class="subsection-title">
+       Upcoming Due Dates
+      </h3>
+      <div id="upcomingDueDates">
+      </div>
+     </div>
+     <div class="subsection">
+      <h3 class="subsection-title">
+       Breeding Method Breakdown
+      </h3>
+      <div class="method-grid" id="methodBreakdown">
+       <div class="method-item">
+        <div class="method-count">
+         -
+        </div>
+        <div class="method-label">
+         AI
+        </div>
+       </div>
+       <div class="method-item">
+        <div class="method-count">
+         -
+        </div>
+        <div class="method-label">
+         Natural
+        </div>
+       </div>
+       <div class="method-item">
+        <div class="method-count">
+         -
+        </div>
+        <div class="method-label">
+         Embryo Transfer
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+    <div class="subsection" style="margin-top: 30px;">
+     <h3 class="subsection-title">
+      Pregnancy Monitor
+     </h3>
+     <div class="loading-state" id="pregLoading">
+      <i class="fa fa-spinner fa-spin">
+      </i>
+      <p>
+       Loading pregnancy data&hellip;
+      </p>
+     </div>
+     <div id="pregContent" style="display:none;">
+      <div class="preg-summary" id="pregSummary">
+      </div>
+      <div id="pregCards">
+      </div>
+     </div>
+     <div class="empty-state" id="pregEmpty" style="display:none;">
+      <i class="fa fa-baby" style="color:#cbd5e1;">
+      </i>
+      <p>
+       No active pregnancies found.
+       <br>
+       Pregnancies appear here after breeding is served and before an outcome is recorded.
+      </p>
+     </div>
+    </div>
+    <div class="subsection" style="margin-top: 30px;">
+     <h3 class="subsection-title">
+      Automatic Breeding Alerts
+     </h3>
+     <div class="event-list" id="breedingAlerts">
+      <div class="empty-state">
+       <i class="fa fa-bell" style="color:#cbd5e1;">
+       </i>
+       <p>
+        Loading alerts&hellip;
+       </p>
+      </div>
+     </div>
+    </div>
+    <div class="subsection" style="margin-top: 30px;">
+     <h3 class="subsection-title">
+      Fertility Analytics Dashboard
+     </h3>
+     <div class="preg-summary" id="fertilityAnalyticsSummary">
+     </div>
+     <div class="method-grid" id="fertilityMethodBreakdown" style="margin-top:16px;">
+     </div>
+    </div>
+    <div class="subsection" style="margin-top: 30px;">
+     <h3 class="subsection-title">
+      Breeding Event Register
+     </h3>
+     <div class="table-container" id="breedingEventsTableWrap">
+      <p>
+       Loading breeding events&hellip;
+      </p>
+     </div>
+    </div>
+   </div>
+  </main>
+  <div class="modal-overlay" id="eventModal">
+   <div class="modal-content">
+    <div class="modal-header">
+     <h3 class="modal-title">
+      Register Breeding Event
+     </h3>
+     <button class="close-modal" onclick="closeModal()">
+      &times;
+     </button>
+    </div>
+    <!-- Form used to collect and submit user input. -->
+    <form class="form-grid" id="breedingForm">
+     <div class="form-group" style="grid-column: span 2;">
+      <label class="form-label">
+       Animal Type
+       <span style="color:#E63946">
+        *
+       </span>
+      </label>
+      <select class="form-select" id="breedingAnimalType" name="animalType" required>
+       <option value>
+        Select Animal Type
+       </option>
+      </select>
+     </div>
+     <div class="form-group">
+      <label class="form-label" id="damLabel">
+       Dam/Mother ID
+       <span style="color:#E63946">
+        *
+       </span>
+      </label>
+      <select class="form-select" disabled id="dam" name="dam" required>
+       <option value>
+        Select Type First
+       </option>
+      </select>
+     </div>
+     <div class="form-group" id="sireSection">
+      <label class="form-label" id="sireLabel">
+       Sire/Father ID
+      </label>
+      <select class="form-select" disabled id="sire" name="sire">
+       <option value>
+        Select Type First
+       </option>
+      </select>
+     </div>
+     <div class="form-group">
+      <label class="form-label">
+       Breeding Method
+       <span style="color:#E63946">
+        *
+       </span>
+      </label>
+      <select class="form-select" id="breedingMethod" name="breedingMethod" required>
+       <option value>
+        Select Method
+       </option>
+       <option value="natural">
+        Natural Service
+       </option>
+       <option value="ai">
+        Artificial Insemination (AI)
+       </option>
+       <option value="et">
+        Embryo Transfer (ET)
+       </option>
+       <option value="ivf">
+        In Vitro Fertilization (IVF)
+       </option>
+      </select>
+     </div>
+     <div class="form-group">
+      <label class="form-label">
+       Breeding Date
+       <span style="color:#E63946">
+        *
+       </span>
+      </label>
+      <input class="form-input" name="breedingDate" required type="date">
+     </div>
+     <div class="form-group">
+      <label class="form-label">
+       Initial Status
+      </label>
+      <select class="form-select" name="breedingStatus">
+       <option value="served">
+        Served / Mated
+       </option>
+       <option value="planned">
+        Planned
+       </option>
+      </select>
+     </div>
+     <div class="form-row hidden" id="aiFields" style="grid-column: span 2;">
+      <div class="form-group">
+       <label class="form-label">
+        Semen Source/Batch No.
+       </label>
+       <input class="form-input" name="batchNumber" placeholder="e.g., GENEX123" type="text">
+      </div>
+      <div class="form-group">
+       <label class="form-label">
+        AI Technician
+       </label>
+       <input class="form-input" name="aiTechnician" placeholder="Technician Name" type="text">
+      </div>
+     </div>
+     <div class="form-row hidden" id="etFields" style="grid-column: span 2;">
+      <div class="form-group">
+       <label class="form-label">
+        Donor Dam ID
+       </label>
+       <input class="form-input" name="donorDam" placeholder="ID of egg donor" type="text">
+      </div>
+      <div class="form-group">
+       <label class="form-label">
+        Embryo ID
+       </label>
+       <input class="form-input" name="embryoId" placeholder="Embryo identification" type="text">
+      </div>
+     </div>
+     <div class="form-group" style="grid-column: span 2;">
+      <label class="form-label">
+       Offspring (Optional)
+      </label>
+      <select class="form-select" disabled id="offspring" name="offspring">
+       <option value>
+        Select Type First
+       </option>
+      </select>
+      <p style="font-size:0.72rem;color:#9CA3AF;margin-top:0.3rem;font-weight:300">
+       Link an existing animal as the result of this breeding event. This will mark the event as 'Successful' and populate the Offspring Register.
+      </p>
+     </div>
+     <div class="form-group">
+      <label class="form-label">
+       Expected Due Date (Optional)
+      </label>
+      <input class="form-input" name="expectedDueDate" type="date">
+     </div>
+     <div class="form-group" style="grid-column: span 2;">
+      <label class="form-label">
+       Notes (Optional)
+      </label>
+      <textarea class="form-input" name="notes" placeholder="Any additional details about the event..." rows="3"></textarea>
+     </div>
+     <button class="submit-btn" style="grid-column: span 2;" type="submit">
+      Register Event
+     </button>
+    </form>
+   </div>
+  </div>
+  <div class="modal-overlay" id="outcomeModal">
+   <div class="modal-content">
+    <div class="modal-header">
+     <h3 class="modal-title" id="outcomeModalTitle">
+      Update Breeding Event
+     </h3>
+     <button class="close-modal" onclick="closeOutcomeModal()">
+      &times;
+     </button>
+    </div>
+    <form class="form-grid" id="outcomeForm">
+     <input id="outcomeEventId" type="hidden">
+     <input id="outcomeActionType" type="hidden">
+     <div class="form-group" id="pregnancyCheckDateGroup">
+      <label class="form-label">
+       Pregnancy Check Date
+      </label>
+      <input class="form-input" id="pregnancyCheckDate" type="date">
+     </div>
+     <div class="form-group" id="outcomeDateGroup">
+      <label class="form-label">
+       Outcome Date
+      </label>
+      <input class="form-input" id="outcomeDate" type="date">
+     </div>
+     <div class="form-group" id="offspringCountGroup">
+      <label class="form-label">
+       Total Offspring
+      </label>
+      <input class="form-input" id="outcomeOffspringCount" min="0" type="number">
+     </div>
+     <div class="form-group" id="liveOffspringCountGroup">
+      <label class="form-label">
+       Live Offspring
+      </label>
+      <input class="form-input" id="outcomeLiveOffspringCount" min="0" type="number">
+     </div>
+     <div class="form-group" style="grid-column: span 2;">
+      <label class="form-label">
+       Notes / Reason
+      </label>
+      <textarea class="form-input" id="outcomeNotes" placeholder="Vet diagnosis, failed conception reason, delivery notes, etc." rows="3"></textarea>
+     </div>
+     <button class="submit-btn" style="grid-column: span 2;" type="submit">
+      Save Update
+     </button>
+    </form>
+   </div>
+  </div>
+  <!-- Scripts loaded for page behavior and API calls. -->
+  <script src="/assets/js/core/config.js">
+  </script>
+  <script src="/assets/js/core/api.js">
+  </script>
+  <script src="/assets/js/core/ui.js">
+  </script>
+  <script src="/assets/js/core/common.js">
+  </script>
+  <script src="/assets/js/breeders.js">
+  </script>
+  <script src="/assets/js/pages/breeder-breeding-events.js">
+  </script>
+  <script src="/assets/js/sidebar-standard.js">
+  </script>
+ </body>
+</html>

@@ -1,0 +1,3 @@
+/* Frontend/assets/css/pages/breeder-animal-management-extra.css: styles the matching Animal Breed Registry page/components. */
+#pedigreeAnimalPopup { display: none; }
+        #pedigreeAnimalPopup.active { display: flex; }

@@ -1,0 +1,339 @@
+<!-- Frontend/breeders/genetics.html: page layout for the Animal Breed Registry System. -->
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>
+   Genetics & Breeding Intelligence &mdash; LineageX
+  </title>
+  <link href="/images/LineageX.png" rel="icon" type="image/png">
+  <link href="/assets/css/app.css" rel="stylesheet">
+  <link href="/assets/css/breeders.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="/assets/css/pages/breeder-genetics.css" rel="stylesheet">
+  <link href="/assets/css/shell-standard.css" rel="stylesheet">
+ </head>
+ <body>
+  <button aria-controls="sidebar" aria-expanded="false" aria-label="Open sidebar" class="menu-toggle" id="menu-toggle" type="button">
+   <i aria-hidden="true" class="fa fa-bars">
+   </i>
+  </button>
+  <!-- Sidebar navigation shared across dashboard pages. -->
+  <aside class="sidebar" id="sidebar">
+   <div class="logo">
+    <img alt="LineageX" class="logo-img" src="/images/lineagex-app-icon.png">
+    <div class="logo-copy">
+     <div class="logo-title">
+      Livestock Registry
+     </div>
+     <div class="logo-subtitle">
+      Breeder Dashboard
+     </div>
+    </div>
+   </div>
+   <!-- Navigation links for moving between related pages. -->
+   <nav aria-label="Breeder Dashboard navigation" class="nav-menu">
+    <a class="nav-item" href="overview.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-home">
+      </i>
+     </span>
+     Overview
+    </a>
+    <a class="nav-item" href="animal_management.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-paw">
+      </i>
+     </span>
+     Animals
+    </a>
+    <a class="nav-item" href="breeding_events.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-heartbeat">
+      </i>
+     </span>
+     Breeding & Pregnancy
+    </a>
+    <a class="nav-item" href="offspring_history.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-baby">
+      </i>
+     </span>
+     Offspring Register
+    </a>
+    <a class="nav-item active" href="genetics.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-dna">
+      </i>
+     </span>
+     Genetics & Recommendations
+    </a>
+    <a class="nav-item" href="reports.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-chart-bar">
+      </i>
+     </span>
+     Reports
+    </a>
+    <a class="nav-item" href="setting.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-cog">
+      </i>
+     </span>
+     Settings
+    </a>
+   </nav>
+   <button class="logout-btn" id="logoutBtn" type="button">
+    <i aria-hidden="true" class="fa fa-sign-out-alt">
+    </i>
+    Logout
+   </button>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay">
+  </div>
+  <!-- Main page content shown to the user. -->
+  <main class="main-content">
+   <div class="page-header">
+    <div>
+     <h1 class="page-title">
+      🧬 Genetics & Breeding Intelligence
+     </h1>
+     <p class="page-subtitle">
+      Pedigree-based inbreeding analysis &middot; Sire recommendations
+     </p>
+    </div>
+   </div>
+   <div class="alert-box alert-warn" style="margin-bottom:18px;">
+    <i class="fa fa-triangle-exclamation">
+    </i>
+    <strong>
+     Important:
+    </strong>
+    This module provides pedigree-based breeding guidance using recorded lineage information.
+        Results depend on the accuracy and completeness of recorded data and do not constitute DNA, laboratory, or official genetic verification.
+   </div>
+   <div class="tab-bar-wrap">
+    <div class="tab-bar">
+     <button class="tab-btn active" onclick="switchTab('coi',  this)">
+      <i class="fa fa-calculator">
+      </i>
+      COI Calculator
+     </button>
+     <button class="tab-btn" onclick="switchTab('recs', this)">
+      <i class="fa fa-star">
+      </i>
+      Sire Recommendations
+     </button>
+    </div>
+   </div>
+   <div id="tab-coi">
+    <div class="card">
+     <div class="card-title">
+      ⚖️ Coefficient of Inbreeding (COI) Calculator
+     </div>
+     <div class="card-subtitle">
+      Wright's COI formula estimates the probability that an offspring will inherit two identical
+                gene copies from a common ancestor, based on the recorded pedigree. Lower projected COI usually indicates lower inbreeding risk,
+                but results can be underestimated when lineage records are incomplete.
+     </div>
+     <div class="form-row">
+      <div class="form-group">
+       <label>
+        Sire (Father)
+       </label>
+       <select id="coiSireSelect">
+        <option value>
+         Loading animals&hellip;
+        </option>
+       </select>
+      </div>
+      <div class="form-group">
+       <label>
+        Dam (Mother)
+       </label>
+       <select id="coiDamSelect">
+        <option value>
+         Loading animals&hellip;
+        </option>
+       </select>
+      </div>
+     </div>
+     <button class="btn-primary" id="calcCoiBtn" onclick="calculateCOI()" style="max-width:220px;">
+      <i class="fa fa-calculator">
+      </i>
+      Calculate COI
+     </button>
+     <div id="coiResult" style="margin-top:22px;">
+      <div class="coi-display">
+       <div class="coi-number" id="coiPctDisplay">
+        0%
+       </div>
+       <div class="coi-details">
+        <div class="coi-level" id="coiLevelDisplay">
+         &mdash;
+        </div>
+        <div class="coi-desc" id="coiDescDisplay">
+         &mdash;
+        </div>
+        <div class="coi-rec" id="coiRecDisplay">
+        </div>
+        <div class="progress-wrap">
+         <div class="progress-label">
+          <span>
+           0% &mdash; No inbreeding
+          </span>
+          <span>
+           25% &mdash; Parent &times; offspring
+          </span>
+         </div>
+         <div class="progress-bar">
+          <div class="progress-fill" id="coiProgressBar" style="width:0%;background:#059669;">
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+      <div id="coiPedigreeNotice">
+      </div>
+      <p class="info-note">
+       <strong>
+        Reference:
+       </strong>
+       &lt;3.125% = 4th-degree relatives &middot; 6.25% = 3rd-degree &middot; 12.5% = 2nd-degree (half-siblings) &middot; 25% = 1st-degree (parent/offspring).
+                    These are pedigree-based estimates, not DNA verification.
+      </p>
+     </div>
+    </div>
+    <div class="card">
+     <div class="card-title">
+      🔍 Animal Inbreeding Lookup
+     </div>
+     <div class="card-subtitle">
+      Check the recorded inbreeding coefficient of any registered animal.
+                Requires both sire & dam to be registered in the system and depends on pedigree completeness.
+     </div>
+     <div class="form-row" style="max-width:400px;">
+      <div class="form-group">
+       <label>
+        Select Animal
+       </label>
+       <select id="lookupAnimalSelect">
+        <option value>
+         Loading&hellip;
+        </option>
+       </select>
+      </div>
+     </div>
+     <button class="btn-primary" onclick="lookupAnimalCOI()" style="max-width:180px;">
+      <i class="fa fa-search">
+      </i>
+      Look Up
+     </button>
+     <div id="lookupResult">
+     </div>
+    </div>
+   </div>
+   <div id="tab-recs" style="display:none;">
+    <div class="card">
+     <div class="card-title">
+      🏆 Breeding Pair Recommendation Engine
+     </div>
+     <div class="card-subtitle">
+      Select a dam to get a ranked list of potential sires. The breeding decision-support score combines
+      <strong>
+       projected COI/genetic diversity, real animal performance, health, fertility, offspring evidence, pedigree completeness, and data confidence
+      </strong>
+      .
+                It also explains missing data and risk penalties so breeders do not over-trust weak records.
+     </div>
+     <div class="form-row" style="max-width:400px;">
+      <div class="form-group">
+       <label>
+        Dam (Mother)
+       </label>
+       <select id="recDamSelect">
+        <option value>
+         Loading&hellip;
+        </option>
+       </select>
+      </div>
+     </div>
+     <button class="btn-primary" id="getRecsBtn" onclick="getRecommendations()" style="max-width:260px;">
+      <i class="fa fa-star">
+      </i>
+      Get Recommendations
+     </button>
+    </div>
+    <div id="recsResult" style="display:none;">
+     <div class="card">
+      <div class="card-title" id="recTableTitle">
+       Recommended Sires
+      </div>
+      <div class="card-subtitle" id="recTableSubtitle">
+      </div>
+      <div class="table-scroll">
+       <table class="rec-table">
+        <thead>
+         <tr>
+          <th>
+           #
+          </th>
+          <th>
+           Sire ID
+          </th>
+          <th>
+           Breed
+          </th>
+          <th>
+           Farm
+          </th>
+          <th>
+           Projected COI
+          </th>
+          <th>
+           Final Score
+          </th>
+          <th>
+           Confidence
+          </th>
+          <th>
+           Recommendation
+          </th>
+          <th>
+           Explanation
+          </th>
+         </tr>
+        </thead>
+        <tbody id="recTableBody">
+        </tbody>
+       </table>
+      </div>
+      <p class="info-note" style="margin-top:14px;">
+       <strong>
+        Composite Score
+       </strong>
+       = (1 &minus; COI) &times; 60% + Breed Performance &times; 40%.
+                    Higher is better. Scores are decision-support estimates based on available records and should be reviewed by a qualified breeder or livestock specialist before critical mating decisions.
+      </p>
+     </div>
+    </div>
+   </div>
+  </main>
+  <!-- Scripts loaded for page behavior and API calls. -->
+  <script src="/assets/js/core/config.js">
+  </script>
+  <script src="/assets/js/core/api.js">
+  </script>
+  <script src="/assets/js/core/ui.js">
+  </script>
+  <script src="/assets/js/core/common.js">
+  </script>
+  <script src="/assets/js/breeders.js">
+  </script>
+  <script src="/assets/js/pages/breeder-genetics.js">
+  </script>
+  <script src="/assets/js/sidebar-standard.js">
+  </script>
+ </body>
+</html>

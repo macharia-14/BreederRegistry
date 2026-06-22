@@ -1,0 +1,367 @@
+<!-- Frontend/breeders/reports.html: page layout for the Animal Breed Registry System. -->
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>
+   Reports & Farm Intelligence | LineageX
+  </title>
+  <link href="/images/LineageX.png" rel="icon" type="image/png">
+  <link href="/assets/css/app.css" rel="stylesheet">
+  <link href="/assets/css/breeders.css" rel="stylesheet">
+  <link href="/assets/css/pages/breeder-reports.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="/assets/css/shell-standard.css" rel="stylesheet">
+ </head>
+ <body>
+  <button aria-controls="sidebar" aria-expanded="false" aria-label="Open sidebar" class="menu-toggle" id="menu-toggle" type="button">
+   <i aria-hidden="true" class="fa fa-bars">
+   </i>
+  </button>
+  <!-- Sidebar navigation shared across dashboard pages. -->
+  <aside class="sidebar" id="sidebar">
+   <div class="logo">
+    <img alt="LineageX" class="logo-img" src="/images/lineagex-app-icon.png">
+    <div class="logo-copy">
+     <div class="logo-title">
+      Livestock Registry
+     </div>
+     <div class="logo-subtitle">
+      Breeder Dashboard
+     </div>
+    </div>
+   </div>
+   <!-- Navigation links for moving between related pages. -->
+   <nav aria-label="Breeder Dashboard navigation" class="nav-menu">
+    <a class="nav-item" href="overview.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-home">
+      </i>
+     </span>
+     Overview
+    </a>
+    <a class="nav-item" href="animal_management.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-paw">
+      </i>
+     </span>
+     Animals
+    </a>
+    <a class="nav-item" href="breeding_events.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-heartbeat">
+      </i>
+     </span>
+     Breeding & Pregnancy
+    </a>
+    <a class="nav-item" href="offspring_history.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-baby">
+      </i>
+     </span>
+     Offspring Register
+    </a>
+    <a class="nav-item" href="genetics.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-dna">
+      </i>
+     </span>
+     Genetics & Recommendations
+    </a>
+    <a class="nav-item active" href="reports.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-chart-bar">
+      </i>
+     </span>
+     Reports
+    </a>
+    <a class="nav-item" href="setting.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-cog">
+      </i>
+     </span>
+     Settings
+    </a>
+   </nav>
+   <button class="logout-btn" id="logoutBtn" type="button">
+    <i aria-hidden="true" class="fa fa-sign-out-alt">
+    </i>
+    Logout
+   </button>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay">
+  </div>
+  <!-- Main page content shown to the user. -->
+  <main class="main-content reports-page">
+   <div class="page-header report-topbar">
+    <div class="page-header-left">
+     <p class="eyebrow">
+      Farm intelligence center
+     </p>
+     <h1 class="page-title">
+      Reports
+     </h1>
+     <p class="page-subtitle">
+      Turn animal, breeding, fertility, health and production records into usable management information.
+     </p>
+    </div>
+    <select aria-label="Farm selector" class="breeder-select" id="breederSelect">
+    </select>
+   </div>
+   <section class="report-hero" id="reportHero">
+    <div class="hero-copy">
+     <span class="status-pill">
+      <i class="fa fa-sync-alt">
+      </i>
+      Live report data
+     </span>
+     <h2 id="reportFarmTitle">
+      Farm report loading&hellip;
+     </h2>
+     <p id="reportFarmSubtitle">
+      Preparing farm intelligence from current records.
+     </p>
+    </div>
+    <div class="hero-score">
+     <div class="score-ring" id="dataQualityRing">
+      &mdash;
+     </div>
+     <span>
+      Data Quality Score
+     </span>
+     <small>
+      Higher data completeness improves genetics and management confidence.
+     </small>
+    </div>
+   </section>
+   <section class="kpi-grid" id="reportKpiGrid">
+   </section>
+   <section class="report-layout">
+    <div class="report-main">
+     <article class="report-card executive-card">
+      <div class="card-heading">
+       <div>
+        <p class="eyebrow">
+         Executive summary
+        </p>
+        <h2>
+         What needs attention now
+        </h2>
+       </div>
+       <button class="small-action" id="refreshReportsBtn">
+        <i class="fa fa-redo">
+        </i>
+        Refresh
+       </button>
+      </div>
+      <div class="action-list" id="recommendedActions">
+      </div>
+     </article>
+     <article class="report-card">
+      <div class="card-heading">
+       <div>
+        <p class="eyebrow">
+         Breeding & pregnancy
+        </p>
+        <h2>
+         Reproductive performance
+        </h2>
+       </div>
+      </div>
+      <div class="split-grid">
+       <div>
+        <h3 class="mini-title">
+         Outcome mix
+        </h3>
+        <div class="horizontal-bars" id="outcomeChart">
+        </div>
+       </div>
+       <div>
+        <h3 class="mini-title">
+         Birth trend
+        </h3>
+        <div class="mini-bar-chart" id="birthTrendChart">
+        </div>
+       </div>
+      </div>
+      <div class="table-wrap compact-table">
+       <table>
+        <thead>
+         <tr>
+          <th>
+           Method
+          </th>
+          <th>
+           Attempts
+          </th>
+          <th>
+           Success
+          </th>
+          <th>
+           Failures
+          </th>
+          <th>
+           Rate
+          </th>
+         </tr>
+        </thead>
+        <tbody id="methodPerformanceBody">
+        </tbody>
+       </table>
+      </div>
+     </article>
+     <article class="report-card">
+      <div class="card-heading">
+       <div>
+        <p class="eyebrow">
+         Animal population
+        </p>
+        <h2>
+         Herd composition
+        </h2>
+       </div>
+      </div>
+      <div class="split-grid">
+       <div>
+        <h3 class="mini-title">
+         Breed distribution
+        </h3>
+        <div class="horizontal-bars" id="breedChart">
+        </div>
+       </div>
+       <div>
+        <h3 class="mini-title">
+         Age groups
+        </h3>
+        <div class="horizontal-bars" id="ageChart">
+        </div>
+       </div>
+      </div>
+     </article>
+     <article class="report-card">
+      <div class="card-heading">
+       <div>
+        <p class="eyebrow">
+         Health & fertility
+        </p>
+        <h2>
+         Watchlists
+        </h2>
+       </div>
+      </div>
+      <div class="split-grid">
+       <div>
+        <h3 class="mini-title">
+         Health watchlist
+        </h3>
+        <div class="watchlist" id="healthWatchlist">
+        </div>
+       </div>
+       <div>
+        <h3 class="mini-title">
+         Dam fertility review
+        </h3>
+        <div class="watchlist" id="damWatchlist">
+        </div>
+       </div>
+      </div>
+     </article>
+    </div>
+    <aside class="report-sidebar">
+     <article class="report-card export-panel">
+      <p class="eyebrow">
+       Exports
+      </p>
+      <h2>
+       Generate reports
+      </h2>
+      <p>
+       Download professional reports for farm records, investor/client review, veterinary work, or breeder decision-making.
+      </p>
+      <button class="export-btn primary" id="generateFarmReportBtn">
+       <i class="fa fa-file-pdf">
+       </i>
+       Farm Intelligence PDF
+      </button>
+      <button class="export-btn" id="generateBreedingReportBtn">
+       <i class="fa fa-heartbeat">
+       </i>
+       Breeding Performance PDF
+      </button>
+      <button class="export-btn" id="generateDataQualityReportBtn">
+       <i class="fa fa-clipboard-check">
+       </i>
+       Data Quality PDF
+      </button>
+      <button class="export-btn" id="exportAllAnimalsCsvBtn">
+       <i class="fa fa-file-csv">
+       </i>
+       Animals CSV
+      </button>
+      <button class="export-btn" id="exportAllEventsCsvBtn">
+       <i class="fa fa-file-csv">
+       </i>
+       Breeding CSV
+      </button>
+      <button class="export-btn" id="exportDataQualityCsvBtn">
+       <i class="fa fa-file-csv">
+       </i>
+       Data Quality CSV
+      </button>
+     </article>
+     <article class="report-card">
+      <p class="eyebrow">
+       Genetics confidence
+      </p>
+      <h2>
+       Data quality
+      </h2>
+      <div class="quality-list" id="dataQualityList">
+      </div>
+     </article>
+     <article class="report-card">
+      <p class="eyebrow">
+       Top sires
+      </p>
+      <h2>
+       Sire performance
+      </h2>
+      <div class="rank-list" id="sirePerformanceList">
+      </div>
+     </article>
+     <article class="report-card">
+      <p class="eyebrow">
+       Production
+      </p>
+      <h2>
+       Output summary
+      </h2>
+      <div class="production-summary" id="productionSummary">
+      </div>
+     </article>
+    </aside>
+   </section>
+  </main>
+  <!-- Scripts loaded for page behavior and API calls. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js">
+  </script>
+  <script src="/assets/js/core/config.js">
+  </script>
+  <script src="/assets/js/core/api.js">
+  </script>
+  <script src="/assets/js/core/ui.js">
+  </script>
+  <script src="/assets/js/core/common.js">
+  </script>
+  <script src="/assets/js/breeders.js">
+  </script>
+  <script src="/assets/js/pages/breeder-reports.js">
+  </script>
+  <script src="/assets/js/sidebar-standard.js">
+  </script>
+ </body>
+</html>

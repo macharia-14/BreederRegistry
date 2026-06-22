@@ -1,0 +1,179 @@
+<!-- Frontend/breeders/offspring_history.html: page layout for the Animal Breed Registry System. -->
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>
+   Breeder Dashboard - Offspring Register
+  </title>
+  <link href="/assets/css/app.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="/assets/css/breeders.css" rel="stylesheet">
+  <link href="/assets/css/pages/breeder-offspring-history.css" rel="stylesheet">
+  <link href="/assets/css/shell-standard.css" rel="stylesheet">
+ </head>
+ <body>
+  <button aria-controls="sidebar" aria-expanded="false" aria-label="Open sidebar" class="menu-toggle" id="menu-toggle" type="button">
+   <i aria-hidden="true" class="fa fa-bars">
+   </i>
+  </button>
+  <!-- Sidebar navigation shared across dashboard pages. -->
+  <aside class="sidebar" id="sidebar">
+   <div class="logo">
+    <img alt="LineageX" class="logo-img" src="/images/lineagex-app-icon.png">
+    <div class="logo-copy">
+     <div class="logo-title">
+      Livestock Registry
+     </div>
+     <div class="logo-subtitle">
+      Breeder Dashboard
+     </div>
+    </div>
+   </div>
+   <!-- Navigation links for moving between related pages. -->
+   <nav aria-label="Breeder Dashboard navigation" class="nav-menu">
+    <a class="nav-item" href="overview.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-home">
+      </i>
+     </span>
+     Overview
+    </a>
+    <a class="nav-item" href="animal_management.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-paw">
+      </i>
+     </span>
+     Animals
+    </a>
+    <a class="nav-item" href="breeding_events.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-heartbeat">
+      </i>
+     </span>
+     Breeding & Pregnancy
+    </a>
+    <a class="nav-item active" href="offspring_history.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-baby">
+      </i>
+     </span>
+     Offspring Register
+    </a>
+    <a class="nav-item" href="genetics.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-dna">
+      </i>
+     </span>
+     Genetics & Recommendations
+    </a>
+    <a class="nav-item" href="reports.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-chart-bar">
+      </i>
+     </span>
+     Reports
+    </a>
+    <a class="nav-item" href="setting.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-cog">
+      </i>
+     </span>
+     Settings
+    </a>
+   </nav>
+   <button class="logout-btn" id="logoutBtn" type="button">
+    <i aria-hidden="true" class="fa fa-sign-out-alt">
+    </i>
+    Logout
+   </button>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay">
+  </div>
+  <!-- Main page content shown to the user. -->
+  <main class="main-content">
+   <div class="page-header">
+    <h1 class="page-title">
+     Breeder Dashboard
+    </h1>
+    <select class="breeder-select" id="breederSelect">
+    </select>
+   </div>
+   <div class="content-section">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+     <h2 class="section-title" style="margin-bottom: 0;">
+      Offspring / Birth History
+     </h2>
+     <div class="export-buttons">
+      <button class="export-btn" id="exportOffspringCsvBtn">
+       Export CSV
+      </button>
+      <button class="export-btn" id="exportOffspringPdfBtn">
+       Export PDF
+      </button>
+     </div>
+    </div>
+    <div class="table-container">
+     <table>
+      <thead>
+       <tr>
+        <th>
+         Offspring ID
+        </th>
+        <th>
+         Birth Date
+        </th>
+        <th>
+         Sire
+        </th>
+        <th>
+         Dam
+        </th>
+        <th>
+         Method
+        </th>
+       </tr>
+      </thead>
+      <tbody id="offspringTableBody">
+      </tbody>
+     </table>
+    </div>
+   </div>
+   <div class="content-section">
+    <h2 class="section-title">
+     Monthly Trends
+    </h2>
+    <div class="chart-container" style="flex-direction:column;align-items:stretch;padding:20px;">
+     <div id="monthlyTrendsChart" style="width:100%;height:180px;display:flex;align-items:flex-end;">
+      <p style="font-size:14px;color:#94a3b8;margin:auto;">
+       Loading chart&hellip;
+      </p>
+     </div>
+     <p style="font-size:12px;color:#94a3b8;text-align:center;margin-top:10px;">
+      Births per month (last 12 months)
+     </p>
+    </div>
+   </div>
+  </main>
+  <!-- Scripts loaded for page behavior and API calls. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js">
+  </script>
+  <script src="/assets/js/core/config.js">
+  </script>
+  <script src="/assets/js/core/api.js">
+  </script>
+  <script src="/assets/js/core/ui.js">
+  </script>
+  <script src="/assets/js/core/common.js">
+  </script>
+  <script src="/assets/js/breeders.js">
+  </script>
+  <script src="/assets/js/sidebar-standard.js">
+  </script>
+ </body>
+</html>

@@ -1,233 +1,417 @@
-// Navigation highlighting
-      document.querySelectorAll(".nav-item").forEach((item) => {
-        item.addEventListener("click", function (e) {
-          // Remove active class from all items
-          document.querySelectorAll(".nav-item").forEach((nav) => {
-            nav.classList.remove("active");
-          });
-          // Add active class to clicked item
-          this.classList.add("active");
-        });
+// ============================================================
+// admin/script.js  —  Admin dashboard logic
+// ============================================================
+
+// ── Helpers ───────────────────────────────────────────────────
+function getToken() {
+  return localStorage.getItem('token') || sessionStorage.getItem('token') || localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
+}
+
+// Handles get role behavior for this page.
+function getRole() {
+  return localStorage.getItem('role') || sessionStorage.getItem('role') || localStorage.getItem('user_role') || sessionStorage.getItem('user_role');
+}
+
+// Clears the active session and returns the user to the login page.
+function logout() {
+  const keys = ['token', 'role', 'admin', 'admin_id'];
+  keys.forEach(k => { localStorage.removeItem(k); sessionStorage.removeItem(k); });
+  window.location.href = '/login.html'; // Redirect to login.html
+}
+
+// Handles api fetch behavior for this page.
+async function apiFetch(url, options = {}) {
+  const token = getToken();
+  const headers = { ...(options.headers || {}) };
+  if (token && !headers.Authorization) headers.Authorization = `Bearer ${token}`;
+  if (options.body && !(options.body instanceof FormData) && !headers['Content-Type']) {
+    headers['Content-Type'] = 'application/json';
+  }
+  let res;
+  try {
+    res = await fetch(url, { ...options, headers });
+  } catch (networkError) {
+    throw new Error('Network error. Please check your connection and try again.');
+  }
+  if (res.status === 401 || res.status === 403) {
+    const message = res.status === 401 ? 'Your session has expired. Please login again.' : 'You are not allowed to perform this action.';
+    if (res.status === 401) {
+      // Clear admin-specific session data and redirect
+      ['token', 'role', 'admin', 'admin_id'].forEach(k => { localStorage.removeItem(k); sessionStorage.removeItem(k); });
+      setTimeout(() => { window.location.href = '/login.html'; }, 800);
+    }
+    throw new Error(message);
+  }
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.detail || data.message || `Request failed with status ${res.status}`);
+  }
+  if (res.status === 204) return null;
+  const text = await res.text();
+  return text ? JSON.parse(text) : null;
+}
+
+// ── Toast Notification System ─────────────────────────────────
+(function initToastSystem() {
+  const style = document.createElement('style');
+  style.textContent = `
+    #toast-container {
+      position: fixed; top: 20px; right: 20px; z-index: 9999;
+      display: flex; flex-direction: column; gap: 10px; pointer-events: none;
+    }
+    .toast {
+      padding: 14px 20px; border-radius: 8px; font-size: 14px; font-weight: 500;
+      color: #fff; min-width: 280px; max-width: 400px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+      animation: toastIn 0.3s ease; pointer-events: all;
+    }
+    .toast.info    { background: #2563eb; }
+    .toast.success { background: #16a34a; }
+    .toast.error   { background: #dc2626; }
+    .toast.fade-out { animation: toastOut 0.4s ease forwards; }
+    @keyframes toastIn  { from{opacity:0;transform:translateX(30px);} to{opacity:1;transform:translateX(0);} }
+    @keyframes toastOut { from{opacity:1;transform:translateX(0);}    to{opacity:0;transform:translateX(30px);} }
+  `;
+  document.head.appendChild(style);
+  const container = document.createElement('div');
+  container.id = 'toast-container';
+  document.body.appendChild(container);
+})();
+
+// Shows toast feedback to the user.
+function showToast(message, type = 'info') {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.classList.add('fade-out');
+    toast.addEventListener('animationend', () => toast.remove());
+  }
+  , 3500);
+}
+const API = window.location.origin + '/api';
+
+// ── Boot ──────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', async () => {
+  // FIX: Same reload loop fix as breeder script.js — skip auth check on
+  // the login page so the form doesn't redirect before credentials can be entered.
+  const path = window.location.pathname.toLowerCase();
+  const publicKeywords = ['login.html', 'register.html', 'lineage_search.html', 'lineage-search', 'lineage', 'reset-password', 'index.html'];
+  const isPublic = publicKeywords.some(kw => path.includes(kw)) ||
+                   path.endsWith('/') || path.split('/').pop() === '';
+
+  console.log(`[Auth Guard] Path: ${path}, isPublic: ${isPublic}`);
+  if (isPublic) return;
+  const token = getToken();
+  const role = getRole();
+  if (!token || role !== 'admin') {
+    console.warn('[Auth Guard] Missing admin session.');
+    return;
+  }
+
+  initAdminNav();
+  initSidebarMobile();
+
+  await Promise.all([
+    renderStats(),
+    renderPendingApplications(),
+    renderApprovedBreeders(),
+    renderRejectedApplications(),
+  ]);
+
+  (document.getElementById('logoutBtn') || document.getElementById('logout-btn'))?.addEventListener('click', e => { e.preventDefault(); logout(); });
+});
+
+// ── Sidebar & nav ─────────────────────────────────────────────
+function initAdminNav() {
+  const sections = document.querySelectorAll('.admin-section');
+  const navItems = document.querySelectorAll('.nav-item');
+
+  // Activate first section by default
+  if (sections.length && !document.querySelector('.admin-section.active')) {
+    sections[0].classList.add('active');
+  }
+
+  navItems.forEach(item => {
+    const sectionId = item.getAttribute('data-section');
+    if (!sectionId) return;
+
+    item.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.getElementById(sectionId);
+      if (!target) return;
+
+      sections.forEach(s => s.classList.remove('active'));
+      navItems.forEach(n => n.classList.remove('active'));
+      target.classList.add('active');
+      item.classList.add('active');
+      const sidebar = document.querySelector('.sidebar');
+      if (window.innerWidth <= 768 && sidebar?.classList.contains('active')) {
+        sidebar.classList.remove('active');
+      }
+    });
+  });
+}
+
+// Initializes sidebar mobile behavior for this page.
+function initSidebarMobile() {
+  if (typeof window.toggleMenu === 'function') return;
+  const sidebar = document.getElementById('sidebar') || document.querySelector('.sidebar');
+  const overlay = document.getElementById('sidebarOverlay') || document.querySelector('.sidebar-overlay');
+  const menuToggle = document.getElementById('menu-toggle') || document.getElementById('menuToggle') || document.querySelector('.menu-toggle');
+  // Handles set open behavior for this page.
+  const setOpen = (open) => {
+    sidebar?.classList.toggle('active', Boolean(open));
+    overlay?.classList.toggle('active', Boolean(open));
+    menuToggle?.setAttribute('aria-expanded', String(Boolean(open)));
+    document.body.classList.toggle('sidebar-open', Boolean(open));
+  };
+  window.toggleMenu = () => setOpen(!sidebar?.classList.contains('active'));
+  window.closeSidebar = () => setOpen(false);
+  menuToggle?.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); window.toggleMenu(); });
+  overlay?.addEventListener('click', window.closeSidebar);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') window.closeSidebar(); });
+  document.querySelectorAll('.sidebar .nav-item').forEach((item) => {
+    item.addEventListener('click', () => { if (window.innerWidth <= 1100) window.closeSidebar(); });
+  });
+}
+
+// ── API helpers ───────────────────────────────────────────────
+function adminHeaders() {
+  return { Authorization: `Bearer ${getToken()}` };
+}
+
+// ── Stats ─────────────────────────────────────────────────────
+async function renderStats() {
+  try {
+    const stats = await apiFetch('/api/admins/stats', { headers: adminHeaders() });
+    // Handles set behavior for this page.
+    const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val ?? 0; };
+
+    // Support both naming conventions used across admin pages
+    set('total-breeders',      stats.total_breeders);
+    set('total-breeders-stat', stats.total_breeders);
+    set('pending-count',       stats.pending_applications);
+    set('pending-count-stat',  stats.pending_applications);
+    set('total-animals',       stats.total_animals);
+    set('total-animals-stat',  stats.total_animals);
+    set('approved-count',      stats.approved_breeders);
+  } catch (err) {
+    showToast('Failed to load stats.', 'error');
+  }
+}
+
+// ── Table helpers ─────────────────────────────────────────────
+function setTableLoading(tbodyId, colSpan) {
+  const tbody = document.getElementById(tbodyId);
+  if (!tbody) return null;
+  tbody.innerHTML = `<tr><td colspan="${colSpan}" style="text-align:center;padding:1rem;">Loading…</td></tr>`;
+  return tbody;
+}
+
+// Handles set table empty behavior for this page.
+function setTableEmpty(tbody, colSpan, message) {
+  tbody.innerHTML = `<tr><td colspan="${colSpan}" style="text-align:center;padding:1.5rem;color:#6B7280;">${message}</td></tr>`;
+}
+
+// ── Pending applications ──────────────────────────────────────
+async function renderPendingApplications() {
+  const tbody = setTableLoading('applications-tbody', 9);
+  if (!tbody) return;
+
+  try {
+    const apps = await apiFetch('/api/admins/applications', { headers: adminHeaders() });
+    tbody.innerHTML = '';
+    if (!apps.length) { setTableEmpty(tbody, 9, 'No pending applications.'); return; }
+
+    apps.forEach(app => tbody.appendChild(buildApplicationRow(app)));
+  } catch (err) {
+    setTableEmpty(tbody, 9, `Error: ${err.message}`);
+  }
+}
+
+// Handles build application row behavior for this page.
+function buildApplicationRow(app) {
+  const row = document.createElement('tr');
+  const cells = [
+    app.full_name,
+    app.national_id,
+    `<span class="badge badge-individual">${app.animal_type ?? '—'}</span>`,
+    app.farm_name ?? '—',
+    app.county ?? '—',
+    app.phone,
+    app.email,
+    new Date(app.created_at).toLocaleDateString(),
+  ];
+
+  cells.forEach((cell, i) => {
+    const td = document.createElement('td');
+    if (i === 2) td.innerHTML = cell;
+    else td.textContent = cell;
+    row.appendChild(td);
+  });
+  const actions = document.createElement('td');
+  const approveBtn = makeBtn('approve-btn', '<svg class="icon-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 5 13"></polyline></svg> Approve', () => approveApplication(app.id));
+  const rejectBtn = makeBtn('reject-btn',  '✕ Reject',  () => rejectApplication(app.id));
+  const viewBtn = makeBtn('view-btn',    '👁 View',    () => viewApplication(app.id));
+  actions.append(approveBtn, rejectBtn, viewBtn);
+  row.appendChild(actions);
+  return row;
+}
+
+// ── Approved breeders ─────────────────────────────────────────
+async function renderApprovedBreeders() {
+  const tbody = setTableLoading('farmers-tbody', 9);
+  if (!tbody) return;
+
+  try {
+    const breeders = await apiFetch('/api/admins/approved-breeders', { headers: adminHeaders() });
+    tbody.innerHTML = '';
+    if (!breeders.length) { setTableEmpty(tbody, 9, 'No approved breeders.'); return; }
+
+    breeders.forEach(b => {
+      const row = document.createElement('tr');
+      const cells = [b.full_name, b.farm_prefix ?? '—', b.farm_name ?? '—', b.county ?? '—',
+        `<span class="badge badge-individual">${b.animal_type ?? '—'}</span>`,
+        b.email, b.phone,
+        `<span class="status-approved">Approved</span>`,
+        b.approved_at ? new Date(b.approved_at).toLocaleDateString() : '—',
+      ];
+      cells.forEach((c, i) => {
+        const td = document.createElement('td');
+        if (i === 4 || i === 7) td.innerHTML = c; else td.textContent = c;
+        row.appendChild(td);
       });
+      const actions = document.createElement('td');
+      actions.appendChild(makeBtn('delete-btn', '🗑 Delete', () => deleteBreeder(b.id)));
+      row.appendChild(actions);
+      tbody.appendChild(row);
+    });
+  } catch (err) {
+    setTableEmpty(tbody, 9, `Error: ${err.message}`);
+  }
+}
 
-      // Role switching
-      document.querySelectorAll(".role-btn").forEach((btn) => {
-        btn.addEventListener("click", function () {
-          document.querySelectorAll(".role-btn").forEach((b) => {
-            b.classList.remove("active");
-          });
-          this.classList.add("active");
+// ── Rejected applications ─────────────────────────────────────
+async function renderRejectedApplications() {
+  const tbody = setTableLoading('rejected-tbody', 9);
+  if (!tbody) return;
 
-          // Here you would redirect to breeder dashboard if needed
-          if (this.textContent === "Breeder") {
-            // window.location.href = 'breeder-dashboard.html';
-            alert("Breeder dashboard coming soon!");
-          }
-        });
+  try {
+    const apps = await apiFetch('/api/admins/rejected-applications', { headers: adminHeaders() });
+    tbody.innerHTML = '';
+    if (!apps.length) { setTableEmpty(tbody, 9, 'No rejected applications.'); return; }
+
+    apps.forEach(app => {
+      const row = document.createElement('tr');
+      [app.full_name, app.national_id, app.animal_type ?? '—', app.farm_name ?? '—',
+       app.county ?? '—', app.phone, app.email,
+       new Date(app.created_at).toLocaleDateString()].forEach(c => {
+        const td = document.createElement('td');
+        td.textContent = c;
+        row.appendChild(td);
       });
+      tbody.appendChild(row);
+    });
+  } catch (err) {
+    setTableEmpty(tbody, 9, `Error: ${err.message}`);
+  }
+}
 
-      // Filter functionality
-        const filterAll = document.getElementById('filterAll');
-        const filterSpecies = document.getElementById('filterSpecies');
-        const filterBreed = document.getElementById('filterBreed');
-        const filterGender = document.getElementById('filterGender');
-        const filterBreeder = document.getElementById('filterBreeder');
+// ── Actions ───────────────────────────────────────────────────
+async function approveApplication(id) {
+  if (!confirm('Approve this breeder?')) return;
+  try {
+    await apiFetch(`/api/admins/approve/${id}`, { method: 'POST', headers: adminHeaders() });
+    showToast('Breeder approved!', 'success');
+    await Promise.all([renderPendingApplications(), renderApprovedBreeders(), renderStats()]);
+  } catch (err) {
+    showToast(err.message, 'error');
+  }
+}
 
-        function filterTable() {
-            const allValue = filterAll.value;
-            const speciesValue = filterSpecies.value;
-            const breedValue = filterBreed.value;
-            const genderValue = filterGender.value;
-            const breederValue = filterBreeder.value;
-            
-            const rows = document.querySelectorAll('#animalTableBody tr');
+// Handles reject application behavior for this page.
+async function rejectApplication(id) {
+  if (!confirm('Reject this application?')) return;
+  try {
+    await apiFetch(`/api/admins/reject/${id}`, { method: 'POST', headers: adminHeaders() });
+    showToast('Application rejected.', 'success');
+    await Promise.all([renderPendingApplications(), renderStats()]);
+  } catch (err) {
+    showToast(err.message, 'error');
+  }
+}
 
-            rows.forEach(row => {
-                const rowSpecies = row.getAttribute('data-species');
-                const rowBreed = row.getAttribute('data-breed');
-                const rowGender = row.getAttribute('data-gender');
-                const rowBreeder = row.getAttribute('data-breeder');
+// Handles delete breeder behavior for this page.
+async function deleteBreeder(id) {
+  if (!confirm('Delete this breeder? This cannot be undone.')) return;
+  try {
+    await apiFetch(`/api/admins/breeders/${id}`, { method: 'DELETE', headers: adminHeaders() });
+    showToast('Breeder deleted.', 'success');
+    await Promise.all([renderApprovedBreeders(), renderStats()]);
+  } catch (err) {
+    showToast(err.message, 'error');
+  }
+}
 
-                const allMatch = allValue === 'all' || rowSpecies === allValue;
-                const speciesMatch = speciesValue === 'all' || rowSpecies === speciesValue;
-                const breedMatch = breedValue === 'all' || rowBreed === breedValue;
-                const genderMatch = genderValue === 'all' || rowGender === genderValue;
-                const breederMatch = breederValue === 'all' || rowBreeder === breederValue;
+// Handles view application behavior for this page.
+async function viewApplication(id) {
+  const modal = createModal();
+  const modalContent = modal.querySelector('.modal-content');
+  document.body.appendChild(modal);
 
-                if (allMatch && speciesMatch && breedMatch && genderMatch && breederMatch) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        }
+  try {
+    const app = await apiFetch(`/api/admins/applications/${id}`, { headers: adminHeaders() });
+    const docList = app.documents
+      ? app.documents.split(',').map(d => `<li>${d.trim()}</li>`).join('')
+      : null;
 
-        // Add event listeners to all filters
-        filterAll.addEventListener('change', filterTable);
-        filterSpecies.addEventListener('change', filterTable);
-        filterBreed.addEventListener('change', filterTable);
-        filterGender.addEventListener('change', filterTable);
-        filterBreeder.addEventListener('change', filterTable);
+    modalContent.innerHTML = `
+      <button class="close-button" aria-label="Close">&times;</button>
+      <h2>Application Details</h2>
+      <div class="application-details">
+        <p><strong>Full Name:</strong> ${app.full_name}</p>
+        <p><strong>National ID:</strong> ${app.national_id}</p>
+        <p><strong>Animal Type:</strong> <span class="badge badge-individual">${app.animal_type}</span></p>
+        <p><strong>Farm Name:</strong> ${app.farm_name ?? '—'}</p>
+        <p><strong>Farm Prefix:</strong> ${app.farm_prefix ?? '—'}</p>
+        <p><strong>Location:</strong> ${app.farm_location}, ${app.county ?? '—'}</p>
+        <p><strong>Phone:</strong> ${app.phone}</p>
+        <p><strong>Email:</strong> ${app.email}</p>
+        <p><strong>Submitted:</strong> ${new Date(app.created_at).toLocaleString()}</p>
+        <div><strong>Documents:</strong> ${docList ? `<ul>${docList}</ul>` : 'None uploaded'}</div>
+      </div>
+      <div class="modal-actions">
+        <button class="action-btn approve-btn" id="modal-approve"><svg class="icon-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 5 13"></polyline></svg> Approve</button>
+        <button class="action-btn reject-btn"  id="modal-reject">✕ Reject</button>
+      </div>
+    `;
 
-        // Click row to view details
-        document.querySelectorAll('#animalTableBody tr').forEach(row => {
-            row.addEventListener('click', function() {
-                const animalId = this.cells[0].textContent;
-                alert(`Viewing details for ${animalId}\n(Animal detail view coming soon)`);
-            });
-        });
+    modal.querySelector('.close-button').addEventListener('click', () => modal.remove());
+    modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+    modal.querySelector('#modal-approve').addEventListener('click', async () => { await approveApplication(app.id); modal.remove(); });
+    modal.querySelector('#modal-reject').addEventListener('click',  async () => { await rejectApplication(app.id);  modal.remove(); });
+  } catch (err) {
+    modalContent.innerHTML = `<button class="close-button">&times;</button><p style="color:#E63946;">${err.message}</p>`;
+    modal.querySelector('.close-button').addEventListener('click', () => modal.remove());
+  }
+}
 
-        // Filter functionality
-        const statusFilter = document.getElementById('filterStatus');
-        const speciesFilter = document.getElementById('filterSpecies');
+// ── Utilities ─────────────────────────────────────────────────
+function makeBtn(className, label, onClick) {
+  const btn = document.createElement('button');
+  btn.className = `action-btn ${className}`;
+  btn.innerHTML = label;
+  btn.addEventListener('click', onClick);
+  return btn;
+}
 
-        function filterTable() {
-            const statusValue = statusFilter.value;
-            const speciesValue = speciesFilter.value;
-            const rows = document.querySelectorAll('#breederTableBody tr');
-
-            rows.forEach(row => {
-                const rowStatus = row.getAttribute('data-status');
-                const rowSpecies = row.getAttribute('data-species');
-
-                const statusMatch = statusValue === 'all' || rowStatus === statusValue;
-                const speciesMatch = speciesValue === 'all' || rowSpecies === speciesValue;
-
-                if (statusMatch && speciesMatch) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        }
-
-        statusFilter.addEventListener('change', filterTable);
-        speciesFilter.addEventListener('change', filterTable);
-
-        // Approve breeder
-        function approveBreeder(button) {
-            const row = button.closest('tr');
-            const breederName = row.cells[0].textContent;
-            
-            if (confirm(`Approve breeder: ${breederName}?`)) {
-                // Update status
-                const statusCell = row.querySelector('.status-badge');
-                statusCell.textContent = 'approved';
-                statusCell.className = 'status-badge status-approved';
-                
-                // Update actions
-                const actionsCell = row.cells[5];
-                actionsCell.innerHTML = '<span class="action-approved">approved</span>';
-                
-                // Update data attribute
-                row.setAttribute('data-status', 'approved');
-                
-                alert(`${breederName} has been approved!`);
-            }
-        }
-
-        // Reject breeder
-        function rejectBreeder(button) {
-            const row = button.closest('tr');
-            const breederName = row.cells[0].textContent;
-            
-            if (confirm(`Reject breeder: ${breederName}?`)) {
-                alert(`${breederName} has been rejected!`);
-                // In a real app, you might want to remove the row or update status
-                row.style.display = 'none';
-            }
-        }
-
-        // Export functions
-        function exportCSV() {
-            alert('Exporting breeder data as CSV...');
-            // Here you would implement actual CSV export logic
-        }
-
-        function exportPDF() {
-            alert('Exporting breeder data as PDF...');
-            // Here you would implement actual PDF export logic
-        }
-
-        // Toggle mobile menu
-        function toggleMenu() {
-            const sidebar = document.querySelector('.sidebar');
-            if (!sidebar) return;
-            sidebar.classList.toggle('active');
-        }
-
-        // Close menu when clicking outside on mobile
-        document.addEventListener('click', function(event) {
-            const sidebar = document.querySelector('.sidebar');
-            const menuToggle = document.querySelector('.menu-toggle');
-            if (!sidebar) return;
-
-            if (window.innerWidth <= 768) {
-                const clickedInsideSidebar = sidebar.contains(event.target);
-                const clickedToggle = menuToggle ? menuToggle.contains(event.target) : false;
-                if (!clickedInsideSidebar && !clickedToggle) {
-                    sidebar.classList.remove('active');
-                }
-            }
-        });
-
-       
-
-        
-
-        // Click row to view event details
-        document.querySelectorAll('tbody tr').forEach(row => {
-            row.addEventListener('click', function() {
-                const eventId = this.cells[0].textContent;
-                alert(`Viewing details for ${eventId}\n(Event detail view coming soon)`);
-            });
-        });
-
-        // Export functions
-        function exportBreedersCSV() {
-            alert('Exporting Breeders CSV...\n\nThis will generate a CSV file containing:\n- Breeder information\n- Farm details\n- Species managed\n- Verification status');
-            // Here you would implement actual CSV export logic
-            // Example: window.location.href = '/api/export/breeders/csv';
-        }
-
-        function exportSystemPDF() {
-            alert('Exporting System PDF Report...\n\nThis will generate a comprehensive PDF including:\n- System overview\n- Breeder statistics\n- Animal inventory\n- Breeding events\n- Success rates');
-            // Here you would implement actual PDF export logic
-            // Example: window.location.href = '/api/export/system/pdf';
-        }
-
-        // Toggle switch
-        function toggleSwitch(element) {
-            element.classList.toggle('active');
-        }
-
-        // Save settings
-        function saveSettings() {
-            // Collect all settings
-            const emailNotifications = document.querySelectorAll('.toggle-switch')[0].classList.contains('active');
-            const autoApproval = document.querySelectorAll('.toggle-switch')[1].classList.contains('active');
-            const dataRetention = document.querySelectorAll('.setting-select')[0].value;
-            const language = document.querySelectorAll('.setting-select')[1].value;
-            const adminEmail = document.querySelector('.setting-input').value;
-            const backupFrequency = document.querySelectorAll('.setting-select')[2].value;
-
-            const settings = {
-                emailNotifications,
-                autoApproval,
-                dataRetention,
-                language,
-                adminEmail,
-                backupFrequency
-            };
-
-            console.log('Saving settings:', settings);
-            alert('Settings saved successfully!\n\nEmail Notifications: ' + (emailNotifications ? 'Enabled' : 'Disabled') + 
-                  '\nAuto-Approval: ' + (autoApproval ? 'Enabled' : 'Disabled') +
-                  '\nData Retention: ' + dataRetention + ' year(s)' +
-                  '\nLanguage: ' + language +
-                  '\nAdmin Email: ' + adminEmail +
-                  '\nBackup Frequency: ' + backupFrequency);
-
-            // Here you would send settings to backend
-            // Example: fetch('/api/settings', { method: 'POST', body: JSON.stringify(settings) });
-        }
+// Handles create modal behavior for this page.
+function createModal() {
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = '<div class="modal-content"></div>';
+  return overlay;
+}

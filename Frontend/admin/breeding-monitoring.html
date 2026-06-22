@@ -1,241 +1,184 @@
+<!-- Frontend/admin/breeding-monitoring.html: page layout for the Animal Breed Registry System. -->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Breeding Monitoring</title>
-    <link rel="stylesheet" href="./css/admin.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-
-
-     
-</head>
-<body>
-    <!-- Mobile Menu Toggle -->
-    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
-
-    <!-- Sidebar -->
-     <aside class="sidebar">
-      <div class="logo">
-        <div class="logo-icon">🔥</div>
-        <div class="logo-title">Breeder Registry</div>
+ <head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>
+   Admin Dashboard - Breeding Monitoring
+  </title>
+  <link href="/assets/css/app.css" rel="stylesheet">
+  <link href="/assets/css/admin.css" rel="stylesheet">
+  <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" referrerpolicy="no-referrer" rel="stylesheet">
+  <link href="/assets/css/shell-standard.css" rel="stylesheet">
+ </head>
+ <body>
+  <button aria-controls="sidebar" aria-expanded="false" aria-label="Open sidebar" class="menu-toggle" id="menu-toggle" type="button">
+   <i aria-hidden="true" class="fa fa-bars">
+   </i>
+  </button>
+  <!-- Sidebar navigation shared across dashboard pages. -->
+  <aside class="sidebar" id="sidebar">
+   <div class="logo">
+    <img alt="LineageX" class="logo-img" src="/images/lineagex-app-icon.png">
+    <div class="logo-copy">
+     <div class="logo-title">
+      Livestock Registry
+     </div>
+     <div class="logo-subtitle">
+      Admin Console
+     </div>
+    </div>
+   </div>
+   <!-- Navigation links for moving between related pages. -->
+   <nav aria-label="Admin Console navigation" class="nav-menu">
+    <a class="nav-item" href="overview.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-tachometer-alt">
+      </i>
+     </span>
+     Overview
+    </a>
+    <a class="nav-item" href="breeder-management.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-users">
+      </i>
+     </span>
+     Breeder Management
+    </a>
+    <a class="nav-item" href="animal-management.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-paw">
+      </i>
+     </span>
+     Animal Management
+    </a>
+    <a class="nav-item active" href="breeding-monitoring.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-heartbeat">
+      </i>
+     </span>
+     Breeding Monitoring
+    </a>
+    <a class="nav-item" href="reports-analytics.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-chart-line">
+      </i>
+     </span>
+     Reports & Analytics
+    </a>
+    <a class="nav-item" href="settings.html">
+     <span class="nav-icon">
+      <i aria-hidden="true" class="fa fa-cog">
+      </i>
+     </span>
+     Settings
+    </a>
+   </nav>
+   <button class="logout-btn" id="logoutBtn" type="button">
+    <i aria-hidden="true" class="fa fa-sign-out-alt">
+    </i>
+    Logout
+   </button>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay">
+  </div>
+  <!-- Main page content shown to the user. -->
+  <main class="main-content">
+   <div class="page-header">
+    <h1 class="page-title">
+     Admin Dashboard
+    </h1>
+   </div>
+   <div class="monitoring-section">
+    <h2 class="section-title">
+     Breeding Monitoring
+    </h2>
+    <div class="content-grid">
+     <div class="events-container">
+      <h3 class="subsection-title">
+       Events
+      </h3>
+      <div class="table-container">
+       <table>
+        <thead>
+         <tr>
+          <th>
+           ID
+          </th>
+          <th>
+           Method
+          </th>
+          <th>
+           Dam
+          </th>
+          <th>
+           Sire
+          </th>
+          <th>
+           Due
+          </th>
+          <th>
+           Offspring
+          </th>
+         </tr>
+        </thead>
+        <tbody id="eventsTableBody">
+         <tr>
+          <td colspan="6" style="text-align: center; padding: 20px;">
+           Loading breeding events...
+          </td>
+         </tr>
+        </tbody>
+       </table>
       </div>
-
-      
-
-      <nav class="nav-menu">
-        <a href="overview.html" class="nav-item">
-          <span class="nav-icon"><i class="fa-solid fa-house"></i></span>
-          <span>Overview</span>
-        </a>
-
-        <a href="breeder-management.html" class="nav-item">
-          <span class="nav-icon"><i class="fa-solid fa-users"></i></span>
-          <span>Breeder Management</span>
-        </a>
-
-        <a href="animal-management.html" class="nav-item">
-          <span class="nav-icon"><i class="fa-solid fa-cow"></i></span>
-          <span>Animal Management</span>
-        </a>
-
-        <a href="breeding-monitoring.html" class="nav-item">
-          <span class="nav-icon"
-            ><i class="fa-solid fa-clipboard-list"></i
-          ></span>
-          <span>Breeding Monitoring</span>
-        </a>
-
-        <a href="reports-analytics.html" class="nav-item">
-          <span class="nav-icon"><i class="fa-solid fa-chart-line"></i></span>
-          <span>Reports & Analytics</span>
-        </a>
-
-        <a href="settings.html" class="nav-item">
-          <span class="nav-icon"><i class="fa-solid fa-gear"></i></span>
-          <span>Settings</span>
-        </a>
-      </nav>
-
-      <div class="version">v1</div>
-      <button id="logoutBtn" class="logout-btn">Logout</button>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="main-content">
-        <div class="page-header">
-            <h1 class="page-title">Admin Dashboard</h1>
-        </div>
-
-        <!-- Breeding Monitoring Section -->
-        <div class="monitoring-section">
-            <h2 class="section-title">Breeding Monitoring</h2>
-
-            <div class="content-grid">
-                <!-- Events Table -->
-                <div class="events-container">
-                    <h3 class="subsection-title">Events</h3>
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Method</th>
-                                    <th>Dam</th>
-                                    <th>Sire</th>
-                                    <th>Due</th>
-                                    <th>Offspring</th>
-                                </tr>
-                            </thead>
-                            <tbody id="eventsTableBody">
-                                <tr>
-                                    <td colspan="6" style="text-align: center; padding: 20px;">Loading breeding events...</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Highlights Panel -->
-                <div class="highlights-container">
-                    <h3 class="subsection-title">Highlights</h3>
-                    
-                    <div class="highlight-card">
-                        <div class="highlight-label">Upcoming due:</div>
-                        <div class="highlight-value" id="upcomingDueCount">-</div>
-                    </div>
-
-                    <div class="highlight-card">
-                        <div class="highlight-label">Top performers:</div>
-                        <div class="highlight-value" id="topPerformers">Loading...</div>
-                    </div>
-
-                    <div class="highlight-card">
-                        <div class="highlight-label">Success rate:</div>
-                        <div class="highlight-value" id="successRate">-</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <script src="js/script.js"></script>
-    <script>
-      // Fetch and load all breeding events
-      async function loadBreedingEvents() {
-        try {
-          // Get all breeders first to fetch their breeding events
-          const approvedRes = await fetch('/api/admins/approved-breeders');
-          if (!approvedRes.ok) throw new Error('Failed to fetch breeders');
-          const approvedBreeders = await approvedRes.json();
-
-          let allEvents = [];
-          
-          // Fetch breeding events for each breeder
-          for (const breeder of approvedBreeders) {
-            try {
-              const eventRes = await fetch(`/api/breeders/${breeder.id}/breeding-events`);
-              if (eventRes.ok) {
-                const events = await eventRes.json();
-                allEvents = allEvents.concat(events.map(e => ({...e, breeder_id: breeder.id})));
-              }
-            } catch (err) {
-              console.warn(`Failed to fetch events for breeder ${breeder.id}:`, err);
-            }
-          }
-
-          const tableBody = document.getElementById('eventsTableBody');
-          tableBody.innerHTML = ''; // Clear loading message
-
-          if (allEvents.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px;">No breeding events found</td></tr>';
-            updateHighlights([]);
-            return;
-          }
-
-          // Populate table rows
-          allEvents.forEach((event, index) => {
-            const row = document.createElement('tr');
-            const dueDate = event.expected_due_date ? new Date(event.expected_due_date).toLocaleDateString() : '-';
-            
-            row.innerHTML = `
-              <td>E-${String(index + 1).padStart(3, '0')}</td>
-              <td>${event.breeding_method || 'N/A'}</td>
-              <td>${event.dam_id || 'N/A'}</td>
-              <td>${event.sire_id || 'N/A'}</td>
-              <td>${dueDate}</td>
-              <td>${event.offspring_id || '-'}</td>
-            `;
-            tableBody.appendChild(row);
-          });
-
-          updateHighlights(allEvents);
-        } catch (error) {
-          console.error('Error loading breeding events:', error);
-          const tableBody = document.getElementById('eventsTableBody');
-          tableBody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: red;">Error loading events: ${error.message}</td></tr>`;
-        }
-      }
-
-      // Update highlights based on events
-      function updateHighlights(events) {
-        // Calculate upcoming due (events with expected_due_date in the future)
-        const now = new Date();
-        const upcomingDue = events.filter(e => {
-          if (!e.expected_due_date) return false;
-          const dueDate = new Date(e.expected_due_date);
-          return dueDate > now;
-        }).length;
-
-        document.getElementById('upcomingDueCount').textContent = upcomingDue;
-
-        // Calculate top performers (sires/dams with most breeding events)
-        const performerCounts = {};
-        events.forEach(e => {
-          if (e.sire_id) performerCounts[e.sire_id] = (performerCounts[e.sire_id] || 0) + 1;
-          if (e.dam_id) performerCounts[e.dam_id] = (performerCounts[e.dam_id] || 0) + 1;
-        });
-
-        const topPerformers = Object.entries(performerCounts)
-          .sort((a, b) => b[1] - a[1])
-          .slice(0, 4)
-          .map(([id, count]) => `${id}(${count})`)
-          .join(', ');
-
-        document.getElementById('topPerformers').textContent = topPerformers || 'None';
-
-        // Calculate success rate (events with offspring divided by total events)
-        const successfulEvents = events.filter(e => e.offspring_id).length;
-        const successRate = events.length > 0 
-          ? Math.round((successfulEvents / events.length) * 100) + '%'
-          : '-';
-
-        document.getElementById('successRate').textContent = successRate;
-      }
-
-      // Load data when page loads
-      document.addEventListener('DOMContentLoaded', loadBreedingEvents);
-    </script>
-    <script>
-      (function(){
-        const btn = document.getElementById('logoutBtn');
-        if (btn) {
-          btn.addEventListener('click', function(e){
-            localStorage.removeItem('admin');
-            localStorage.removeItem('breeder');
-            localStorage.removeItem('token');
-            localStorage.removeItem('admin_id');
-            localStorage.removeItem('breeder_id');
-            window.location.href = '/index.html';
-          });
-        }
-      })();
-    </script>
-</body>
+     </div>
+     <div class="highlights-container">
+      <h3 class="subsection-title">
+       Highlights
+      </h3>
+      <div class="highlight-card">
+       <div class="highlight-label">
+        Upcoming due:
+       </div>
+       <div class="highlight-value" id="upcomingDueCount">
+        -
+       </div>
+      </div>
+      <div class="highlight-card">
+       <div class="highlight-label">
+        Top performers:
+       </div>
+       <div class="highlight-value" id="topPerformers">
+        Loading...
+       </div>
+      </div>
+      <div class="highlight-card">
+       <div class="highlight-label">
+        Success rate:
+       </div>
+       <div class="highlight-value" id="successRate">
+        -
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </main>
+  <!-- Scripts loaded for page behavior and API calls. -->
+  <script src="/assets/js/core/config.js">
+  </script>
+  <script src="/assets/js/core/api.js">
+  </script>
+  <script src="/assets/js/core/ui.js">
+  </script>
+  <script src="/assets/js/core/common.js">
+  </script>
+  <script src="/assets/js/admin.js">
+  </script>
+  <script src="/assets/js/pages/admin-breeding-monitoring.js">
+  </script>
+  <script src="/assets/js/sidebar-standard.js">
+  </script>
+ </body>
 </html>
